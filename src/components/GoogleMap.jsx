@@ -16,22 +16,6 @@ class GoogleMap extends Component {
     });
   };
 
-  addMarker = ({ coords, icon, content }) => {
-    let marker = new window.google.maps.Marker({
-      position: coords,
-      map: this.googleMap,
-      icon: icon,
-    });
-    if (content) {
-      let infoWindow = new window.google.maps.InfoWindow({
-        content: content,
-      });
-      marker.addListener("click", () => {
-        infoWindow.open(this.googleMap, marker);
-      });
-    }
-    return marker;
-  };
 
   componentDidMount() {
     const googleMapScript = document.createElement("script");
@@ -56,3 +40,15 @@ class GoogleMap extends Component {
 }
 
 export default GoogleMap;
+
+
+// const placeMarker = (latLng) => {
+//   var newMarker = new google.maps.Marker({
+//     position: latLng,
+//     map: map,
+//   });
+// };
+
+// google.maps.event.addListener(map, "click", function (e) {
+//   placeMarker(e.latLng);
+// });
