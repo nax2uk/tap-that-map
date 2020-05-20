@@ -17,7 +17,7 @@ class GoogleMap extends Component {
 
   createGoogleMap = () => {
     return new window.google.maps.Map(this.googleMapRef.current, {
-      zoom: 10,
+      zoom: 5,
       center: {
         lat: 1.3521,
         lng: 103.8198,
@@ -64,21 +64,24 @@ class GoogleMap extends Component {
   calculateScore = (event) => {
     event.preventDefault();
     const { marker, question } = this.state;
+    if (marker !== null) {
+      const distance = this.calculateDistance(
+        { lat: marker.position.lat(), lng: marker.position.lng() },
+        { lat: question.position.lat, lng: question.position.lng }
+      );
 
-    const distance = this.calculateDistance(
-      { lat: marker.position.lat(), lng: marker.position.lng() },
-      { lat: question.position.lat, lng: question.position.lng }
-    );
-
-    let circleOfEarth = 2 * Math.PI * 6371.071;
-    const percentage = Math.floor(
-      ((circleOfEarth - distance) / circleOfEarth) * 100
-    );
-    const score = (percentage - 50) * 2;
-
-    this.setState((currState) => {
-      return { totalScore: currState.totalScore + score };
-    });
+      let circleOfEarth = 2 * Math.PI * 6371.071;
+      const percentage = Math.floor(
+        ((circleOfEarth - distance) / circleOfEarth) * 100
+      );
+      const score = (percentage - 50) * 2;
+      this.setState((currState) => {
+        return { totalScore: currState.totalScore + score };
+      });
+    } else {
+      // need to look at adding material UI styling to the alert? 
+      window.alert("You need to place a marker before submitting!")
+    }
   };
 
   componentDidMount() {
