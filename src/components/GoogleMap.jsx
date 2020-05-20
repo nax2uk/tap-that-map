@@ -3,6 +3,12 @@ import API_KEY from "../API-KEYS/maps-api";
 // import { Container } from "@material-ui/core";
 
 class GoogleMap extends Component {
+state = {
+  marker: null,
+  // markerAdded: false, 
+
+}
+
   googleMapRef = createRef();
 
   createGoogleMap = () => {
@@ -16,6 +22,14 @@ class GoogleMap extends Component {
     });
   };
 
+  placeMarker = (latLng) => {
+    return new window.google.maps.Marker({
+      position: latLng,
+      map: this.googleMap,
+      // makes the marker draggable across the map, may not need to add a resubmit/change marker function.
+      draggable: true, 
+    });
+  };
 
   componentDidMount() {
     const googleMapScript = document.createElement("script");
@@ -24,7 +38,15 @@ class GoogleMap extends Component {
     window.document.body.appendChild(googleMapScript);
 
     googleMapScript.addEventListener("load", () => {
-      this.googleMap = this.createGoogleMap(); 
+      this.googleMap = this.createGoogleMap();
+      window.google.maps.event.addListener(this.googleMap, "click", (e) => {
+    
+        if (this.state.marker === null) 
+        this.setState({
+          marker: this.placeMarker(e.latLng), 
+          // markerAdded: true,
+        }) 
+      });
     });
   }
 
@@ -40,15 +62,3 @@ class GoogleMap extends Component {
 }
 
 export default GoogleMap;
-
-
-// const placeMarker = (latLng) => {
-//   var newMarker = new google.maps.Marker({
-//     position: latLng,
-//     map: map,
-//   });
-// };
-
-// google.maps.event.addListener(map, "click", function (e) {
-//   placeMarker(e.latLng);
-// });
