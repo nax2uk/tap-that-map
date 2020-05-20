@@ -1,8 +1,13 @@
 import React from "react";
+import { Typography } from "@material-ui/core";
 
 const Question = (props) => {
   const { location } = props;
-  return <h2>{`Where is ${location} on the map?`}</h2>;
+  return (
+    <div id="question-wrapper">
+      <Typography variant="h2">{`${location}`}</Typography>
+    </div>
+  );
 };
 
 export default Question;

@@ -1,4 +1,5 @@
 import React from "react";
+import "./App.css";
 import Title from "./components/Title";
 import GoogleMap from "./components/GoogleMap";
 // import database from "./firebaseInitialise";

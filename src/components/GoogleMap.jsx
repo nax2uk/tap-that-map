@@ -1,6 +1,7 @@
 import React, { Component, createRef } from "react";
 import API_KEY from "../API-KEYS/maps-api.js";
-import { Button } from "@material-ui/core";
+import { Fab } from "@material-ui/core";
+import Icon from "@material-ui/core/Icon";
 import questionData from "../Data/questions.json"; //  array - country objects {name, position, lat/long}
 import Timer from "./Timer";
 import mapStyle from "../Data/mapStyling";
@@ -127,7 +128,11 @@ class GoogleMap extends Component {
           ref={this.googleMapRef}
           style={{ width: window.innerWidth, height: window.innerHeight }}
         />
-        <Button onClick={this.calculateScore}>Submit!</Button>
+        <div id="submit-wrapper">
+          <Fab size="large" onClick={this.calculateScore}>
+            <Icon font-size="large">check_circle</Icon>
+          </Fab>
+        </div>
         <Timer />
       </>
     );
