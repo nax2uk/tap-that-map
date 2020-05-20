@@ -5,6 +5,7 @@ import questionData from "../Data/questions.json"; //  array - country objects {
 import Timer from "./Timer";
 import mapStyle from "../Data/mapStyling";
 import Question from "./Question";
+import Score from "./Score.jsx";
 
 class GoogleMap extends Component {
   state = {
@@ -94,17 +95,13 @@ class GoogleMap extends Component {
     }
   };
 
-  // componentDidUpdate(prevState) {
-  //   if (this.state.question !== prevState)
-  // }
-
   componentDidMount() {
     const googleMapScript = document.createElement("script");
 
     googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places`;
     window.document.body.appendChild(googleMapScript);
 
-    // this.generateQuestion(questionData.questions);
+    this.generateQuestion(questionData.questions);
 
     googleMapScript.addEventListener("load", () => {
       this.googleMap = this.createGoogleMap();
@@ -123,7 +120,8 @@ class GoogleMap extends Component {
     const { totalScore, question } = this.state;
     return (
       <>
-        {/* <Question generateQuestion={this.generateQuestion} question={question}  /> */}
+        <Question location={question.location} />
+        <Score totalScore={totalScore} />
         <div
           id="google-map"
           ref={this.googleMapRef}

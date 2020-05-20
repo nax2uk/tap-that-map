@@ -1,16 +1,8 @@
 import React from "react";
-import questionData from "../Data/questions.json";
 
 const Question = (props) => {
-  const { generateQuestion, question } = props;
-  if(question === {}){
-    generateQuestion(questionData.questions);
-  }
-    return (
-      <div>
-      <h2>{`THIS IS THE LOCATION ${question.location}`}</h2>
-    </div>
-  );
+  const { location } = props;
+  return <h2>{`Where is ${location} on the map?`}</h2>;
 };
 
 export default Question;
