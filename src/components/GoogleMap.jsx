@@ -43,6 +43,7 @@ class GoogleMap extends Component {
     return new window.google.maps.Marker({
       position: latLng,
       map: this.googleMap,
+      animation: window.google.maps.Animation.DROP,
       // makes the marker draggable across the map, may not need to add a resubmit/change marker function.
       draggable: true,
     });
