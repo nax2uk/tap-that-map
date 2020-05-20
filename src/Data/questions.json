@@ -1,0 +1,18 @@
+{
+    "questions": [
+        {
+            "location": "Guangzhou",
+            "position": {
+                "lat": 23.1291,
+                "lng": 113.2644
+            }
+        },
+        {
+            "location": "Jakarta",
+            "position": {
+                "lat": 6.2088,
+                "lng": 106.8456
+            }
+        }
+    ]
+}
