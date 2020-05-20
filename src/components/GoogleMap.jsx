@@ -1,7 +1,10 @@
 import React, { Component, createRef } from "react";
 import API_KEY from "../API-KEYS/maps-api";
 import { Button } from "@material-ui/core";
-import questionData from "../Data/questions.json";
+import questionData from "../Data/questions.json"; //  array - country objects {name, position, lat/long}
+import Timer from "./Timer";
+import mapStyle from "../Data/mapStyling";
+import Question from "./Question";
 
 class GoogleMap extends Component {
   state = {
@@ -10,8 +13,6 @@ class GoogleMap extends Component {
     question: questionData.questions[0],
     totalScore: 0,
   };
-
-  //generateQuestion function needed
 
   googleMapRef = createRef();
 
@@ -23,7 +24,17 @@ class GoogleMap extends Component {
         lng: 103.8198,
       },
       disableDefaultUI: true,
+      styles: mapStyle,
     });
+  };
+
+  generateQuestion = (questionDataArr) => {
+    //pass this to Question in props
+    const index = Math.floor(Math.random() * questionDataArr.length);
+    this.setState({
+      question: questionDataArr[index],
+    });
+    console.log(questionDataArr[index].location);
   };
 
   placeMarker = (latLng) => {
@@ -60,7 +71,6 @@ class GoogleMap extends Component {
     return d;
   };
 
-  //guessMarker.position.lat()
   calculateScore = (event) => {
     event.preventDefault();
     const { marker, question } = this.state;
@@ -79,16 +89,22 @@ class GoogleMap extends Component {
         return { totalScore: currState.totalScore + score };
       });
     } else {
-      // need to look at adding material UI styling to the alert? 
-      window.alert("You need to place a marker before submitting!")
+      // need to look at adding material UI styling to the alert?
+      window.alert("You need to place a marker before submitting!");
     }
   };
+
+  // componentDidUpdate(prevState) {
+  //   if (this.state.question !== prevState)
+  // }
 
   componentDidMount() {
     const googleMapScript = document.createElement("script");
 
     googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places`;
     window.document.body.appendChild(googleMapScript);
+
+    // this.generateQuestion(questionData.questions);
 
     googleMapScript.addEventListener("load", () => {
       this.googleMap = this.createGoogleMap();
@@ -103,15 +119,18 @@ class GoogleMap extends Component {
   }
 
   render() {
-    console.log(this.state.totalScore);
+    console.log(this.state.question);
+    const { totalScore, question } = this.state;
     return (
       <>
+        {/* <Question generateQuestion={this.generateQuestion} question={question}  /> */}
         <div
           id="google-map"
           ref={this.googleMapRef}
           style={{ width: window.innerWidth, height: window.innerHeight }}
         />
         <Button onClick={this.calculateScore}>Submit!</Button>
+        <Timer />
       </>
     );
   }
