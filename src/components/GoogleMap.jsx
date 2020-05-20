@@ -20,10 +20,10 @@ class GoogleMap extends Component {
 
   createGoogleMap = () => {
     return new window.google.maps.Map(this.googleMapRef.current, {
-      zoom: 5,
+      zoom: 2,
       center: {
-        lat: 1.3521,
-        lng: 103.8198,
+        lat: 0,
+        lng: 0,
       },
       disableDefaultUI: true,
       styles: mapStyle,
