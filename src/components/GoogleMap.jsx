@@ -1,5 +1,5 @@
 import React, { Component, createRef } from "react";
-import API_KEY from "../API-KEYS/maps-api";
+import API_KEY from "../API-KEYS/maps-api.js";
 import { Button } from "@material-ui/core";
 import questionData from "../Data/questions.json"; //  array - country objects {name, position, lat/long}
 import Timer from "./Timer";
