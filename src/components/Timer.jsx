@@ -8,7 +8,7 @@ class Timer extends Component {
   };
 
   startTimer = () => {
-    const { updateRound, round } = this.props;
+    const { round } = this.props;
     this.myInterval = setInterval(() => {
       const { minutes, seconds } = this.state;
       if (seconds > 0) {
@@ -16,10 +16,11 @@ class Timer extends Component {
           seconds: seconds - 1,
         }));
         window.localStorage.setItem("seconds", `${seconds - 1}`);
+        window.localStorage.setItem("round", `${round}`);
       } else if (seconds === 0) {
         if (minutes === 0) {
           //calls updateRound and updates state in GoogleMap component
-          updateRound();
+          // updateRound();
 
           clearInterval(this.myInterval);
           window.localStorage.clear();
@@ -40,14 +41,18 @@ class Timer extends Component {
 
   startNewRound = (event) => {
     event.preventDefault();
+    const { updateRound } = this.props;
+    updateRound();
     this.setState({ seconds: 10 });
     this.startTimer();
   };
 
   componentDidMount() {
+    const { setRound } = this.props;
     if (
       window.localStorage.getItem("minutes") ||
-      window.localStorage.getItem("seconds")
+      window.localStorage.getItem("seconds") ||
+      window.localStorage.getItem("round")
     ) {
       let previousMinutes = parseInt(
         window.localStorage.getItem("minutes") || 0
@@ -55,6 +60,9 @@ class Timer extends Component {
       let previousSeconds = parseInt(
         window.localStorage.getItem("seconds") || 0
       );
+      let previousRound = parseInt(window.localStorage.getItem("round") || 0);
+      //invoked a fuction
+      setRound(previousRound);
       this.setState({ minutes: previousMinutes, seconds: previousSeconds });
     }
     this.startTimer();

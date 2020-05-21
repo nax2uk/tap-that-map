@@ -2,7 +2,7 @@ import React, { Component, createRef } from "react";
 import API_KEY from "../API-KEYS/maps-api.js";
 import { Fab } from "@material-ui/core";
 import Icon from "@material-ui/core/Icon";
-import questionData from "../Data/questions.json"; //  array - country objects {name, position, lat/long}
+// import questionData from "../Data/questions.json"; //  array - country objects {name, position, lat/long}
 import Timer from "./Timer";
 import mapStyle from "../Data/mapStyling";
 import Question from "./Question";
@@ -12,7 +12,6 @@ import database from "../firebaseInitialise";
 // import RoundNum from "./RoundNum.jsx";
 
 class GoogleMap extends Component {
-
   state = {
     marker: null,
     // markerAdded: false,
@@ -20,6 +19,8 @@ class GoogleMap extends Component {
     countryArr: null,
     totalScore: 0,
     round: 0,
+    gameOver: false,
+    scoreSubmitted: false,
   };
 
   googleMapRef = createRef();
@@ -45,10 +46,21 @@ class GoogleMap extends Component {
     // console.log(questionDataArr[index].location);
   };
 
-  updateRound = (currState) => {
-    this.setState((currState) => {
-      console.log("Updated!", this.state.round);
-      return { round: currState.round++ };
+  updateRound = () => {
+    if (this.state.round < 9) {
+      this.setState((currState) => {
+        console.log("Updated!", this.state.round);
+        return {
+          round: currState.round++,
+          scoreSubmitted: false,
+        };
+      });
+    } else this.setState({ gameOver: true });
+  };
+
+  setRound = (roundsNum) => {
+    this.setState({
+      round: roundsNum,
     });
   };
 
@@ -89,6 +101,7 @@ class GoogleMap extends Component {
 
   calculateScore = (event) => {
     event.preventDefault();
+
     const { marker, question } = this.state;
     if (marker !== null) {
       const distance = this.calculateDistance(
@@ -102,7 +115,10 @@ class GoogleMap extends Component {
       );
       const score = (percentage - 50) * 2;
       this.setState((currState) => {
-        return { totalScore: currState.totalScore + score };
+        return {
+          totalScore: currState.totalScore + score,
+          scoreSubmitted: true,
+        };
       });
     } else {
       // need to look at adding material UI styling to the alert?
@@ -157,18 +173,6 @@ class GoogleMap extends Component {
     if (prevState.round !== this.state.round) {
       this.questionFormatter();
     }
-
-    // const googleMapScript = document.createElement("script");
-    // googleMapScript.addEventListener("load", () => {
-    //   this.googleMap = this.createGoogleMap();
-    //   window.google.maps.event.addListener(this.googleMap, "click", (e) => {
-    //     if (this.state.marker === null)
-    //       this.setState({
-    //         marker: this.placeMarker(e.latLng),
-    //         // markerAdded: true,
-    //       });
-    //   });
-    // });
   }
 
   componentDidMount() {
@@ -200,12 +204,18 @@ class GoogleMap extends Component {
   }
 
   render() {
-
-    const { totalScore, round, question } = this.state;
+    const {
+      totalScore,
+      round,
+      question,
+      gameOver,
+      scoreSubmitted,
+    } = this.state;
+    if (gameOver) return <h1>END OF GAME/Results... </h1>;
     return (
       <>
         {question !== null ? <Question location={question.location} /> : null}
-         <Score totalScore={totalScore} round={round} />
+        <Score totalScore={totalScore} round={round} />
 
         <div
           id="google-map"
@@ -213,11 +223,19 @@ class GoogleMap extends Component {
           style={{ width: window.innerWidth, height: window.innerHeight }}
         />
         <div id="submit-wrapper">
-          <Fab size="large" onClick={this.calculateScore}>
+          <Fab
+            size="large"
+            onClick={this.calculateScore}
+            disabled={scoreSubmitted}
+          >
             <Icon fontSize="large">check_circle</Icon>
           </Fab>
         </div>
-        <Timer updateRound={this.updateRound} round={round} />
+        <Timer
+          updateRound={this.updateRound}
+          round={round}
+          setRound={this.setRound}
+        />
       </>
     );
   }
