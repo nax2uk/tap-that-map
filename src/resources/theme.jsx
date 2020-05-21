@@ -22,11 +22,10 @@ let theme = createMuiTheme({
   },
 
   // can import our own fonts, instructions here https://material-ui.com/customization/typography/
-  typography: { fontFamily: ["Roboto"].join(","), fontSize: 14; },
+  typography: { fontFamily: ["Roboto"].join(","), fontSize: 14 },
 
   // allows us to override css sheets in this file, instructions here https://material-ui.com/customization/globals/
-  overrides:{},
-
+  overrides: {},
 });
 
 theme = responsiveFontSizes(theme);
