@@ -9,9 +9,10 @@ import Question from "./Question";
 import Score from "./Score.jsx";
 import countryNameList from "../Data/countryNameList";
 import database from "../firebaseInitialise";
+// import RoundNum from "./RoundNum.jsx";
 
 class GoogleMap extends Component {
-  //numRounds = 1;
+  
 
   state = {
     marker: null,
@@ -47,7 +48,7 @@ class GoogleMap extends Component {
 
   updateRound = (currState) => {
     this.setState((currState) => {
-      // console.log("Updated!", this.state.round)
+      console.log("Updated!", this.state.round);
       return { round: currState.round++ };
     });
   };
@@ -187,15 +188,14 @@ class GoogleMap extends Component {
   }
 
   render() {
-    //console.log(this.state.questionArray[0]);
-    //console.log(this.state.questionArray[0].location);
-    const { totalScore, questionArray } = this.state;
+
+    const { totalScore, questionArray, round } = this.state;
     return (
       <>
         {questionArray !== null ? (
           <Question location={questionArray[0].location} />
         ) : null}
-        <Score totalScore={totalScore} />
+        <Score totalScore={totalScore} round={round} />
         <div
           id="google-map"
           ref={this.googleMapRef}
@@ -206,7 +206,7 @@ class GoogleMap extends Component {
             <Icon fontSize="large">check_circle</Icon>
           </Fab>
         </div>
-        <Timer updateRound={this.updateRound} />
+        <Timer updateRound={this.updateRound} round={round} />
       </>
     );
   }
