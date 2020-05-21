@@ -14,6 +14,7 @@ class GoogleMap extends Component {
     // markerAdded: false,
     question: questionData.questions[0],
     totalScore: 0,
+    round: 0,
   };
 
   googleMapRef = createRef();
@@ -36,7 +37,14 @@ class GoogleMap extends Component {
     this.setState({
       question: questionDataArr[index],
     });
-    console.log(questionDataArr[index].location);
+    // console.log(questionDataArr[index].location);
+  };
+
+  updateRound = (currState) => {
+    this.setState((currState) => {
+      console.log("Updated!", this.state.round)
+      return { round: currState.round++ };
+    });
   };
 
   placeMarker = (latLng) => {
@@ -97,6 +105,22 @@ class GoogleMap extends Component {
     }
   };
 
+  componentDidUpdate() {
+    // const googleMapScript = document.createElement("script");
+    // googleMapScript.addEventListener("load", () => {
+    //   this.googleMap = this.createGoogleMap();
+    //   window.google.maps.event.addListener(this.googleMap, "click", (e) => {
+    //     if (this.state.marker === null)
+    //       this.setState({
+    //         marker: this.placeMarker(e.latLng),
+    //         // markerAdded: true,
+    //       });
+    //   });
+    // });
+  }
+
+
+
   componentDidMount() {
     const googleMapScript = document.createElement("script");
 
@@ -118,7 +142,7 @@ class GoogleMap extends Component {
   }
 
   render() {
-    console.log(this.state.question);
+    // console.log(this.state.question);
     const { totalScore, question } = this.state;
     return (
       <>
@@ -134,7 +158,7 @@ class GoogleMap extends Component {
             <Icon font-size="large">check_circle</Icon>
           </Fab>
         </div>
-        <Timer />
+        <Timer updateRound={this.updateRound} />
       </>
     );
   }
