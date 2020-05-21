@@ -11,13 +11,11 @@ import countryNameList from "../Data/countryNameList";
 import database from "../firebaseInitialise";
 
 class GoogleMap extends Component {
-  //numRounds = 1;
-
   state = {
     marker: null,
     // markerAdded: false,
-    //question: []//questionData.questions[0],
-    questionArray: null,
+    question: null, //questionData.questions[0],
+    countryArr: null,
     totalScore: 0,
     round: 0,
   };
@@ -139,19 +137,25 @@ class GoogleMap extends Component {
   };
 
   questionFormatter = () => {
-    const location = this.countryQuestions(1);
-    console.log(location[0]);
-    var country = database.ref(`countries/${location[0]}`);
+    const { countryArr, round } = this.state;
+    const location = countryArr[round];
+    console.log(location);
+
+    var country = database.ref(`countries/${location}`);
     country.on("value", (data) => {
       const countryData = data.val();
-      const countryObj = { location: location[0], position: countryData };
+      const countryObj = { location: location, position: countryData };
       this.setState({
-        questionArray: [countryObj],
+        question: countryObj,
       });
     });
   };
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProp, prevState) {
+    if (prevState.round !== this.state.round) {
+      this.questionFormatter();
+    }
+
     // const googleMapScript = document.createElement("script");
     // googleMapScript.addEventListener("load", () => {
     //   this.googleMap = this.createGoogleMap();
@@ -172,7 +176,14 @@ class GoogleMap extends Component {
     window.document.body.appendChild(googleMapScript);
 
     //this.generateQuestion(questionData.questions);
-    this.questionFormatter();
+    this.setState(
+      {
+        countryArr: this.countryQuestions(10),
+      },
+      () => {
+        this.questionFormatter();
+      }
+    );
 
     googleMapScript.addEventListener("load", () => {
       this.googleMap = this.createGoogleMap();
@@ -189,12 +200,11 @@ class GoogleMap extends Component {
   render() {
     //console.log(this.state.questionArray[0]);
     //console.log(this.state.questionArray[0].location);
-    const { totalScore, questionArray } = this.state;
+    const { totalScore, question } = this.state;
     return (
       <>
-        {questionArray !== null ? (
-          <Question location={questionArray[0].location} />
-        ) : null}
+        {question !== null ? <Question location={question.location} /> : null}
+        {/* <Question location={question.location} /> */}
         <Score totalScore={totalScore} />
         <div
           id="google-map"
