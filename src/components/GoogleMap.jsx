@@ -42,7 +42,7 @@ class GoogleMap extends Component {
 
   updateRound = (currState) => {
     this.setState((currState) => {
-      console.log("Updated!", this.state.round)
+      // console.log("Updated!", this.state.round)
       return { round: currState.round++ };
     });
   };

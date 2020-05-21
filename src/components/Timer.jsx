@@ -20,6 +20,7 @@ class Timer extends Component {
         if (minutes === 0) {
           //calls updateRound and updates state in GoogleMap component
           updateRound();
+          
           clearInterval(this.myInterval);
           window.localStorage.clear();
         } else {
