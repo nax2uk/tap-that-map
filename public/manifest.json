@@ -1,8 +1,14 @@
 {
   "short_name": "Tap Map",
-  "name": "Tap That Map Game",
+  "name": "Tap That Map",
   "icons": [
     {
+      "src": "favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    },
+    {
+
       "src": "/icons/android-icon-36x36.png",
       "sizes": "36x36",
       "type": "image/png",
@@ -40,7 +46,9 @@
     }
   ],
   "start_url": ".",
+
   "display": "minimal-ui",
+  "orientation": "portrait",
   "theme_color": "#000000",
   "background_color": "#ffffff"
 }
