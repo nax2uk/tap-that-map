@@ -131,7 +131,7 @@ class GoogleMap extends Component {
         />
         <div id="submit-wrapper">
           <Fab size="large" onClick={this.calculateScore}>
-            <Icon font-size="large">check_circle</Icon>
+            <Icon fontSize="large">check_circle</Icon>
           </Fab>
         </div>
         <Timer />
