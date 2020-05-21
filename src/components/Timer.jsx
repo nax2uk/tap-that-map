@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Typography } from "@material-ui/core";
+import { Typography, Button } from "@material-ui/core";
 
 class Timer extends Component {
   state = {
@@ -8,7 +8,7 @@ class Timer extends Component {
   };
 
   startTimer = () => {
-    const { updateRound } = this.props;
+    const { updateRound, round } = this.props;
     this.myInterval = setInterval(() => {
       const { minutes, seconds } = this.state;
       if (seconds > 0) {
@@ -20,7 +20,7 @@ class Timer extends Component {
         if (minutes === 0) {
           //calls updateRound and updates state in GoogleMap component
           updateRound();
-          
+
           clearInterval(this.myInterval);
           window.localStorage.clear();
         } else {
@@ -30,9 +30,18 @@ class Timer extends Component {
           }));
           window.localStorage.setItem("minutes", `${minutes - 1}`);
           window.localStorage.setItem("seconds", "59");
+
+          // can't get localstorage to keep hold of the current round on refresh
+          window.localStorage.setItem("round", `${round}`);
         }
       }
     }, 1000);
+  };
+
+  startNewRound = (event) => {
+    event.preventDefault();
+    this.setState({ seconds: 10 });
+    this.startTimer();
   };
 
   componentDidMount() {
@@ -53,6 +62,18 @@ class Timer extends Component {
 
   render() {
     const { minutes, seconds } = this.state;
+    if (minutes === 0 && seconds === 0) {
+      return (
+        <div id="timer-wrapper">
+          <Typography variant="h2">
+            <span id="time">
+              TIME IS UP! {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+            </span>
+          </Typography>
+          <Button onClick={this.startNewRound}>Begin Next Round?</Button>
+        </div>
+      );
+    }
     return (
       <div id="timer-wrapper">
         <Typography variant="h2">
