@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Typography } from "@material-ui/core";
 
 class Timer extends Component {
   state = {
@@ -27,16 +28,18 @@ class Timer extends Component {
   };
 
   componentDidMount() {
-      this.startTimer();
+    this.startTimer();
   }
 
   render() {
     const { minutes, seconds } = this.state;
     return (
       <div id="timer-wrapper">
-        <span id="time">
-          {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-        </span>
+        <Typography variant="h2">
+          <span id="time">
+            {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+          </span>
+        </Typography>
       </div>
     );
   }
