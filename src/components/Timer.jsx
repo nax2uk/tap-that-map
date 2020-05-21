@@ -4,10 +4,11 @@ import { Typography } from "@material-ui/core";
 class Timer extends Component {
   state = {
     minutes: 0,
-    seconds: 30,
+    seconds: 10,
   };
 
   startTimer = () => {
+    const { updateRound } = this.props;
     this.myInterval = setInterval(() => {
       const { minutes, seconds } = this.state;
       if (seconds > 0) {
@@ -17,6 +18,9 @@ class Timer extends Component {
         window.localStorage.setItem("seconds", `${seconds - 1}`);
       } else if (seconds === 0) {
         if (minutes === 0) {
+          //calls updateRound and updates state in GoogleMap component
+          updateRound();
+          
           clearInterval(this.myInterval);
           window.localStorage.clear();
         } else {
