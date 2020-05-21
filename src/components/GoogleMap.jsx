@@ -1,14 +1,15 @@
 import React, { Component, createRef } from "react";
 import API_KEY from "../API-KEYS/maps-api.js";
-import { Fab } from "@material-ui/core";
-import Icon from "@material-ui/core/Icon";
+import { Fab, Icon } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core/styles";
+import theme from "../resources/theme.jsx";
 import Timer from "./Timer";
 import mapStyle from "../Data/mapStyling";
 import Question from "./Question";
 import Score from "./Score.jsx";
 import database from "../firebaseInitialise";
-import calculateScore from "../utils/calculateScore"
-import generateCountryQuestions from '../utils/generateCountryQuestions'
+import calculateScore from "../utils/calculateScore";
+import generateCountryQuestions from "../utils/generateCountryQuestions";
 // import RoundNum from "./RoundNum.jsx";
 
 class GoogleMap extends Component {
@@ -53,8 +54,10 @@ class GoogleMap extends Component {
     event.preventDefault();
     const { marker, question } = this.state;
     if (marker !== null) {
-
-      const markerPosition = { lat: marker.position.lat(), lng: marker.position.lng() };
+      const markerPosition = {
+        lat: marker.position.lat(),
+        lng: marker.position.lng(),
+      };
       const score = calculateScore(markerPosition, question.position);
 
       this.setState((currState) => {
@@ -63,13 +66,11 @@ class GoogleMap extends Component {
           scoreSubmitted: true,
         };
       });
-    }
-    else {
+    } else {
       // need to look at adding material UI styling to the alert?
       window.alert("You need to place a marker before submitting!");
     }
-  }
-
+  };
 
   /******** QUESTION FUNCTIONS ********/
   // called in componentDidMount and componentDidUpdate
@@ -162,13 +163,16 @@ class GoogleMap extends Component {
           style={{ width: window.innerWidth, height: window.innerHeight }}
         />
         <div id="submit-wrapper">
-          <Fab
-            size="large"
-            onClick={this.submitMarker}
-            disabled={scoreSubmitted}
-          >
-            <Icon fontSize="large">check_circle</Icon>
-          </Fab>
+          <ThemeProvider theme={theme}>
+            <Fab
+              size="large"
+              onClick={this.submitMarker}
+              disabled={scoreSubmitted}
+              color="secondary"
+            >
+              <Icon fontSize="large">check_circle</Icon>
+            </Fab>
+          </ThemeProvider>
         </div>
         <Timer
           updateRound={this.updateRound}
