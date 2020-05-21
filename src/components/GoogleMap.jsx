@@ -7,12 +7,17 @@ import Timer from "./Timer";
 import mapStyle from "../Data/mapStyling";
 import Question from "./Question";
 import Score from "./Score.jsx";
+import countryNameList from "../Data/countryNameList";
+import database from "../firebaseInitialise";
 
 class GoogleMap extends Component {
+  //numRounds = 1;
+
   state = {
     marker: null,
     // markerAdded: false,
-    question: questionData.questions[0],
+    //question: []//questionData.questions[0],
+    questionArray: null,
     totalScore: 0,
     round: 0,
   };
@@ -105,6 +110,47 @@ class GoogleMap extends Component {
     }
   };
 
+  checkRepeat = (array) => {
+    for (let i = 0; i < array.length; i++) {
+      for (let j = 0; j < array.length; j++) {
+        if (i !== j) {
+          if (array[i] === array[j]) {
+            return false;
+          }
+        }
+      }
+    }
+    return true;
+  };
+
+  countryQuestions = (num) => {
+    let countryList = [];
+
+    for (let i = 0; i < num; i++) {
+      let country =
+        countryNameList[Math.round(Math.random() * countryNameList.length)];
+      countryList.push(country);
+    }
+    if (this.checkRepeat(countryList)) {
+      return countryList;
+    } else {
+      this.countryQuestions(num);
+    }
+  };
+
+  questionFormatter = () => {
+    const location = this.countryQuestions(1);
+    console.log(location[0]);
+    var country = database.ref(`countries/${location[0]}`);
+    country.on("value", (data) => {
+      const countryData = data.val();
+      const countryObj = { location: location[0], position: countryData };
+      this.setState({
+        questionArray: [countryObj],
+      });
+    });
+  };
+
   componentDidUpdate() {
     // const googleMapScript = document.createElement("script");
     // googleMapScript.addEventListener("load", () => {
@@ -119,15 +165,14 @@ class GoogleMap extends Component {
     // });
   }
 
-
-
   componentDidMount() {
     const googleMapScript = document.createElement("script");
 
     googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places`;
     window.document.body.appendChild(googleMapScript);
 
-    this.generateQuestion(questionData.questions);
+    //this.generateQuestion(questionData.questions);
+    this.questionFormatter();
 
     googleMapScript.addEventListener("load", () => {
       this.googleMap = this.createGoogleMap();
@@ -142,11 +187,14 @@ class GoogleMap extends Component {
   }
 
   render() {
-    // console.log(this.state.question);
-    const { totalScore, question } = this.state;
+    //console.log(this.state.questionArray[0]);
+    //console.log(this.state.questionArray[0].location);
+    const { totalScore, questionArray } = this.state;
     return (
       <>
-        <Question location={question.location} />
+        {questionArray !== null ? (
+          <Question location={questionArray[0].location} />
+        ) : null}
         <Score totalScore={totalScore} />
         <div
           id="google-map"
