@@ -3,26 +3,19 @@ import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 let theme = createMuiTheme({
   palette: {
     // used to represent primary interface elements for a user
-    primary: {},
-
+    primary: {
+      main: "#00008B",
+    },
     // used to represent secondary interface elements for a user
-    secondary: {},
-
-    // used to represent interface elements that the user should be made aware of
-    error: {},
-
-    // used to represent potentially dangerous actions or important messages
-    info: {},
-
-    // used to present information to the user that is neutral and not necessarily important
-    warning: {},
-
-    // used to indicate the successful completion of an action that user triggered
-    success: {},
+    secondary: {
+      main: "#FFFFFF",
+    },
   },
 
-  // can import our own fonts, instructions here https://material-ui.com/customization/typography/
-  typography: { fontFamily: ["Roboto"].join(","), fontSize: 14 },
+  typography: {
+    fontFamily: ["Permanent Marker", "Roboto"].join(","),
+    fontSize: 14,
+  },
 
   // allows us to override css sheets in this file, instructions here https://material-ui.com/customization/globals/
   overrides: {},
