@@ -5,6 +5,11 @@ const mapStyle = [
   },
   { featureType: "water", stylers: [{ color: "#58dbd3" }] },
   {
+    featureType: "water",
+    elementType: "geometry.stroke",
+    stylers: [{ color: "#58dbd3" }],
+  },
+  {
     featureType: "all",
     elementType: "labels",
     stylers: [{ visibility: "off" }],
