@@ -42,9 +42,11 @@ class Home extends Component {
       <ThemeProvider theme={theme}>
         <Fade in={true} timeout={1000}>
           <Paper id="home-wrapper" elevation={3}>
-            <Typography variant="h2" align="center">
-              Home
-            </Typography>
+            <Fade in={true} timeout={1500}>
+              <Typography variant="h2" align="center">
+                Home
+              </Typography>
+            </Fade>
             <Box margin="normal" fullWidth className="two-button-wrapper">
               <Link to="/googlemap">
                 <Button variant="contained" color="primary">
