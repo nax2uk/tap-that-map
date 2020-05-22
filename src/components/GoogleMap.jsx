@@ -7,9 +7,15 @@ import Timer from "./Timer";
 import mapStyle from "../Data/mapStyling";
 import Question from "./Question";
 import Score from "./Score.jsx";
+<<<<<<< HEAD
 import database from "../firebaseInitialise";
 import calculateScore from "../utils/calculateScore";
 import generateCountryQuestions from "../utils/generateCountryQuestions";
+=======
+import { database } from "../firebaseInitialise";
+import calculateScore from "../utils/calculateScore"
+import generateCountryQuestions from '../utils/generateCountryQuestions'
+>>>>>>> ab2b9a5424d9653f8a39fea7c199935f73d50e9b
 // import RoundNum from "./RoundNum.jsx";
 
 class GoogleMap extends Component {
