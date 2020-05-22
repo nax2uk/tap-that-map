@@ -7,10 +7,10 @@ const mapStyle = [
     ],
   },
   {
-    featureType: "water",
+    elementType: "geometry.fill",
     stylers: [
       {
-        color: "#081f8c",
+        color: "#000e96",
       },
       {
         visibility: "on",
@@ -18,11 +18,44 @@ const mapStyle = [
     ],
   },
   {
-    featureType: "water",
+    featureType: "administrative.country",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#fbfffc",
+      },
+      {
+        visibility: "on",
+      },
+      {
+        weight: 3.5,
+      },
+    ],
+  },
+  {
+    featureType: "administrative.country",
     elementType: "geometry.stroke",
     stylers: [
       {
-        color: "#000000",
+        color: "#ffffff",
+      },
+      {
+        visibility: "on",
+      },
+      {
+        weight: 2,
+      },
+    ],
+  },
+  {
+    featureType: "water",
+    elementType: "geometry.fill",
+    stylers: [
+      {
+        color: "#ffffff",
+      },
+      {
+        visibility: "on",
       },
     ],
   },
