@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { Typography, Button } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core/styles";
+import theme from "../resources/theme.jsx";
 
 class Timer extends Component {
   state = {
@@ -73,22 +75,26 @@ class Timer extends Component {
     if (minutes === 0 && seconds === 0) {
       return (
         <div id="timer-wrapper">
-          <Typography variant="h2">
-            <span id="time">
-              TIME IS UP! {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-            </span>
-          </Typography>
-          <Button onClick={this.startNewRound}>Begin Next Round?</Button>
+          <ThemeProvider theme={theme}>
+            <Typography variant="h2">
+              <span id="time">
+                TIME IS UP! {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+              </span>
+            </Typography>
+            <Button onClick={this.startNewRound}>Begin Next Round?</Button>
+          </ThemeProvider>
         </div>
       );
     }
     return (
       <div id="timer-wrapper">
-        <Typography variant="h2">
-          <span id="time">
-            {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-          </span>
-        </Typography>
+        <ThemeProvider theme={theme}>
+          <Typography variant="h2">
+            <span id="time">
+              {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
+            </span>
+          </Typography>
+        </ThemeProvider>
       </div>
     );
   }
