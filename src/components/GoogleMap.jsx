@@ -7,10 +7,10 @@ import Timer from "./Timer";
 import mapStyle from "../Data/mapStyling";
 import Question from "./Question";
 import Score from "./Score.jsx";
+
 import { database } from "../firebaseInitialise";
 import calculateScore from "../utils/calculateScore";
 import generateCountryQuestions from "../utils/generateCountryQuestions";
-// import RoundNum from "./RoundNum.jsx";
 
 class GoogleMap extends Component {
   state = {
@@ -41,6 +41,7 @@ class GoogleMap extends Component {
   };
 
   placeMarker = (latLng) => {
+    console.log("PLACE MARKER FIRING!");
     let newMarker = new window.google.maps.Marker({
       position: latLng,
       map: this.googleMap,
@@ -54,7 +55,7 @@ class GoogleMap extends Component {
 
   setMapOnAll = (map) => {
     const { allMarkers } = this.state;
-
+    console.log("setMap Func", this.googleMap);
     for (var i = 0; i < allMarkers.length; i++) {
       allMarkers[i].setMap(map);
     }
@@ -92,6 +93,7 @@ class GoogleMap extends Component {
   getQuestion = () => {
     const { countryArr, round } = this.state;
     const location = countryArr[round];
+    console.log(location);
 
     var country = database.ref(`countries/${location}`);
     country.on("value", (data) => {
@@ -181,8 +183,10 @@ class GoogleMap extends Component {
     if (gameOver) return <h1>END OF GAME/Results... </h1>;
     return (
       <>
-        {question !== null ? <Question location={question.location} /> : null}
-        <Score totalScore={totalScore} round={round} />
+        {question !== null ? (
+          <Question location={question.location} round={round} />
+        ) : null}
+        <Score totalScore={totalScore} />
 
         <div
           id="google-map"

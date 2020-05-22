@@ -7,14 +7,19 @@
 
 #timer-wrapper {
   position: absolute;
-  top: 0;
-  right: 0;
+  width: 8rem;
+  padding: 1vh 2vw 1vh 1vw;
+  top: 2vh;
+  right: -1vh;
+  text-align: center;
+  z-index: 1;
 }
 
 #question-wrapper {
   position: absolute;
-  top: 0;
-  left: 0;
+  padding: 1vh 1vw 1vh 2vw;
+  top: 2vh;
+  left: -1vh;
   z-index: 1;
 }
 
@@ -27,8 +32,9 @@
 
 #score-wrapper {
   position: absolute;
-  left: 0;
-  top: 10vh;
+  padding: 1vh 1vw 1vh 2vw;
+  top: 15vh;
+  left: -1vh;
   z-index: 1;
 }
 

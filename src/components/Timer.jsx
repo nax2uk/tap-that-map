@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Typography, Button } from "@material-ui/core";
+import { Typography, Paper, Button } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../resources/theme.jsx";
 
@@ -23,7 +23,6 @@ class Timer extends Component {
         if (minutes === 0) {
           clearInterval(this.myInterval);
           window.localStorage.clear();
-          
         } else {
           this.setState(({ minutes }) => ({
             minutes: minutes - 1,
@@ -70,30 +69,25 @@ class Timer extends Component {
 
   render() {
     const { minutes, seconds } = this.state;
-    if (minutes === 0 && seconds === 0) {
-      return (
-        <div id="timer-wrapper">
-          <ThemeProvider theme={theme}>
-            <Typography variant="h2">
-              <span id="time">
-                TIME IS UP! {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-              </span>
-            </Typography>
-            <Button onClick={this.startNewRound}>Begin Next Round?</Button>
-          </ThemeProvider>
-        </div>
-      );
-    }
     return (
-      <div id="timer-wrapper">
+      <Paper id="timer-wrapper" elevation={3}>
         <ThemeProvider theme={theme}>
           <Typography variant="h2">
             <span id="time">
               {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
             </span>
+            {minutes === 0 && seconds === 0 && (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.startNewRound}
+              >
+                Next
+              </Button>
+            )}
           </Typography>
         </ThemeProvider>
-      </div>
+      </Paper>
     );
   }
 }
