@@ -72,7 +72,7 @@ class Login extends Component {
               onChange={this.handleChange}
               required
             />
-            <Box margin="normal" fullWidth className="login-button-wrapper">
+            <Box margin="normal" fullWidth className="two-button-wrapper">
               <Button
                 variant="contained"
                 color="primary"
