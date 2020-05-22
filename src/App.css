@@ -31,3 +31,39 @@
   top: 10vh;
   z-index: 1;
 }
+
+#login-form-wrapper {
+  width: 30vw;
+  margin: 20vh auto;
+  display: flex;
+  flex-direction: column;
+  padding: 5vh 5vw;
+  justify-content: space-around;
+}
+
+.two-button-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 1rem;
+}
+
+#logout-wrapper {
+  width: 30vw;
+  margin: 20vh auto;
+  display: flex;
+  flex-direction: column;
+  padding: 5vh 5vw;
+  justify-content: space-around;
+  align-items: center;
+}
+
+#home-wrapper {
+  width: 30vw;
+  margin: 20vh auto;
+  display: flex;
+  flex-direction: column;
+  padding: 5vh 5vw;
+  justify-content: space-around;
+  align-content: center;
+}

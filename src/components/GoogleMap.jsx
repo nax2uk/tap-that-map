@@ -9,8 +9,8 @@ import Question from "./Question";
 import Score from "./Score.jsx";
 
 import { database } from "../firebaseInitialise";
-import calculateScore from "../utils/calculateScore"
-import generateCountryQuestions from '../utils/generateCountryQuestions'
+import calculateScore from "../utils/calculateScore";
+import generateCountryQuestions from "../utils/generateCountryQuestions";
 // import RoundNum from "./RoundNum.jsx";
 
 class GoogleMap extends Component {
