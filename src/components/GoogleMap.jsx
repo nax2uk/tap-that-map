@@ -17,7 +17,7 @@ class GoogleMap extends Component {
   state = {
     marker: null,
     // markerAdded: false,
-    question: null, //questionData.questions[0],
+    question: null,
     countryArr: null,
     totalScore: 0,
     round: 0,
@@ -109,10 +109,22 @@ class GoogleMap extends Component {
     });
   };
 
+  saveScore = () => {
+    const scores = database.ref("scores");
+    const data = {
+      UID: this.props.currentUserId,
+      score: this.state.totalScore,
+    };
+    scores.push(data);
+  };
+
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProp, prevState) {
     if (prevState.round !== this.state.round) {
       this.getQuestion();
+    }
+    if (prevState.gameOver !== this.state.gameOver) {
+      this.saveScore();
     }
   }
 
