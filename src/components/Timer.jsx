@@ -21,11 +21,9 @@ class Timer extends Component {
         window.localStorage.setItem("round", `${round}`);
       } else if (seconds === 0) {
         if (minutes === 0) {
-          //calls updateRound and updates state in GoogleMap component
-          // updateRound();
-
           clearInterval(this.myInterval);
           window.localStorage.clear();
+          
         } else {
           this.setState(({ minutes }) => ({
             minutes: minutes - 1,

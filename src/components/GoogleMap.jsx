@@ -15,6 +15,7 @@ import generateCountryQuestions from "../utils/generateCountryQuestions";
 
 class GoogleMap extends Component {
   state = {
+    allMarkers: [],
     marker: null,
     // markerAdded: false,
     question: null,
@@ -41,13 +42,28 @@ class GoogleMap extends Component {
   };
 
   placeMarker = (latLng) => {
-    return new window.google.maps.Marker({
+    console.log("PLACE MARKER FIRING!");
+    let newMarker = new window.google.maps.Marker({
       position: latLng,
       map: this.googleMap,
       animation: window.google.maps.Animation.DROP,
-      // makes the marker draggable across the map, may not need to add a resubmit/change marker function.
       draggable: true,
     });
+    const { allMarkers } = this.state;
+    this.setState({ allMarkers: [newMarker, ...allMarkers] });
+    return newMarker;
+  };
+
+  setMapOnAll = (map) => {
+    const { allMarkers } = this.state;
+    console.log("setMap Func", this.googleMap);
+    for (var i = 0; i < allMarkers.length; i++) {
+      allMarkers[i].setMap(map);
+    }
+  };
+
+  removeMarker = () => {
+    this.setMapOnAll(null);
   };
 
   //called when submit button is clicked
@@ -94,10 +110,11 @@ class GoogleMap extends Component {
   updateRound = () => {
     if (this.state.round < 9) {
       this.setState((currState) => {
-        console.log("Updated!", this.state.round);
+        this.removeMarker();
         return {
           round: currState.round++,
           scoreSubmitted: false,
+          marker: null,
         };
       });
     } else this.setState({ gameOver: true });
