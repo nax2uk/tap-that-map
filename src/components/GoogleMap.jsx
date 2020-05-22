@@ -10,6 +10,7 @@ import Score from "./Score.jsx";
 import { database } from "../firebaseInitialise";
 import calculateScore from "../utils/calculateScore";
 import generateCountryQuestions from "../utils/generateCountryQuestions";
+import ResultsPage from "./ResultsPage.jsx";
 // import RoundNum from "./RoundNum.jsx";
 
 class GoogleMap extends Component {
@@ -20,9 +21,11 @@ class GoogleMap extends Component {
     question: null,
     countryArr: null,
     totalScore: 0,
+    scorePerRound: 0,
     round: 0,
     gameOver: false,
     scoreSubmitted: false,
+    scoreArr: [],
   };
 
   googleMapRef = createRef();
@@ -67,18 +70,22 @@ class GoogleMap extends Component {
   //called when submit button is clicked
   submitMarker = (event) => {
     event.preventDefault();
-    const { marker, question } = this.state;
+    const { marker, question, scoreArr } = this.state;
+    console.log(scoreArr);
     if (marker !== null) {
       const markerPosition = {
         lat: marker.position.lat(),
         lng: marker.position.lng(),
       };
       const score = calculateScore(markerPosition, question.position);
+      console.log(score);
 
       this.setState((currState) => {
         return {
           totalScore: currState.totalScore + score,
           scoreSubmitted: true,
+          scorePerRound: score,
+          // scoreArr: [...scoreArr, score || 0],
         };
       });
     } else {
@@ -102,6 +109,21 @@ class GoogleMap extends Component {
       });
     });
   };
+  /********* TIMEOUT FUNCTIONS ********/
+  // Prevents the player submitting their answer when the timer is at zero
+  answerTimeout = () => {
+    this.setState({
+      scoreSubmitted: true,
+      // scoreArr: [...scoreArr, 0],
+    });
+    // this.setState((currState) => {
+    //   const { scoreArr } = this.state;
+    //   return {
+    //     scoreSubmitted: true,
+    //     scoreArr: [...scoreArr, 0],
+    //   };
+    // });
+  };
 
   /********* ROUND FUNCTIONS ********/
   updateRound = () => {
@@ -112,6 +134,8 @@ class GoogleMap extends Component {
           round: currState.round++,
           scoreSubmitted: false,
           marker: null,
+          scoreArr: [...currState.scoreArr, currState.scorePerRound],
+          scorePerRound: 0,
         };
       });
     } else this.setState({ gameOver: true });
@@ -177,8 +201,10 @@ class GoogleMap extends Component {
       question,
       gameOver,
       scoreSubmitted,
+      scorePerRound,
+      scoreArr,
     } = this.state;
-    if (gameOver) return <h1>END OF GAME/Results... </h1>;
+    if (gameOver) return <ResultsPage scoreArr={scoreArr} />;
     return (
       <>
         {question !== null ? <Question location={question.location} /> : null}
@@ -205,6 +231,8 @@ class GoogleMap extends Component {
           updateRound={this.updateRound}
           round={round}
           setRound={this.setRound}
+          scorePerRound={scorePerRound}
+          answerTimeout={this.answerTimeout}
         />
       </>
     );

@@ -10,7 +10,7 @@ class Timer extends Component {
   };
 
   startTimer = () => {
-    const { round } = this.props;
+    const { round, answerTimeout } = this.props;
     this.myInterval = setInterval(() => {
       const { minutes, seconds } = this.state;
       if (seconds > 0) {
@@ -23,7 +23,7 @@ class Timer extends Component {
         if (minutes === 0) {
           clearInterval(this.myInterval);
           window.localStorage.clear();
-          
+          answerTimeout()
         } else {
           this.setState(({ minutes }) => ({
             minutes: minutes - 1,
@@ -70,6 +70,7 @@ class Timer extends Component {
 
   render() {
     const { minutes, seconds } = this.state;
+    const { scorePerRound } = this.props;
     if (minutes === 0 && seconds === 0) {
       return (
         <div id="timer-wrapper">
@@ -80,6 +81,7 @@ class Timer extends Component {
               </span>
             </Typography>
             <Button onClick={this.startNewRound}>Begin Next Round?</Button>
+            <h2>{`You scored ${scorePerRound} in this round!⭐️`}</h2>
           </ThemeProvider>
         </div>
       );
