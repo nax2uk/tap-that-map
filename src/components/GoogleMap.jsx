@@ -12,6 +12,7 @@ import calculateScore from "../utils/calculateScore";
 import generateCountryQuestions from "../utils/generateCountryQuestions";
 import customMarker from "../resources/customMarker";
 import customLine from "../resources/customLine";
+import * as borderGeojson from "../resources/hq-borders.json";
 
 class GoogleMap extends Component {
   state = {
@@ -19,6 +20,7 @@ class GoogleMap extends Component {
     marker: null,
     // markerAdded: false,
     question: null,
+    borderData: null,
     countryArr: null,
     totalScore: 0,
     round: 0,
@@ -66,11 +68,11 @@ class GoogleMap extends Component {
     this.setMapOnAll(null);
   };
 
-  //called when submit button is clicked
   submitMarker = (event) => {
     event.preventDefault();
 
-    this.drawLinkLine();
+    this.plotLinkLine();
+    this.plotCountryBorder();
 
     const { marker, question } = this.state;
     if (marker !== null) {
@@ -92,7 +94,7 @@ class GoogleMap extends Component {
     }
   };
 
-  drawLinkLine = () => {
+  plotLinkLine = () => {
     const { marker, question } = this.state;
     const markerPosition = {
       lat: marker.position.lat(),
@@ -104,9 +106,22 @@ class GoogleMap extends Component {
       path: linkPath,
       ...customLine,
     });
+
     linkLine.setMap(this.googleMap);
+
     this.setState(({ allOverlay }) => {
       return { allOverlay: [linkLine, ...allOverlay] };
+    });
+  };
+
+  plotCountryBorder = () => {
+    const { borderData } = this.state;
+    this.googleMap.data.addGeoJson(borderData);
+    this.googleMap.data.setStyle({
+      fillColor: "white",
+      fillOpacity: 0.5,
+      strokeColor: "black",
+      strokeWeight: 0,
     });
   };
 
@@ -115,7 +130,6 @@ class GoogleMap extends Component {
   getQuestion = () => {
     const { countryArr, round } = this.state;
     const location = countryArr[round];
-    console.log(location);
 
     var country = database.ref(`countries/${location}`);
     country.on("value", (data) => {
@@ -125,6 +139,22 @@ class GoogleMap extends Component {
         question: countryObj,
       });
     });
+  };
+
+  getQuestionGeojson = () => {
+    const {
+      question: { location },
+    } = this.state;
+
+    const locationGeojson = borderGeojson.features.find(
+      (feature) => feature.location === location
+    );
+    const questionBorderData = {
+      type: "FeatureCollection",
+      features: [locationGeojson],
+    };
+
+    this.setState({ borderData: questionBorderData });
   };
 
   /********* ROUND FUNCTIONS ********/
@@ -163,6 +193,9 @@ class GoogleMap extends Component {
     }
     if (prevState.gameOver !== this.state.gameOver) {
       this.saveScore();
+    }
+    if (prevState.question !== this.state.question) {
+      this.getQuestionGeojson();
     }
   }
 
