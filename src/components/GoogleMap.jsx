@@ -1,13 +1,12 @@
 import React, { Component, createRef } from "react";
 import API_KEY from "../API-KEYS/maps-api.js";
-import { Fab, Icon } from "@material-ui/core";
+import { Fab, Icon, Paper } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../resources/theme.jsx";
 import Timer from "./Timer";
 import mapStyle from "../Data/mapStyling";
 import Question from "./Question";
 import Score from "./Score.jsx";
-
 import { database } from "../firebaseInitialise";
 import calculateScore from "../utils/calculateScore";
 import generateCountryQuestions from "../utils/generateCountryQuestions";
@@ -188,10 +187,15 @@ class GoogleMap extends Component {
         ) : null}
         <Score totalScore={totalScore} />
 
-        <div
+        <Paper
+          elevation={3}
+          square={true}
           id="google-map"
           ref={this.googleMapRef}
-          style={{ width: window.innerWidth, height: window.innerHeight }}
+          style={{
+            width: 0.95 * window.innerWidth,
+            height: 0.95 * window.innerHeight,
+          }}
         />
         <div id="submit-wrapper">
           <ThemeProvider theme={theme}>
