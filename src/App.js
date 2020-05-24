@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "./App.css";
-import Title from "./components/Title";
 import GoogleMap from "./components/GoogleMap";
 import Login from "./components/Login";
 import Home from "./components/Home";
@@ -27,7 +26,6 @@ class App extends Component {
   }
 
   render() {
-    // <GoogleMap />
     return (
       <Router>
         {this.state.currentUserId ? <Home path="/" /> : <Login path="/" />}
