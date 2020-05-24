@@ -15,7 +15,7 @@ import customLine from "../resources/customLine";
 
 class GoogleMap extends Component {
   state = {
-    allMarkers: [],
+    allOverlay: [],
     marker: null,
     // markerAdded: false,
     question: null,
@@ -48,15 +48,17 @@ class GoogleMap extends Component {
       draggable: true,
       icon: customMarker,
     });
-    const { allMarkers } = this.state;
-    this.setState({ allMarkers: [newMarker, ...allMarkers] });
+
+    this.setState(({ allOverlay }) => {
+      return { allOverlay: [newMarker, ...allOverlay] };
+    });
     return newMarker;
   };
 
   setMapOnAll = (map) => {
-    const { allMarkers } = this.state;
-    for (var i = 0; i < allMarkers.length; i++) {
-      allMarkers[i].setMap(map);
+    const { allOverlay } = this.state;
+    for (var i = 0; i < allOverlay.length; i++) {
+      allOverlay[i].setMap(map);
     }
   };
 
@@ -103,6 +105,9 @@ class GoogleMap extends Component {
       ...customLine,
     });
     linkLine.setMap(this.googleMap);
+    this.setState(({ allOverlay }) => {
+      return { allOverlay: [linkLine, ...allOverlay] };
+    });
   };
 
   /******** QUESTION FUNCTIONS ********/
