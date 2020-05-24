@@ -11,6 +11,7 @@ import { database } from "../firebaseInitialise";
 import calculateScore from "../utils/calculateScore";
 import generateCountryQuestions from "../utils/generateCountryQuestions";
 import customMarker from "../resources/customMarker";
+import customLine from "../resources/customLine";
 
 class GoogleMap extends Component {
   state = {
@@ -54,7 +55,6 @@ class GoogleMap extends Component {
 
   setMapOnAll = (map) => {
     const { allMarkers } = this.state;
-    console.log("setMap Func", this.googleMap);
     for (var i = 0; i < allMarkers.length; i++) {
       allMarkers[i].setMap(map);
     }
@@ -67,6 +67,9 @@ class GoogleMap extends Component {
   //called when submit button is clicked
   submitMarker = (event) => {
     event.preventDefault();
+
+    this.drawLinkLine();
+
     const { marker, question } = this.state;
     if (marker !== null) {
       const markerPosition = {
@@ -85,6 +88,21 @@ class GoogleMap extends Component {
       // need to look at adding material UI styling to the alert?
       window.alert("You need to place a marker before submitting!");
     }
+  };
+
+  drawLinkLine = () => {
+    const { marker, question } = this.state;
+    const markerPosition = {
+      lat: marker.position.lat(),
+      lng: marker.position.lng(),
+    };
+    const linkPath = [markerPosition, question.position];
+
+    const linkLine = new window.google.maps.Polyline({
+      path: linkPath,
+      ...customLine,
+    });
+    linkLine.setMap(this.googleMap);
   };
 
   /******** QUESTION FUNCTIONS ********/
