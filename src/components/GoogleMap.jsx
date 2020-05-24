@@ -10,6 +10,7 @@ import CancelButton from "./CancelButton";
 import { database } from "../firebaseInitialise";
 import calculateScore from "../utils/calculateScore";
 import generateCountryQuestions from "../utils/generateCountryQuestions";
+import customMarker from "../resources/customMarker";
 
 class GoogleMap extends Component {
   state = {
@@ -40,12 +41,11 @@ class GoogleMap extends Component {
   };
 
   placeMarker = (latLng) => {
-    console.log("PLACE MARKER FIRING!");
     let newMarker = new window.google.maps.Marker({
       position: latLng,
       map: this.googleMap,
-      animation: window.google.maps.Animation.DROP,
       draggable: true,
+      icon: customMarker,
     });
     const { allMarkers } = this.state;
     this.setState({ allMarkers: [newMarker, ...allMarkers] });
