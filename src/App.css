@@ -55,6 +55,15 @@
   text-align: left;
   z-index: 1;
 }
+#totaliser-wrapper {
+  position: absolute;
+  width: 15rem;
+  padding: 1vh 2vw 1vh 1vw;
+  top: 25vh;
+  right: -1vh;
+  text-align: left;
+  z-index: 1;
+}
 
 #score-wrapper {
   position: absolute;

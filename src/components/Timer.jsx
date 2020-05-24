@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import NextButton from "./NextButton";
+import Totaliser from "./Totaliser";
 import { Typography, Paper } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../resources/theme.jsx";
@@ -80,14 +81,10 @@ class Timer extends Component {
           </Typography>
         </Paper>
         {minutes === 0 && seconds === 0 && (
-          <NextButton startNewRound={this.startNewRound} />
-          // <Button
-          //   variant="contained"
-          //   color="primary"
-          //   onClick={this.startNewRound}
-          // >
-          //   Next
-          // </Button>
+          <>
+            <NextButton startNewRound={this.startNewRound} />
+            <Totaliser />
+          </>
         )}
       </ThemeProvider>
     );
