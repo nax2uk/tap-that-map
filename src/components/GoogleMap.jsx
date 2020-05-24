@@ -62,7 +62,7 @@ class GoogleMap extends Component {
     }
   };
 
-  removeMarker = () => {
+  removeOverlays = () => {
     this.setMapOnAll(null);
   };
 
@@ -131,7 +131,7 @@ class GoogleMap extends Component {
   updateRound = () => {
     if (this.state.round < 9) {
       this.setState((currState) => {
-        this.removeMarker();
+        this.removeOverlays();
         return {
           round: currState.round++,
           scoreSubmitted: false,
