@@ -7,11 +7,11 @@
 
 #timer-wrapper {
   position: absolute;
-  width: 8rem;
+  width: 10rem;
   padding: 1vh 2vw 1vh 1vw;
   top: 2vh;
   right: -1vh;
-  text-align: center;
+  text-align: left;
   z-index: 1;
 }
 
@@ -32,9 +32,11 @@
 
 #score-wrapper {
   position: absolute;
-  padding: 1vh 1vw 1vh 2vw;
+  width: 10rem;
+  padding: 1vh 2vw 1vh 1vw;
   top: 15vh;
-  left: -1vh;
+  right: -1vh;
+  text-align: left;
   z-index: 1;
 }
 
