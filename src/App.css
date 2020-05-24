@@ -35,6 +35,17 @@
   justify-content: center;
   align-items: stretch;
 }
+#cancel-wrapper {
+  position: absolute;
+  width: 4rem;
+  height: 4rem;
+  left: 2.5vw;
+  bottom: 2.5vh;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
 
 #score-wrapper {
   position: absolute;

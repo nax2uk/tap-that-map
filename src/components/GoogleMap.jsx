@@ -6,6 +6,7 @@ import mapStyle from "../Data/mapStyling";
 import Question from "./Question";
 import Score from "./Score.jsx";
 import SubmitButton from "./SubmitButton";
+import CancelButton from "./CancelButton";
 import { database } from "../firebaseInitialise";
 import calculateScore from "../utils/calculateScore";
 import generateCountryQuestions from "../utils/generateCountryQuestions";
@@ -200,6 +201,7 @@ class GoogleMap extends Component {
           submitMarker={this.submitMarker}
           scoreSubmitted={scoreSubmitted}
         />
+        <CancelButton />
         <Timer
           updateRound={this.updateRound}
           round={round}
