@@ -46,6 +46,15 @@
   justify-content: center;
   align-items: stretch;
 }
+#next-wrapper {
+  position: absolute;
+  width: 10rem;
+  padding: 1vh 2vw 1vh 1vw;
+  bottom: 2vh;
+  right: -1vh;
+  text-align: left;
+  z-index: 1;
+}
 
 #score-wrapper {
   position: absolute;

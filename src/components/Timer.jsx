@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Typography, Paper, Button } from "@material-ui/core";
+import NextButton from "./NextButton";
+import { Typography, Paper } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../resources/theme.jsx";
 
@@ -70,24 +71,25 @@ class Timer extends Component {
   render() {
     const { minutes, seconds } = this.state;
     return (
-      <Paper id="timer-wrapper" elevation={3}>
-        <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
+        <Paper id="timer-wrapper" elevation={3}>
           <Typography variant="h2">
             <span id="time">
               {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
             </span>
-            {minutes === 0 && seconds === 0 && (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this.startNewRound}
-              >
-                Next
-              </Button>
-            )}
           </Typography>
-        </ThemeProvider>
-      </Paper>
+        </Paper>
+        {minutes === 0 && seconds === 0 && (
+          <NextButton startNewRound={this.startNewRound} />
+          // <Button
+          //   variant="contained"
+          //   color="primary"
+          //   onClick={this.startNewRound}
+          // >
+          //   Next
+          // </Button>
+        )}
+      </ThemeProvider>
     );
   }
 }
