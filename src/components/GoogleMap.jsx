@@ -1,12 +1,11 @@
 import React, { Component, createRef } from "react";
 import API_KEY from "../API-KEYS/maps-api.js";
-import { Fab, Icon, Paper } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../resources/theme.jsx";
+import { Paper } from "@material-ui/core";
 import Timer from "./Timer";
 import mapStyle from "../Data/mapStyling";
 import Question from "./Question";
 import Score from "./Score.jsx";
+import SubmitButton from "./SubmitButton";
 import { database } from "../firebaseInitialise";
 import calculateScore from "../utils/calculateScore";
 import generateCountryQuestions from "../utils/generateCountryQuestions";
@@ -197,18 +196,10 @@ class GoogleMap extends Component {
             height: 0.95 * window.innerHeight,
           }}
         />
-        <div id="submit-wrapper">
-          <ThemeProvider theme={theme}>
-            <Fab
-              size="large"
-              onClick={this.submitMarker}
-              disabled={scoreSubmitted}
-              color="secondary"
-            >
-              <Icon fontSize="large">check_circle</Icon>
-            </Fab>
-          </ThemeProvider>
-        </div>
+        <SubmitButton
+          submitMarker={this.submitMarker}
+          scoreSubmitted={scoreSubmitted}
+        />
         <Timer
           updateRound={this.updateRound}
           round={round}
