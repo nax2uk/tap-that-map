@@ -146,7 +146,17 @@ class Game extends Component {
             <StartButton startGame={this.startGame} />
           )}
           {gameIsRunning && (
-            <Question location={questionArr[round].location} round={round} />
+            <>
+              <Question location={questionArr[round].location} round={round} />
+              <Timer
+                updateRound={this.updateRound}
+                startRound={this.startRound}
+                endRound={this.endRound}
+                userIsReady={userIsReady}
+                roundIsRunning={roundIsRunning}
+              />
+              <Score totalScore={totalScore} />
+            </>
           )}
           <GoogleMap
             currentUserId={currentUserId}
@@ -157,16 +167,6 @@ class Game extends Component {
             roundIsRunning={roundIsRunning}
             endRound={this.endRound}
           />
-          <Timer
-            updateRound={this.updateRound}
-            startRound={this.startRound}
-            endRound={this.endRound}
-            roundScore={roundScore}
-            roundDistance={roundDistance}
-            userIsReady={userIsReady}
-            roundIsRunning={roundIsRunning}
-          />
-          <Score totalScore={totalScore} />
           {gameIsRunning && !roundIsRunning && (
             <>
               <NextButton updateRound={this.updateRound} round={round} />

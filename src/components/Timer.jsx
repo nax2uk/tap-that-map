@@ -63,6 +63,7 @@ class Timer extends Component {
       !roundIsRunning && roundIsRunning !== prevProps.roundIsRunning;
     const roundHasStarted =
       roundIsRunning && roundIsRunning !== prevProps.roundIsRunning;
+
     if (roundHasStarted) {
       this.resetTimer();
       this.startTimer();
