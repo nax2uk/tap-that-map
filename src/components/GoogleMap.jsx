@@ -145,13 +145,11 @@ class GoogleMap extends Component {
 
     resultBounds.extend(markerPosition);
     resultBounds.extend(question.position);
-    console.dir(resultBounds);
     this.setState({ roundBounds: resultBounds });
   };
 
   panToBounds = () => {
     const { roundBounds } = this.state;
-    console.log("attempting to fit bounds");
     this.googleMap.fitBounds(roundBounds);
     this.googleMap.panToBounds(roundBounds);
   };
