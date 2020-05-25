@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import NextButton from "./NextButton";
 import Totaliser from "./Totaliser";
 import { Typography, Paper } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
@@ -8,30 +7,37 @@ import theme from "../resources/theme.jsx";
 class Timer extends Component {
   state = {
     seconds: 10,
+    timer: null,
   };
 
   startTimer = () => {
-    this.myInterval = setInterval(() => {
-      const { seconds } = this.state;
-      if (seconds > 1) {
-        this.setState(({ seconds }) => ({
-          seconds: seconds - 1,
-        }));
-        window.localStorage.setItem("seconds", `${seconds - 1}`);
-      } else {
-        this.setState({ seconds: 0 });
-        clearInterval(this.myInterval);
-        window.localStorage.clear();
-      }
-    }, 1000);
+    const timer = setInterval(this.timerFunction, 1000);
+    this.setState({ timer });
   };
 
-  startNewRound = (event) => {
-    const { startRound, updateRound } = this.props;
-    updateRound();
-    startRound();
+  stopTimer = () => {
+    const { timer } = this.state;
+    clearInterval(timer);
+  };
+
+  resetTimer = () => {
     this.setState({ seconds: 10 });
-    this.startTimer();
+  };
+
+  timerFunction = () => {
+    const { endRound } = this.props;
+    const { seconds, timer } = this.state;
+    if (seconds > 1) {
+      this.setState(({ seconds }) => ({
+        seconds: seconds - 1,
+      }));
+      window.localStorage.setItem("seconds", `${seconds - 1}`);
+    } else {
+      this.setState({ seconds: 0 });
+      clearInterval(timer);
+      endRound();
+      window.localStorage.clear();
+    }
   };
 
   formatAndDisplayTime = () => {
@@ -53,9 +59,17 @@ class Timer extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { userIsReady } = this.props;
-    if (userIsReady && prevProps.userIsReady !== userIsReady) {
+    const { roundIsRunning } = this.props;
+    const roundHasStopped =
+      !roundIsRunning && roundIsRunning !== prevProps.roundIsRunning;
+    const roundHasStarted =
+      roundIsRunning && roundIsRunning !== prevProps.roundIsRunning;
+    if (roundHasStarted) {
+      this.resetTimer();
       this.startTimer();
+    }
+    if (roundHasStopped) {
+      this.stopTimer();
     }
   }
 
@@ -71,7 +85,6 @@ class Timer extends Component {
         </Paper>
         {seconds === 0 && (
           <>
-            <NextButton startNewRound={this.startNewRound} />
             <Totaliser roundScore={roundScore} roundDistance={roundDistance} />
           </>
         )}

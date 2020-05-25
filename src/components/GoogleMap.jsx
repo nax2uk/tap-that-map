@@ -77,7 +77,10 @@ class GoogleMap extends Component {
 
   removeLinkLine = () => {
     const { linkLine } = this.state;
-    linkLine.setMap(null);
+    if (linkLine !== null) {
+      linkLine.setMap(null);
+    }
+
     this.setState({ linkLine: null });
   };
 

@@ -8,10 +8,10 @@ import Timer from "./Timer";
 import * as calculate from "../utils/calculateFunctions";
 import Score from "./Score";
 import StartButton from "./StartButton";
+import NextButton from "./NextButton";
 
 class Game extends Component {
   state = {
-    gameIsReady: false,
     userIsReady: false,
     gameIsRunning: false,
     roundIsRunning: false,
@@ -49,21 +49,30 @@ class Game extends Component {
 
   endGame = () => {};
 
-  startRound = () => {
-    this.setState({ roundIsRunning: true });
-  };
-
   endRound = () => {
-    this.setState({ roundIsRunning: false });
-    this.calculateScoreAndDistance();
+    const { playerMarker } = this.state;
+    if (playerMarker !== null) {
+      this.calculateScoreAndDistance();
+    }
+    this.setState((currState) => {
+      return {
+        totalScore: currState.totalScore + currState.roundScore,
+        roundIsRunning: false,
+      };
+    });
   };
 
   updateRound = () => {
     this.setState((currState) => {
       if (currState.round === 9) {
-        return { round: currState.round++, gameIsFinished: true };
+        return {
+          round: currState.round++,
+          gameIsRunning: false,
+          gameIsFinished: true,
+          roundIsRunning: false,
+        };
       } else {
-        return { round: currState.round++ };
+        return { round: currState.round++, roundIsRunning: true };
       }
     });
   };
@@ -77,14 +86,13 @@ class Game extends Component {
       lng: playerMarker.position.lng(),
     };
     const score = calculate.score(markerPosition, question.position);
-    const distance = calculate.distance(markerPosition, question.position);
+    const distance = Math.round(
+      calculate.distance(markerPosition, question.position)
+    );
 
-    this.setState((currState) => {
-      return {
-        roundScore: score,
-        roundDistance: distance,
-        totalScore: currState.totalScore + score,
-      };
+    this.setState({
+      roundScore: score,
+      roundDistance: distance,
     });
   };
 
@@ -122,7 +130,6 @@ class Game extends Component {
       roundScore,
       roundDistance,
       totalScore,
-      timerInSeconds,
     } = this.state;
     if (gameIsReady) {
       return (
@@ -143,12 +150,16 @@ class Game extends Component {
           <Timer
             updateRound={this.updateRound}
             startRound={this.startRound}
-            timerInSeconds={timerInSeconds}
+            endRound={this.endRound}
             roundScore={roundScore}
             roundDistance={roundDistance}
             userIsReady={userIsReady}
+            roundIsRunning={roundIsRunning}
           />
           <Score totalScore={totalScore} />
+          {gameIsRunning && !roundIsRunning && (
+            <NextButton updateRound={this.updateRound} />
+          )}
         </>
       );
     } else return <h1>loading</h1>;
