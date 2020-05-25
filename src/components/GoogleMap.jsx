@@ -138,6 +138,7 @@ class GoogleMap extends Component {
       this.setState({
         question: countryObj,
       });
+      this.getQuestionGeojson();
     });
   };
 
@@ -188,32 +189,22 @@ class GoogleMap extends Component {
 
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProp, prevState) {
-    if (prevState.round !== this.state.round) {
+    const countryArrChanges = prevState.countryArr !== this.state.countryArr;
+    const roundChanges = prevState.round !== this.state.round;
+    const gameEnds = prevState.gameOver !== this.state.gameOver;
+
+    if (countryArrChanges || roundChanges) {
       this.getQuestion();
     }
-    if (prevState.gameOver !== this.state.gameOver) {
+    if (gameEnds) {
       this.saveScore();
-    }
-    if (prevState.question !== this.state.question) {
-      this.getQuestionGeojson();
     }
   }
 
   componentDidMount() {
     const googleMapScript = document.createElement("script");
-
     googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places`;
     window.document.body.appendChild(googleMapScript);
-
-    //this.generateQuestion(questionData.questions);
-    this.setState(
-      {
-        countryArr: generateCountryQuestions(10),
-      },
-      () => {
-        this.getQuestion();
-      }
-    );
 
     googleMapScript.addEventListener("load", () => {
       this.googleMap = this.createGoogleMap();
@@ -221,9 +212,12 @@ class GoogleMap extends Component {
         if (this.state.marker === null)
           this.setState({
             marker: this.placeMarker(e.latLng),
-            // markerAdded: true,
           });
       });
+    });
+
+    this.setState({
+      countryArr: generateCountryQuestions(10),
     });
   }
 
