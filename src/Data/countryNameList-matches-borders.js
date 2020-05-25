@@ -16,7 +16,6 @@ const countryNameList = [
   "Anguilla",
   "Antigua and Barb.",
   "Bahamas",
-  "Bajo Nuevo Bank (Petrel Is.)",
   "St-Barthélemy",
   "Belize",
   "Bermuda",
