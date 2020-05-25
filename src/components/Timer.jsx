@@ -30,12 +30,10 @@ class Timer extends Component {
       this.setState(({ seconds }) => ({
         seconds: seconds - 1,
       }));
-      window.localStorage.setItem("seconds", `${seconds - 1}`);
     } else {
       this.setState({ seconds: 0 });
       clearInterval(timer);
       endRound();
-      window.localStorage.clear();
     }
   };
 
@@ -49,12 +47,8 @@ class Timer extends Component {
   };
 
   componentDidMount() {
-    if (window.localStorage.getItem("seconds")) {
-      let previousSeconds = parseInt(
-        window.localStorage.getItem("seconds") || 0
-      );
-      this.setState({ seconds: previousSeconds });
-    }
+    this.resetTimer();
+    this.startTimer();
   }
 
   componentDidUpdate(prevProps, prevState) {
