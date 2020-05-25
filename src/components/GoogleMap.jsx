@@ -154,6 +154,11 @@ class GoogleMap extends Component {
     this.googleMap.panToBounds(roundBounds);
   };
 
+  resetMapView = () => {
+    this.googleMap.setCenter({ lat: 0, lng: 0 });
+    this.googleMap.setZoom(2);
+  };
+
   /******** QUESTION FUNCTIONS ********/
   // called in componentDidMount and componentDidUpdate
   getQuestion = () => {
@@ -223,8 +228,12 @@ class GoogleMap extends Component {
     const gameEnds = prevState.gameOver !== this.state.gameOver;
     const boundsHaveChanged = prevState.roundBounds !== this.state.roundBounds;
 
-    if (countryArrChanges || roundChanges) {
+    if (countryArrChanges) {
       this.getQuestion();
+    }
+    if (roundChanges) {
+      this.getQuestion();
+      this.resetMapView();
     }
     if (gameEnds) {
       this.saveScore();
