@@ -33,6 +33,15 @@ class Timer extends Component {
     this.startTimer();
   };
 
+  formatAndDisplayTime = () => {
+    const { seconds } = this.state;
+
+    const minsToDisplay = Math.floor(seconds / 60).toString();
+    const secsToDisplay = seconds.toString().padStart(2, 0);
+
+    return `${minsToDisplay}:${secsToDisplay}`;
+  };
+
   componentDidMount() {
     if (window.localStorage.getItem("seconds")) {
       let previousSeconds = parseInt(
@@ -50,7 +59,7 @@ class Timer extends Component {
       <ThemeProvider theme={theme}>
         <Paper id="timer-wrapper" elevation={3}>
           <Typography variant="h2">
-            <span id="time">{seconds}</span>
+            <span id="time">{this.formatAndDisplayTime()}</span>
           </Typography>
         </Paper>
         {seconds === 0 && (
