@@ -24,6 +24,7 @@ class GoogleMap extends Component {
     countryArr: null,
     roundScore: 0,
     roundDistance: 0,
+    roundBounds: null,
     totalScore: 0,
     round: 0,
     gameOver: false,
@@ -76,7 +77,7 @@ class GoogleMap extends Component {
 
     this.plotLinkLine();
     this.plotCountryBorder();
-    // this.createBounds();
+    this.createBounds();
 
     const { marker, question } = this.state;
     if (marker !== null) {
@@ -135,12 +136,16 @@ class GoogleMap extends Component {
   };
 
   createBounds = () => {
-    const { allOverlay } = this.state;
-
+    const { marker, question } = this.state;
+    const markerPosition = {
+      lat: marker.position.lat(),
+      lng: marker.position.lng(),
+    };
     let resultBounds = new window.google.maps.LatLngBounds();
-    allOverlay.forEach((overlay) => {
-      resultBounds.extend(overlay);
-    });
+
+    resultBounds.extend(markerPosition);
+    resultBounds.extend(question.position);
+    this.setState({ roundBounds: resultBounds });
   };
 
   /******** QUESTION FUNCTIONS ********/
