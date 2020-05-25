@@ -13,6 +13,7 @@ import generateCountryQuestions from "../utils/generateCountryQuestions";
 import customMarker from "../resources/customMarker";
 import customLine from "../resources/customLine";
 import * as borderGeojson from "../resources/hq-borders.json";
+import ResultsPage from "./ResultsPage";
 
 class GoogleMap extends Component {
   state = {
@@ -272,7 +273,7 @@ class GoogleMap extends Component {
       roundScore,
       roundDistance,
     } = this.state;
-    if (gameOver) return <h1>END OF GAME/Results... </h1>;
+    if (gameOver) return <ResultsPage />;
     return (
       <>
         {question !== null ? (
