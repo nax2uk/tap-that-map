@@ -18,7 +18,6 @@ class GoogleMap extends Component {
   state = {
     allOverlay: [],
     marker: null,
-    // markerAdded: false,
     question: null,
     borderData: null,
     countryArr: null,
