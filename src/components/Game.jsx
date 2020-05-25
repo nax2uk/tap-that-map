@@ -10,6 +10,7 @@ import Score from "./Score";
 import StartButton from "./StartButton";
 import NextButton from "./NextButton";
 import Totaliser from "./Totaliser";
+import ResultsPage from "./ResultsPage";
 
 class Game extends Component {
   state = {
@@ -23,6 +24,7 @@ class Game extends Component {
     roundScore: 0,
     roundDistance: 0,
     totalScore: 0,
+    scoreArr: [],
   };
 
   getQuestionGeojson = ({ location }) => {
@@ -65,9 +67,9 @@ class Game extends Component {
 
   updateRound = () => {
     this.setState((currState) => {
-      if (currState.round === 9) {
+      if (currState.round === 10) {
         return {
-          round: currState.round++,
+          gameIsReady: false,
           gameIsRunning: false,
           gameIsFinished: true,
           roundIsRunning: false,
@@ -91,9 +93,12 @@ class Game extends Component {
       calculate.distance(markerPosition, question.position)
     );
 
-    this.setState({
-      roundScore: score,
-      roundDistance: distance,
+    this.setState((currState) => {
+      return {
+        roundScore: score,
+        roundDistance: distance,
+        scoreArr: [...currState.scoreArr, score],
+      };
     });
   };
 
@@ -123,6 +128,7 @@ class Game extends Component {
     const { currentUserId } = this.props;
     const {
       gameIsReady,
+      gameIsFinished,
       userIsReady,
       gameIsRunning,
       roundIsRunning,
@@ -131,14 +137,17 @@ class Game extends Component {
       roundScore,
       roundDistance,
       totalScore,
+      scoreArr,
     } = this.state;
-    if (gameIsReady) {
+    if (gameIsReady && !gameIsFinished) {
       return (
         <>
           {!gameIsRunning && !userIsReady && (
             <StartButton startGame={this.startGame} />
           )}
-          <Question location={questionArr[round].location} round={round} />
+          {gameIsRunning && (
+            <Question location={questionArr[round].location} round={round} />
+          )}
           <GoogleMap
             currentUserId={currentUserId}
             round={round}
@@ -169,7 +178,11 @@ class Game extends Component {
           )}
         </>
       );
-    } else return <h1>loading</h1>;
+    } else if (gameIsFinished) {
+      return <ResultsPage scoreArr={scoreArr} />;
+    } else {
+      return <h1>loading</h1>;
+    }
   }
 }
 

@@ -1,7 +1,6 @@
 import React from "react";
 
-const ResultsPage = (props) => {
-  const { scoreArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10] } = props;
+const ResultsPage = ({ scoreArr }) => {
   return (
     <div>
       <h1>{"Thanks for playing TAP THAT MAP 🌎"}</h1>;
@@ -34,7 +33,7 @@ const ResultsPage = (props) => {
         <li>Round 9:{scoreArr[8]}</li>
       </ul>
       <ul>
-        <li>Round 10:TBD</li>
+        <li>Round 10:{scoreArr[9]}</li>
       </ul>
     </div>
   );

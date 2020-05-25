@@ -137,7 +137,7 @@ class GoogleMap extends Component {
     if (roundHasStopped) {
       // this.createBounds();
       this.plotLinkLine();
-      this.plotCountryBorder();
+      //this.plotCountryBorder();
       // this.panToBounds();
     }
     if (round !== prevProps.round) {
