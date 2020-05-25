@@ -143,6 +143,7 @@ class GoogleMap extends Component {
     if (round !== prevProps.round) {
       this.removeLinkLine();
       this.removeMarker();
+      this.resetMapView();
     }
   }
 
