@@ -48,7 +48,7 @@ class Home extends Component {
               </Typography>
             </Fade>
             <Box margin="normal" fullWidth className="two-button-wrapper">
-              <Link to="/googlemap">
+              <Link to="/game">
                 <Button variant="contained" color="primary">
                   Start Game
                 </Button>
