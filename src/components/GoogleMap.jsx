@@ -3,7 +3,6 @@ import API_KEY from "../API-KEYS/maps-api.js";
 import { Paper } from "@material-ui/core";
 import Timer from "./Timer";
 import mapStyle from "../Data/mapStyling";
-import Question from "./Question";
 import Score from "./Score.jsx";
 import SubmitButton from "./SubmitButton";
 import CancelButton from "./CancelButton";
@@ -161,6 +160,8 @@ class GoogleMap extends Component {
 
   /******** QUESTION FUNCTIONS ********/
   // called in componentDidMount and componentDidUpdate
+
+  // these now dealt with in Game.jsx
   getQuestion = () => {
     const { countryArr, round } = this.state;
     const location = countryArr[round];
@@ -258,6 +259,7 @@ class GoogleMap extends Component {
       });
     });
 
+    // this is now covered in Game.jsx
     this.setState({
       countryArr: generateCountryQuestions(10),
     });
@@ -266,8 +268,6 @@ class GoogleMap extends Component {
   render() {
     const {
       totalScore,
-      round,
-      question,
       gameOver,
       scoreSubmitted,
       roundScore,
@@ -276,9 +276,6 @@ class GoogleMap extends Component {
     if (gameOver) return <ResultsPage />;
     return (
       <>
-        {question !== null ? (
-          <Question location={question.location} round={round} />
-        ) : null}
         <Score totalScore={totalScore} />
 
         <Paper
