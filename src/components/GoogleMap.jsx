@@ -1,14 +1,11 @@
 import React, { Component, createRef } from "react";
 import API_KEY from "../API-KEYS/maps-api.js";
 import { Paper } from "@material-ui/core";
-import Timer from "./Timer";
 import mapStyle from "../Data/mapStyling";
-import Score from "./Score.jsx";
 import SubmitButton from "./SubmitButton";
 import CancelButton from "./CancelButton";
 import { database } from "../firebaseInitialise";
 import * as calculate from "../utils/calculateFunctions";
-import generateCountryQuestions from "../utils/generateCountryQuestions";
 import customMarker from "../resources/customMarker";
 import customLine from "../resources/customLine";
 import * as borderGeojson from "../resources/hq-borders.json";
@@ -73,13 +70,12 @@ class GoogleMap extends Component {
 
   submitMarker = (event) => {
     event.preventDefault();
-    const { updateRoundScore, updateRoundDistance } = this.props;
+    const { marker, question } = this.state;
 
     this.plotLinkLine();
     this.plotCountryBorder();
     this.createBounds();
 
-    const { marker, question } = this.state;
     if (marker !== null) {
       const markerPosition = {
         lat: marker.position.lat(),
@@ -89,9 +85,6 @@ class GoogleMap extends Component {
       const distance = Math.round(
         calculate.distance(markerPosition, question.position)
       );
-
-      updateRoundScore(score);
-      updateRoundDistance(distance);
 
       this.setState((currState) => {
         return {
@@ -227,17 +220,13 @@ class GoogleMap extends Component {
   };
 
   /******** REACT LIFE CYCLES ********/
-  componentDidUpdate(prevProp, prevState) {
-    const countryArrChanges = prevState.countryArr !== this.state.countryArr;
-    const roundChanges = prevState.round !== this.state.round;
+  componentDidUpdate(prevProps, prevState) {
+    const roundChanges = prevProps.round !== this.props.round;
     const gameEnds = prevState.gameOver !== this.state.gameOver;
     const boundsHaveChanged = prevState.roundBounds !== this.state.roundBounds;
+    const markerHasChanged = prevState.marker !== this.state.marker;
 
-    if (countryArrChanges) {
-      this.getQuestion();
-    }
     if (roundChanges) {
-      this.getQuestion();
       this.resetMapView();
     }
     if (gameEnds) {
@@ -245,6 +234,9 @@ class GoogleMap extends Component {
     }
     if (boundsHaveChanged) {
       this.panToBounds();
+    }
+    if (markerHasChanged) {
+      this.props.recordPlayerMarker(this.state.marker);
     }
   }
 
@@ -263,25 +255,14 @@ class GoogleMap extends Component {
       });
     });
 
-    // this is now covered in Game.jsx
-    this.setState({
-      countryArr: generateCountryQuestions(10),
-    });
+    this.setState({ question: this.props.question, round: this.props.round });
   }
 
   render() {
-    const {
-      totalScore,
-      gameOver,
-      scoreSubmitted,
-      roundScore,
-      roundDistance,
-    } = this.state;
+    const { gameOver, scoreSubmitted } = this.state;
     if (gameOver) return <ResultsPage />;
     return (
       <>
-        <Score totalScore={totalScore} />
-
         <Paper
           elevation={3}
           square={true}
@@ -297,11 +278,6 @@ class GoogleMap extends Component {
           scoreSubmitted={scoreSubmitted}
         />
         <CancelButton />
-        {/* <Timer
-          updateRound={this.updateRound}
-          roundScore={roundScore}
-          roundDistance={roundDistance}
-        /> */}
       </>
     );
   }

@@ -5,6 +5,8 @@ import * as borderGeojson from "../resources/hq-borders.json";
 import { database } from "../firebaseInitialise";
 import Question from "./Question";
 import Timer from "./Timer";
+import * as calculate from "../utils/calculateFunctions";
+import Score from "./Score";
 
 class Game extends Component {
   state = {
@@ -15,6 +17,7 @@ class Game extends Component {
     gameIsFinished: false,
     questionArr: null,
     countryArr: null,
+    playerMarker: null,
     round: 0,
     roundScore: 0,
     roundDistance: 0,
@@ -34,12 +37,8 @@ class Game extends Component {
     return questionBorderData;
   };
 
-  updateRoundScore = (roundScore) => {
-    this.setState({ roundScore });
-  };
-
-  updateRoundDistance = (roundDistance) => {
-    this.setState({ roundDistance });
+  recordPlayerMarker = (marker) => {
+    this.setState({ playerMarker: marker });
   };
 
   updateRound = () => {
@@ -51,6 +50,7 @@ class Game extends Component {
       }
     });
   };
+
   componentDidMount() {
     const countryArr = generateCountryQuestions(10);
 
@@ -69,20 +69,58 @@ class Game extends Component {
     this.setState({ countryArr, questionArr, gameIsReady: true });
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevState.playerMarker !== this.state.playerMarker &&
+      this.state.playerMarker !== null
+    ) {
+      const { playerMarker, questionArr, round } = this.state;
+      const question = questionArr[round];
+
+      const markerPosition = {
+        lat: playerMarker.position.lat(),
+        lng: playerMarker.position.lng(),
+      };
+
+      const score = calculate.score(markerPosition, question.position);
+      const distance = calculate.distance(markerPosition, question.position);
+
+      this.setState((currState) => {
+        return {
+          roundScore: score,
+          roundDistance: distance,
+          totalScore: currState.totalScore + score,
+        };
+      });
+    }
+  }
+
   render() {
     const { currentUserId } = this.props;
-    const { gameIsReady, questionArr, round, roundDistance } = this.state;
+    const {
+      gameIsReady,
+      questionArr,
+      round,
+      roundScore,
+      roundDistance,
+      totalScore,
+    } = this.state;
     if (gameIsReady) {
       return (
         <>
-          <Question
-            location={questionArr[round].location}
+          <Question location={questionArr[round].location} round={round} />
+          <GoogleMap
+            currentUserId={currentUserId}
             round={round}
-            updateRoundScore={this.updateRoundScore}
-            updateRoundDistance={this.updateRoundDistance}
+            question={questionArr[round]}
+            recordPlayerMarker={this.recordPlayerMarker}
           />
-          <GoogleMap currentUserId={currentUserId} />
-          <Timer updateRound={this.updateRound} roundDistance={roundDistance} />
+          <Timer
+            updateRound={this.updateRound}
+            roundScore={roundScore}
+            roundDistance={roundDistance}
+          />
+          <Score totalScore={totalScore} />
         </>
       );
     } else return <h1>loading</h1>;
