@@ -55,6 +55,7 @@ class Timer extends Component {
 
   render() {
     const { seconds } = this.state;
+    const { roundScore, roundDistance } = this.props;
     return (
       <ThemeProvider theme={theme}>
         <Paper id="timer-wrapper" elevation={3}>
@@ -65,7 +66,7 @@ class Timer extends Component {
         {seconds === 0 && (
           <>
             <NextButton startNewRound={this.startNewRound} />
-            <Totaliser />
+            <Totaliser roundScore={roundScore} roundDistance={roundDistance} />
           </>
         )}
       </ThemeProvider>

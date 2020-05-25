@@ -8,7 +8,7 @@ import Score from "./Score.jsx";
 import SubmitButton from "./SubmitButton";
 import CancelButton from "./CancelButton";
 import { database } from "../firebaseInitialise";
-import calculateScore from "../utils/calculateScore";
+import * as calculate from "../utils/calculateFunctions";
 import generateCountryQuestions from "../utils/generateCountryQuestions";
 import customMarker from "../resources/customMarker";
 import customLine from "../resources/customLine";
@@ -22,6 +22,8 @@ class GoogleMap extends Component {
     question: null,
     borderData: null,
     countryArr: null,
+    roundScore: 0,
+    roundDistance: 0,
     totalScore: 0,
     round: 0,
     gameOver: false,
@@ -80,11 +82,16 @@ class GoogleMap extends Component {
         lat: marker.position.lat(),
         lng: marker.position.lng(),
       };
-      const score = calculateScore(markerPosition, question.position);
+      const score = calculate.score(markerPosition, question.position);
+      const distance = Math.round(
+        calculate.distance(markerPosition, question.position)
+      );
 
       this.setState((currState) => {
         return {
           totalScore: currState.totalScore + score,
+          roundScore: score,
+          roundDistance: distance,
           scoreSubmitted: true,
         };
       });
@@ -228,6 +235,8 @@ class GoogleMap extends Component {
       question,
       gameOver,
       scoreSubmitted,
+      roundScore,
+      roundDistance,
     } = this.state;
     if (gameOver) return <h1>END OF GAME/Results... </h1>;
     return (
@@ -254,8 +263,8 @@ class GoogleMap extends Component {
         <CancelButton />
         <Timer
           updateRound={this.updateRound}
-          round={round}
-          setRound={this.setRound}
+          roundScore={roundScore}
+          roundDistance={roundDistance}
         />
       </>
     );
