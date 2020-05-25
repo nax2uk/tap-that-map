@@ -169,7 +169,7 @@ class Game extends Component {
           <Score totalScore={totalScore} />
           {gameIsRunning && !roundIsRunning && (
             <>
-              <NextButton updateRound={this.updateRound} />
+              <NextButton updateRound={this.updateRound} round={round} />
               <Totaliser
                 roundScore={roundScore}
                 roundDistance={roundDistance}
