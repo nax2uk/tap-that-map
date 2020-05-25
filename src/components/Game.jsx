@@ -179,7 +179,7 @@ class Game extends Component {
         </>
       );
     } else if (gameIsFinished) {
-      return <ResultsPage scoreArr={scoreArr} />;
+      return <ResultsPage scoreArr={scoreArr} totalScore={totalScore} />;
     } else {
       return <h1>loading</h1>;
     }

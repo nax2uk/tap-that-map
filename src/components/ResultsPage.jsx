@@ -1,6 +1,6 @@
 import React from "react";
 
-const ResultsPage = ({ scoreArr }) => {
+const ResultsPage = ({ scoreArr, totalScore }) => {
   return (
     <div>
       <h1>{"Thanks for playing TAP THAT MAP 🌎"}</h1>;
@@ -34,6 +34,9 @@ const ResultsPage = ({ scoreArr }) => {
       </ul>
       <ul>
         <li>Round 10:{scoreArr[9]}</li>
+      </ul>
+      <ul>
+        <li>Total: {totalScore}</li>
       </ul>
     </div>
   );
