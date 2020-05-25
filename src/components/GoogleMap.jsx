@@ -1,29 +1,20 @@
 import React, { Component, createRef } from "react";
-import API_KEY from "../API-KEYS/maps-api.js";
 import { Paper } from "@material-ui/core";
-import mapStyle from "../Data/mapStyling";
+import { database } from "../firebaseInitialise";
+import API_KEY from "../API-KEYS/maps-api.js";
 import SubmitButton from "./SubmitButton";
 import CancelButton from "./CancelButton";
-import { database } from "../firebaseInitialise";
-import * as calculate from "../utils/calculateFunctions";
+import ResultsPage from "./ResultsPage";
+import mapStyle from "../Data/mapStyling";
 import customMarker from "../resources/customMarker";
 import customLine from "../resources/customLine";
-import * as borderGeojson from "../resources/hq-borders.json";
-import ResultsPage from "./ResultsPage";
 
 class GoogleMap extends Component {
   state = {
     allOverlay: [],
     marker: null,
-    question: null,
-    borderData: null,
-    countryArr: null,
-    roundScore: 0,
-    roundDistance: 0,
+    linkLine: null,
     roundBounds: null,
-    totalScore: 0,
-    round: 0,
-    gameOver: false,
     scoreSubmitted: false,
   };
 
@@ -43,65 +34,31 @@ class GoogleMap extends Component {
   };
 
   placeMarker = (latLng) => {
-    let newMarker = new window.google.maps.Marker({
+    const { recordPlayerMarker } = this.props;
+    const newMarker = new window.google.maps.Marker({
       position: latLng,
       map: this.googleMap,
       draggable: true,
       icon: customMarker,
     });
-
-    this.setState(({ allOverlay }) => {
-      return { allOverlay: [newMarker, ...allOverlay] };
-    });
+    recordPlayerMarker(newMarker);
     return newMarker;
   };
 
-  setMapOnAll = (map) => {
-    const { allOverlay } = this.state;
-    allOverlay.forEach((overlay) => {
-      overlay.setMap(map);
-    });
+  removeMarker = () => {
+    const { marker } = this.state;
+    marker.setMap(null);
+    this.setState({ marker: null });
   };
 
-  removeOverlays = () => {
-    this.setMapOnAll(null);
-    this.setState({ allOverlay: [] });
-  };
-
-  submitMarker = (event) => {
-    event.preventDefault();
-    const { marker, question } = this.state;
-
-    this.plotLinkLine();
-    this.plotCountryBorder();
-    this.createBounds();
-
-    if (marker !== null) {
-      const markerPosition = {
-        lat: marker.position.lat(),
-        lng: marker.position.lng(),
-      };
-      const score = calculate.score(markerPosition, question.position);
-      const distance = Math.round(
-        calculate.distance(markerPosition, question.position)
-      );
-
-      this.setState((currState) => {
-        return {
-          totalScore: currState.totalScore + score,
-          roundScore: score,
-          roundDistance: distance,
-          scoreSubmitted: true,
-        };
-      });
-    } else {
-      // need to look at adding material UI styling to the alert?
-      window.alert("You need to place a marker before submitting!");
-    }
+  submitMarker = () => {
+    const { endRound } = this.props;
+    endRound();
   };
 
   plotLinkLine = () => {
-    const { marker, question } = this.state;
+    const { marker } = this.state;
+    const { question } = this.props;
     const markerPosition = {
       lat: marker.position.lat(),
       lng: marker.position.lng(),
@@ -115,14 +72,18 @@ class GoogleMap extends Component {
 
     linkLine.setMap(this.googleMap);
 
-    this.setState(({ allOverlay }) => {
-      return { allOverlay: [linkLine, ...allOverlay] };
-    });
+    this.setState({ linkLine });
+  };
+
+  removeLinkLine = () => {
+    const { linkLine } = this.state;
+    linkLine.setMap(null);
+    this.setState({ linkLine: null });
   };
 
   plotCountryBorder = () => {
-    const { borderData } = this.state;
-    this.googleMap.data.addGeoJson(borderData);
+    const { question } = this.props;
+    this.googleMap.data.addGeoJson(question.borderData);
     this.googleMap.data.setStyle({
       fillColor: "white",
       fillOpacity: 0.5,
@@ -132,15 +93,13 @@ class GoogleMap extends Component {
   };
 
   createBounds = () => {
-    const { marker, question } = this.state;
-    const markerPosition = {
-      lat: marker.position.lat(),
-      lng: marker.position.lng(),
-    };
+    const { question } = this.props;
+    const { marker } = this.state;
     let resultBounds = new window.google.maps.LatLngBounds();
 
-    resultBounds.extend(markerPosition);
     resultBounds.extend(question.position);
+    resultBounds.extend({ lat: marker.position.lat, lng: marker.position.lng });
+
     this.setState({ roundBounds: resultBounds });
   };
 
@@ -155,61 +114,6 @@ class GoogleMap extends Component {
     this.googleMap.setZoom(2);
   };
 
-  /******** QUESTION FUNCTIONS ********/
-  // called in componentDidMount and componentDidUpdate
-
-  // these now dealt with in Game.jsx
-  getQuestion = () => {
-    const { countryArr, round } = this.state;
-    const location = countryArr[round];
-
-    var country = database.ref(`countries/${location}`);
-    country.on("value", (data) => {
-      const countryData = data.val();
-      const countryObj = { location: location, position: countryData };
-      this.setState({
-        question: countryObj,
-      });
-      this.getQuestionGeojson();
-    });
-  };
-
-  getQuestionGeojson = () => {
-    const {
-      question: { location },
-    } = this.state;
-
-    const locationGeojson = borderGeojson.features.find(
-      (feature) => feature.location === location
-    );
-    const questionBorderData = {
-      type: "FeatureCollection",
-      features: [locationGeojson],
-    };
-
-    this.setState({ borderData: questionBorderData });
-  };
-
-  /********* ROUND FUNCTIONS ********/
-  updateRound = () => {
-    if (this.state.round < 9) {
-      this.setState((currState) => {
-        this.removeOverlays();
-        return {
-          round: currState.round++,
-          scoreSubmitted: false,
-          marker: null,
-        };
-      });
-    } else this.setState({ gameOver: true });
-  };
-
-  setRound = (roundsNum) => {
-    this.setState({
-      round: roundsNum,
-    });
-  };
-
   saveScore = () => {
     const scores = database.ref("scores");
     const data = {
@@ -221,22 +125,21 @@ class GoogleMap extends Component {
 
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProps, prevState) {
-    const roundChanges = prevProps.round !== this.props.round;
-    const gameEnds = prevState.gameOver !== this.state.gameOver;
-    const boundsHaveChanged = prevState.roundBounds !== this.state.roundBounds;
-    const markerHasChanged = prevState.marker !== this.state.marker;
-
-    if (roundChanges) {
-      this.resetMapView();
+    const { round, roundIsRunning } = this.props;
+    const { marker } = this.state;
+    const roundHasStopped =
+      !roundIsRunning &&
+      roundIsRunning !== prevProps.roundIsRunning &&
+      marker !== null;
+    if (roundHasStopped) {
+      // this.createBounds();
+      this.plotLinkLine();
+      this.plotCountryBorder();
+      // this.panToBounds();
     }
-    if (gameEnds) {
-      this.saveScore();
-    }
-    if (boundsHaveChanged) {
-      this.panToBounds();
-    }
-    if (markerHasChanged) {
-      this.props.recordPlayerMarker(this.state.marker);
+    if (round !== prevProps.round) {
+      this.removeLinkLine();
+      this.removeMarker();
     }
   }
 
@@ -254,12 +157,11 @@ class GoogleMap extends Component {
           });
       });
     });
-
-    this.setState({ question: this.props.question, round: this.props.round });
   }
 
   render() {
-    const { gameOver, scoreSubmitted } = this.state;
+    const { gameOver, scoreSubmitted, marker } = this.state;
+    const { roundIsRunning } = this.props;
     if (gameOver) return <ResultsPage />;
     return (
       <>
@@ -273,11 +175,15 @@ class GoogleMap extends Component {
             height: 0.95 * window.innerHeight,
           }}
         />
-        <SubmitButton
-          submitMarker={this.submitMarker}
-          scoreSubmitted={scoreSubmitted}
-        />
-        <CancelButton />
+        {marker !== null && roundIsRunning && (
+          <>
+            <SubmitButton
+              submitMarker={this.submitMarker}
+              scoreSubmitted={scoreSubmitted}
+            />
+            <CancelButton removeMarker={this.removeMarker} />
+          </>
+        )}
       </>
     );
   }

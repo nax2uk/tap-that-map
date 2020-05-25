@@ -7,6 +7,7 @@ import Question from "./Question";
 import Timer from "./Timer";
 import * as calculate from "../utils/calculateFunctions";
 import Score from "./Score";
+import StartButton from "./StartButton";
 
 class Game extends Component {
   state = {
@@ -16,14 +17,11 @@ class Game extends Component {
     roundIsRunning: false,
     gameIsFinished: false,
     questionArr: null,
-    countryArr: null,
     playerMarker: null,
     round: 0,
     roundScore: 0,
     roundDistance: 0,
     totalScore: 0,
-    scoreSubmitted: false,
-    scoreArray: [],
   };
 
   getQuestionGeojson = ({ location }) => {
@@ -41,6 +39,25 @@ class Game extends Component {
     this.setState({ playerMarker: marker });
   };
 
+  startGame = () => {
+    this.setState({
+      userIsReady: true,
+      gameIsRunning: true,
+      roundIsRunning: true,
+    });
+  };
+
+  endGame = () => {};
+
+  startRound = () => {
+    this.setState({ roundIsRunning: true });
+  };
+
+  endRound = () => {
+    this.setState({ roundIsRunning: false });
+    this.calculateScoreAndDistance();
+  };
+
   updateRound = () => {
     this.setState((currState) => {
       if (currState.round === 9) {
@@ -48,6 +65,26 @@ class Game extends Component {
       } else {
         return { round: currState.round++ };
       }
+    });
+  };
+
+  calculateScoreAndDistance = () => {
+    const { playerMarker, questionArr, round } = this.state;
+    const question = questionArr[round];
+
+    const markerPosition = {
+      lat: playerMarker.position.lat(),
+      lng: playerMarker.position.lng(),
+    };
+    const score = calculate.score(markerPosition, question.position);
+    const distance = calculate.distance(markerPosition, question.position);
+
+    this.setState((currState) => {
+      return {
+        roundScore: score,
+        roundDistance: distance,
+        totalScore: currState.totalScore + score,
+      };
     });
   };
 
@@ -60,65 +97,56 @@ class Game extends Component {
 
     questionArr.forEach((question) => {
       const request = database.ref(`countries/${question.location}`);
-      request.on("value", (response) => {
+      request.once("value", (response) => {
         question.position = response.val();
       });
       question.borderData = this.getQuestionGeojson(question);
     });
 
-    this.setState({ countryArr, questionArr, gameIsReady: true });
+    this.setState(() => {
+      return { countryArr, questionArr, gameIsReady: true };
+    });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      prevState.playerMarker !== this.state.playerMarker &&
-      this.state.playerMarker !== null
-    ) {
-      const { playerMarker, questionArr, round } = this.state;
-      const question = questionArr[round];
-
-      const markerPosition = {
-        lat: playerMarker.position.lat(),
-        lng: playerMarker.position.lng(),
-      };
-
-      const score = calculate.score(markerPosition, question.position);
-      const distance = calculate.distance(markerPosition, question.position);
-
-      this.setState((currState) => {
-        return {
-          roundScore: score,
-          roundDistance: distance,
-          totalScore: currState.totalScore + score,
-        };
-      });
-    }
-  }
+  componentDidUpdate(prevProps, prevState) {}
 
   render() {
     const { currentUserId } = this.props;
     const {
       gameIsReady,
+      userIsReady,
+      gameIsRunning,
+      roundIsRunning,
       questionArr,
       round,
       roundScore,
       roundDistance,
       totalScore,
+      timerInSeconds,
     } = this.state;
     if (gameIsReady) {
       return (
         <>
+          {!gameIsRunning && !userIsReady && (
+            <StartButton startGame={this.startGame} />
+          )}
           <Question location={questionArr[round].location} round={round} />
           <GoogleMap
             currentUserId={currentUserId}
             round={round}
             question={questionArr[round]}
             recordPlayerMarker={this.recordPlayerMarker}
+            gameIsRunning={gameIsRunning}
+            roundIsRunning={roundIsRunning}
+            endRound={this.endRound}
           />
           <Timer
             updateRound={this.updateRound}
+            startRound={this.startRound}
+            timerInSeconds={timerInSeconds}
             roundScore={roundScore}
             roundDistance={roundDistance}
+            userIsReady={userIsReady}
           />
           <Score totalScore={totalScore} />
         </>

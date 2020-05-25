@@ -27,8 +27,9 @@ class Timer extends Component {
   };
 
   startNewRound = (event) => {
-    const { updateRound } = this.props;
+    const { startRound, updateRound } = this.props;
     updateRound();
+    startRound();
     this.setState({ seconds: 10 });
     this.startTimer();
   };
@@ -47,10 +48,15 @@ class Timer extends Component {
       let previousSeconds = parseInt(
         window.localStorage.getItem("seconds") || 0
       );
-
       this.setState({ seconds: previousSeconds });
     }
-    this.startTimer();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const { userIsReady } = this.props;
+    if (userIsReady && prevProps.userIsReady !== userIsReady) {
+      this.startTimer();
+    }
   }
 
   render() {
