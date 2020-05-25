@@ -61,13 +61,14 @@ class GoogleMap extends Component {
 
   setMapOnAll = (map) => {
     const { allOverlay } = this.state;
-    for (var i = 0; i < allOverlay.length; i++) {
-      allOverlay[i].setMap(map);
-    }
+    allOverlay.forEach((overlay) => {
+      overlay.setMap(map);
+    });
   };
 
   removeOverlays = () => {
     this.setMapOnAll(null);
+    this.setState({ allOverlay: [] });
   };
 
   submitMarker = (event) => {
@@ -75,6 +76,7 @@ class GoogleMap extends Component {
 
     this.plotLinkLine();
     this.plotCountryBorder();
+    // this.createBounds();
 
     const { marker, question } = this.state;
     if (marker !== null) {
@@ -129,6 +131,15 @@ class GoogleMap extends Component {
       fillOpacity: 0.5,
       strokeColor: "black",
       strokeWeight: 0,
+    });
+  };
+
+  createBounds = () => {
+    const { allOverlay } = this.state;
+
+    let resultBounds = new window.google.maps.LatLngBounds();
+    allOverlay.forEach((overlay) => {
+      resultBounds.extend(overlay);
     });
   };
 
