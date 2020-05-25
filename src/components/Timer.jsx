@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Totaliser from "./Totaliser";
 import { Typography, Paper } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../resources/theme.jsx";
@@ -74,8 +73,6 @@ class Timer extends Component {
   }
 
   render() {
-    const { seconds } = this.state;
-    const { roundScore, roundDistance } = this.props;
     return (
       <ThemeProvider theme={theme}>
         <Paper id="timer-wrapper" elevation={3}>
@@ -83,11 +80,6 @@ class Timer extends Component {
             <span id="time">{this.formatAndDisplayTime()}</span>
           </Typography>
         </Paper>
-        {seconds === 0 && (
-          <>
-            <Totaliser roundScore={roundScore} roundDistance={roundDistance} />
-          </>
-        )}
       </ThemeProvider>
     );
   }

@@ -9,6 +9,7 @@ import * as calculate from "../utils/calculateFunctions";
 import Score from "./Score";
 import StartButton from "./StartButton";
 import NextButton from "./NextButton";
+import Totaliser from "./Totaliser";
 
 class Game extends Component {
   state = {
@@ -158,7 +159,13 @@ class Game extends Component {
           />
           <Score totalScore={totalScore} />
           {gameIsRunning && !roundIsRunning && (
-            <NextButton updateRound={this.updateRound} />
+            <>
+              <NextButton updateRound={this.updateRound} />
+              <Totaliser
+                roundScore={roundScore}
+                roundDistance={roundDistance}
+              />
+            </>
           )}
         </>
       );
