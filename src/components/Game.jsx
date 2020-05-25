@@ -27,15 +27,23 @@ class Game extends Component {
     scoreArr: [],
   };
 
-  getQuestionGeojson = ({ location }) => {
-    const locationGeojson = borderGeojson.features.find(
-      (feature) => feature.location === location
-    );
-    const questionBorderData = {
-      type: "FeatureCollection",
-      features: [locationGeojson],
-    };
-    return questionBorderData;
+  getQuestionGeojson = () => {
+    const { questionArr } = this.state;
+
+    const questionsWithGeojson = questionArr.map((question) => {
+      const amendedQuestion = { ...question };
+      const locationGeojson = borderGeojson.features.find(
+        (feature) => feature.location === question.location
+      );
+      const questionBorderData = {
+        type: "FeatureCollection",
+        features: [locationGeojson],
+      };
+      amendedQuestion.borderData = questionBorderData;
+      return amendedQuestion;
+    });
+
+    this.setState({ questionArr: questionsWithGeojson, gameIsReady: true });
   };
 
   recordPlayerMarker = (marker) => {
@@ -49,8 +57,6 @@ class Game extends Component {
       roundIsRunning: true,
     });
   };
-
-  endGame = () => {};
 
   endRound = () => {
     const { playerMarker } = this.state;
@@ -114,15 +120,22 @@ class Game extends Component {
       request.once("value", (response) => {
         question.position = response.val();
       });
-      question.borderData = this.getQuestionGeojson(question);
     });
 
-    this.setState(() => {
-      return { countryArr, questionArr, gameIsReady: true };
-    });
+    setTimeout(() => {
+      this.setState(() => {
+        return { countryArr, questionArr };
+      });
+    }, 5000);
   }
 
-  componentDidUpdate(prevProps, prevState) {}
+  componentDidUpdate(prevProps, prevState) {
+    const { questionArr, gameIsReady } = this.state;
+    const questionArrHasLoaded = questionArr !== prevState.questionArr;
+    if (questionArrHasLoaded && !gameIsReady) {
+      this.getQuestionGeojson();
+    }
+  }
 
   render() {
     const { currentUserId } = this.props;
