@@ -73,6 +73,7 @@ class GoogleMap extends Component {
 
   submitMarker = (event) => {
     event.preventDefault();
+    const { updateRoundScore, updateRoundDistance } = this.props;
 
     this.plotLinkLine();
     this.plotCountryBorder();
@@ -88,6 +89,9 @@ class GoogleMap extends Component {
       const distance = Math.round(
         calculate.distance(markerPosition, question.position)
       );
+
+      updateRoundScore(score);
+      updateRoundDistance(distance);
 
       this.setState((currState) => {
         return {
@@ -293,11 +297,11 @@ class GoogleMap extends Component {
           scoreSubmitted={scoreSubmitted}
         />
         <CancelButton />
-        <Timer
+        {/* <Timer
           updateRound={this.updateRound}
           roundScore={roundScore}
           roundDistance={roundDistance}
-        />
+        /> */}
       </>
     );
   }

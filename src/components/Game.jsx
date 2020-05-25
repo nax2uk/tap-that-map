@@ -34,6 +34,23 @@ class Game extends Component {
     return questionBorderData;
   };
 
+  updateRoundScore = (roundScore) => {
+    this.setState({ roundScore });
+  };
+
+  updateRoundDistance = (roundDistance) => {
+    this.setState({ roundDistance });
+  };
+
+  updateRound = () => {
+    this.setState((currState) => {
+      if (currState.round === 9) {
+        return { round: currState.round++, gameIsFinished: true };
+      } else {
+        return { round: currState.round++ };
+      }
+    });
+  };
   componentDidMount() {
     const countryArr = generateCountryQuestions(10);
 
@@ -54,12 +71,18 @@ class Game extends Component {
 
   render() {
     const { currentUserId } = this.props;
-    const { gameIsReady, questionArr, round } = this.state;
+    const { gameIsReady, questionArr, round, roundDistance } = this.state;
     if (gameIsReady) {
       return (
         <>
-          <Question location={questionArr[round].location} round={round} />
+          <Question
+            location={questionArr[round].location}
+            round={round}
+            updateRoundScore={this.updateRoundScore}
+            updateRoundDistance={this.updateRoundDistance}
+          />
           <GoogleMap currentUserId={currentUserId} />
+          <Timer updateRound={this.updateRound} roundDistance={roundDistance} />
         </>
       );
     } else return <h1>loading</h1>;
