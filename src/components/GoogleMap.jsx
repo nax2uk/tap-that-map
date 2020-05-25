@@ -145,7 +145,15 @@ class GoogleMap extends Component {
 
     resultBounds.extend(markerPosition);
     resultBounds.extend(question.position);
+    console.dir(resultBounds);
     this.setState({ roundBounds: resultBounds });
+  };
+
+  panToBounds = () => {
+    const { roundBounds } = this.state;
+    console.log("attempting to fit bounds");
+    this.googleMap.fitBounds(roundBounds);
+    this.googleMap.panToBounds(roundBounds);
   };
 
   /******** QUESTION FUNCTIONS ********/
@@ -215,12 +223,16 @@ class GoogleMap extends Component {
     const countryArrChanges = prevState.countryArr !== this.state.countryArr;
     const roundChanges = prevState.round !== this.state.round;
     const gameEnds = prevState.gameOver !== this.state.gameOver;
+    const boundsHaveChanged = prevState.roundBounds !== this.state.roundBounds;
 
     if (countryArrChanges || roundChanges) {
       this.getQuestion();
     }
     if (gameEnds) {
       this.saveScore();
+    }
+    if (boundsHaveChanged) {
+      this.panToBounds();
     }
   }
 
