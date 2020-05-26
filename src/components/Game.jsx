@@ -95,10 +95,11 @@ class Game extends Component {
       lat: playerMarker.position.lat(),
       lng: playerMarker.position.lng(),
     };
-    const score = calculate.score(markerPosition, question.position);
+
     const distance = Math.round(
       calculate.distance(markerPosition, question.position)
     );
+    const score = calculate.score(distance);
 
     this.setState((currState) => {
       return {

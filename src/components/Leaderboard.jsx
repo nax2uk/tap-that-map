@@ -34,6 +34,7 @@ class Leaderboard extends Component {
     const { leaderArray } = this.state;
     return (
       <div>
+        <h3>LeaderBoard</h3>
         {leaderArray
           ? leaderArray.map((result, index) => {
               return (

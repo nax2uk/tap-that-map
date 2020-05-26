@@ -20,16 +20,21 @@ export const distance = (mk1, mk2) => {
   return d;
 };
 
-export const score = (p1, p2) => {
-  const calculatedDistance = distance(
-    { lat: p1.lat, lng: p1.lng },
-    { lat: p2.lat, lng: p2.lng }
-  );
+export const score = (distance) => {
+  let score = 0;
+  // const calculatedDistance = distance(
+  //   { lat: p1.lat, lng: p1.lng },
+  //   { lat: p2.lat, lng: p2.lng }
+  // );
 
-  let circleOfEarth = 2 * Math.PI * 6371.071;
-  const percentage = Math.floor(
-    ((circleOfEarth - calculatedDistance) / circleOfEarth) * 100
-  );
-  const score = (percentage - 50) * 2;
+  // let circleOfEarth = 2 * Math.PI * 6371.071;
+  // const percentage = Math.floor(
+  //   ((circleOfEarth - calculatedDistance) / circleOfEarth) * 100
+  // );
+
+  // const score = (percentage - 50) * 2;
+  if (distance < 5000) {
+    score = Math.round(((5000 - distance) / 5000) * 100);
+  }
   return score;
 };

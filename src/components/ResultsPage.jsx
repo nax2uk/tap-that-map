@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "@reach/router";
+import Leaderboard from "./Leaderboard";
 
 const ResultsPage = ({ scoreArr, totalScore }) => {
   return (
@@ -22,6 +23,7 @@ const ResultsPage = ({ scoreArr, totalScore }) => {
       <button>
         <Link to="/">BACK HOME</Link>
       </button>
+      <Leaderboard />
     </div>
   );
 };
