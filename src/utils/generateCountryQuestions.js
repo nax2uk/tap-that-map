@@ -1,4 +1,4 @@
-import countryNameList from "../Data/countryNameList-matches-borders";
+import countryNameList from "../Data/countryNameList";
 
 const generateCountryQuestions = (num) => {
   const uniqueIndices = new Set();

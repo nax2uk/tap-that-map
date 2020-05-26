@@ -47,7 +47,9 @@ class GoogleMap extends Component {
 
   removeMarker = () => {
     const { marker } = this.state;
-    marker.setMap(null);
+    if (marker !== null) {
+      marker.setMap(null);
+    }
     this.setState({ marker: null });
   };
 
@@ -59,20 +61,22 @@ class GoogleMap extends Component {
   plotLinkLine = () => {
     const { marker } = this.state;
     const { question } = this.props;
-    const markerPosition = {
-      lat: marker.position.lat(),
-      lng: marker.position.lng(),
-    };
-    const linkPath = [markerPosition, question.position];
+    if (marker !== null && question.position !== null) {
+      const markerPosition = {
+        lat: marker.position.lat(),
+        lng: marker.position.lng(),
+      };
+      const linkPath = [markerPosition, question.position];
 
-    const linkLine = new window.google.maps.Polyline({
-      path: linkPath,
-      ...customLine,
-    });
+      const linkLine = new window.google.maps.Polyline({
+        path: linkPath,
+        ...customLine,
+      });
 
-    linkLine.setMap(this.googleMap);
+      linkLine.setMap(this.googleMap);
 
-    this.setState({ linkLine });
+      this.setState({ linkLine });
+    }
   };
 
   removeLinkLine = () => {
@@ -86,13 +90,15 @@ class GoogleMap extends Component {
 
   plotCountryBorder = () => {
     const { question } = this.props;
-    this.googleMap.data.addGeoJson(question.borderData);
-    this.googleMap.data.setStyle({
-      fillColor: "white",
-      fillOpacity: 0.5,
-      strokeColor: "black",
-      strokeWeight: 0,
-    });
+    if (question.borderData) {
+      this.googleMap.data.addGeoJson(question.borderData);
+      this.googleMap.data.setStyle({
+        fillColor: "white",
+        fillOpacity: 0.5,
+        strokeColor: "black",
+        strokeWeight: 0,
+      });
+    }
   };
 
   createBounds = () => {
