@@ -119,3 +119,17 @@
   justify-content: space-around;
   align-content: center;
 }
+
+#results-wrapper {
+  width: 95vw;
+  display: flex;
+  justify-content: space-around;
+}
+
+#player-results-wrapper {
+  width: 40vw;
+}
+
+#leaderboard-wrapper {
+  width: 40vw;
+}
