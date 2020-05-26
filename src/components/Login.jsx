@@ -52,7 +52,6 @@ class Login extends Component {
               label="e-mail"
               variant="outlined"
               margin="normal"
-              fullWidth
               id="email"
               name="email"
               type="email"
@@ -64,7 +63,6 @@ class Login extends Component {
               label="password"
               variant="outlined"
               margin="normal"
-              fullWidth
               id="password"
               name="password"
               type="password"
@@ -72,7 +70,7 @@ class Login extends Component {
               onChange={this.handleChange}
               required
             />
-            <Box margin="normal" fullWidth className="two-button-wrapper">
+            <Box margin="normal" className="two-button-wrapper">
               <Button
                 variant="contained"
                 color="primary"
