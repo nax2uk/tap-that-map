@@ -90,6 +90,7 @@
   flex-direction: column;
   padding: 5vh 5vw;
   justify-content: space-around;
+  align-items: center;
 }
 
 .two-button-wrapper {
@@ -117,4 +118,18 @@
   padding: 5vh 5vw;
   justify-content: space-around;
   align-content: center;
+}
+
+#results-wrapper {
+  width: 95vw;
+  display: flex;
+  justify-content: space-around;
+}
+
+#player-results-wrapper {
+  width: 40vw;
+}
+
+#leaderboard-wrapper {
+  width: 40vw;
 }

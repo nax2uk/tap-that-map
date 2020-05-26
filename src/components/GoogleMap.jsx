@@ -155,11 +155,10 @@ class GoogleMap extends Component {
     googleMapScript.addEventListener("load", () => {
       this.googleMap = this.createGoogleMap();
       window.google.maps.event.addListener(this.googleMap, "click", (e) => {
-        if (this.state.marker === null) {
-          this.setState({
-            marker: this.placeMarker(e.latLng),
-          });
-        }
+        this.removeMarker();
+        this.setState({
+          marker: this.placeMarker(e.latLng),
+        });
       });
     });
   }
