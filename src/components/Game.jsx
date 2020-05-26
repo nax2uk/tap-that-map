@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import GoogleMap from "./GoogleMap";
 import generateCountryQuestions from "../utils/generateCountryQuestions";
 import * as borderGeojson from "../resources/hq-borders.json";
-import { database } from "../firebaseInitialise";
+import { database, auth } from "../firebaseInitialise";
 import Question from "./Question";
 import Timer from "./Timer";
 import * as calculate from "../utils/calculateFunctions";
@@ -60,12 +60,14 @@ class Game extends Component {
   };
 
   endRound = () => {
+
     this.calculateScoreAndDistance();
+
     this.setState((currState) => {
       return {
         totalScore: currState.totalScore + currState.roundScore,
         roundIsRunning: false,
-        playerMarker: null,
+        playerMarker: null
       };
     });
   };
@@ -73,6 +75,7 @@ class Game extends Component {
   updateRound = () => {
     this.setState((currState) => {
       if (currState.round === 10) {
+        this.saveScore();
         return {
           gameIsReady: false,
           gameIsRunning: false,
@@ -80,13 +83,7 @@ class Game extends Component {
           roundIsRunning: false,
         };
       } else {
-        return {
-          round: currState.round++,
-          roundIsRunning: true,
-          playerMarker: null,
-          roundDistance: 0,
-          roundScore: 0,
-        };
+        return { round: currState.round++, roundIsRunning: true, playerMarker: null, roundDistance: 0, roundScore: 0 };
       }
     });
   };
@@ -94,6 +91,7 @@ class Game extends Component {
   calculateScoreAndDistance = () => {
     let score = 0;
     let distance = 0;
+
     const { playerMarker, questionArr, round } = this.state;
 
     if (playerMarker !== null) {
@@ -103,10 +101,10 @@ class Game extends Component {
         lat: playerMarker.position.lat(),
         lng: playerMarker.position.lng(),
       };
+      score = calculate.score(markerPosition, question.position);
       distance = Math.round(
         calculate.distance(markerPosition, question.position)
       );
-      score = calculate.score(distance);
     }
 
     this.setState((currState) => {
@@ -116,6 +114,16 @@ class Game extends Component {
         scoreArr: [...currState.scoreArr, score],
       };
     });
+  };
+
+  saveScore = () => {
+    const scores = database.ref("scores");
+    const data = {
+      //UID: this.props.currentUserId,
+      score: this.state.totalScore,
+      username: auth.currentUser.displayName
+    };
+    scores.push(data);
   };
 
   componentDidMount() {
