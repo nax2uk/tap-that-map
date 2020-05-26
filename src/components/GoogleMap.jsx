@@ -101,21 +101,18 @@ class GoogleMap extends Component {
     }
   };
 
-  createBounds = () => {
+  createAndPanToBounds = () => {
     const { question } = this.props;
     const { marker } = this.state;
-    let resultBounds = new window.google.maps.LatLngBounds();
-
-    resultBounds.extend(question.position);
-    resultBounds.extend({ lat: marker.position.lat, lng: marker.position.lng });
-
-    this.setState({ roundBounds: resultBounds });
-  };
-
-  panToBounds = () => {
-    const { roundBounds } = this.state;
-    this.googleMap.fitBounds(roundBounds);
-    this.googleMap.panToBounds(roundBounds);
+    if (marker !== null) {
+      const lat = marker.position.lat();
+      const lng = marker.position.lng();
+      let resultBounds = new window.google.maps.LatLngBounds();
+      resultBounds.extend(question.position);
+      resultBounds.extend({ lat, lng });
+      this.googleMap.fitBounds(resultBounds);
+      this.googleMap.panToBounds(resultBounds);
+    }
   };
 
   resetMapView = () => {
@@ -141,10 +138,9 @@ class GoogleMap extends Component {
       roundIsRunning !== prevProps.roundIsRunning &&
       marker !== null;
     if (roundHasStopped) {
-      // this.createBounds();
       this.plotLinkLine();
       this.plotCountryBorder();
-      // this.panToBounds();
+      this.createAndPanToBounds();
     }
     if (round !== prevProps.round) {
       this.removeLinkLine();
@@ -161,10 +157,11 @@ class GoogleMap extends Component {
     googleMapScript.addEventListener("load", () => {
       this.googleMap = this.createGoogleMap();
       window.google.maps.event.addListener(this.googleMap, "click", (e) => {
-        if (this.state.marker === null)
+        if (this.state.marker === null) {
           this.setState({
             marker: this.placeMarker(e.latLng),
           });
+        }
       });
     });
   }
