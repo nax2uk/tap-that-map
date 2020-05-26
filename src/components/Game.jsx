@@ -64,10 +64,14 @@ class Game extends Component {
     if (playerMarker !== null) {
       this.calculateScoreAndDistance();
     }
+    // else {
+    //   this.setState({ roundScore: 0 })
+    // }
     this.setState((currState) => {
       return {
         totalScore: currState.totalScore + currState.roundScore,
         roundIsRunning: false,
+        playerMarker: null
       };
     });
   };
@@ -82,7 +86,7 @@ class Game extends Component {
           roundIsRunning: false,
         };
       } else {
-        return { round: currState.round++, roundIsRunning: true };
+        return { round: currState.round++, roundIsRunning: true, playerMarker: null, roundDistance: 0, roundScore: 0 };
       }
     });
   };
