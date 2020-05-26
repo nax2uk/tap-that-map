@@ -65,47 +65,41 @@ class Home extends Component {
   render() {
     return (
       <ThemeProvider theme={theme}>
-          <Paper id="home-wrapper" elevation={3}>
-              <Typography variant="h2" align="center">
-                Home
-              </Typography>
-            <form id="login-form">
-              <TextField
-                label="nickname"
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                id="nickname"
-                name="nickname"
-                type="nickname"
-                value={this.state.nickname}
-                onChange={this.handleChange}
-                required
-              />
-              <TextField
-                label="image url"
-                variant="outlined"
-                margin="normal"
-                fullWidth
-                id="image url"
-                name="image url"
-                type="image url"
-                value={this.state.update}
-                onChange={this.handleChange}            
-              />
-            </form>
-            <Box margin="normal" fullWidth className="two-button-wrapper">
-              <Link to="/game">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.updateUser}
-                >
-                  Start Game
-                </Button>
-              </Link>
-              <Button variant="contained" color="secondary" onClick={logout}>
-                Logout
+        <Paper id="home-wrapper" elevation={3}>
+          <Typography variant="h2" align="center">
+            Home
+          </Typography>
+          <form id="login-form">
+            <TextField
+              label="nickname"
+              variant="outlined"
+              margin="normal"
+              id="nickname"
+              name="nickname"
+              type="nickname"
+              value={this.state.nickname}
+              onChange={this.handleChange}
+              required
+            />
+            <TextField
+              label="image url"
+              variant="outlined"
+              margin="normal"
+              id="image url"
+              name="image url"
+              type="image url"
+              value={this.state.update}
+              onChange={this.handleChange}
+            />
+          </form>
+          <Box margin="normal" className="two-button-wrapper">
+            <Link to="/game">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.updateUser}
+              >
+                Start Game
               </Button>
             </Link>
             <Button variant="contained" color="secondary" onClick={logout}>
