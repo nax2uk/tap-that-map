@@ -11,10 +11,8 @@ import customLine from "../resources/customLine";
 
 class GoogleMap extends Component {
   state = {
-    allOverlay: [],
     marker: null,
     linkLine: null,
-    roundBounds: null,
     scoreSubmitted: false,
   };
 
@@ -108,8 +106,8 @@ class GoogleMap extends Component {
       const lat = marker.position.lat();
       const lng = marker.position.lng();
       let resultBounds = new window.google.maps.LatLngBounds();
-      resultBounds.extend(question.position);
       resultBounds.extend({ lat, lng });
+      resultBounds.extend(question.position);
       this.googleMap.fitBounds(resultBounds);
       this.googleMap.panToBounds(resultBounds);
     }

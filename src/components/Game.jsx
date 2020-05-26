@@ -164,7 +164,6 @@ class Game extends Component {
               <Question location={questionArr[round].location} round={round} />
               <Timer
                 updateRound={this.updateRound}
-                startRound={this.startRound}
                 endRound={this.endRound}
                 userIsReady={userIsReady}
                 roundIsRunning={roundIsRunning}
