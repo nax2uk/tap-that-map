@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { auth } from "../firebaseInitialise";
 import { Link, navigate } from "@reach/router";
-import { Paper, Typography, Button, Box, Fade } from "@material-ui/core";
+import { Paper, Typography, Button, Box } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../resources/theme.jsx";
 import { Howl } from "howler";
@@ -40,25 +40,21 @@ class Home extends Component {
   render() {
     return (
       <ThemeProvider theme={theme}>
-        <Fade in={true} timeout={1000}>
-          <Paper id="home-wrapper" elevation={3}>
-            <Fade in={true} timeout={1500}>
-              <Typography variant="h2" align="center">
-                Home
-              </Typography>
-            </Fade>
-            <Box margin="normal" fullWidth className="two-button-wrapper">
-              <Link to="/game">
-                <Button variant="contained" color="primary">
-                  Start Game
-                </Button>
-              </Link>
-              <Button variant="contained" color="secondary" onClick={logout}>
-                Logout
+        <Paper id="home-wrapper" elevation={3}>
+          <Typography variant="h2" align="center">
+            Home
+          </Typography>
+          <Box margin="normal" className="two-button-wrapper">
+            <Link to="/game">
+              <Button variant="contained" color="primary">
+                Start Game
               </Button>
-            </Box>
-          </Paper>
-        </Fade>
+            </Link>
+            <Button variant="contained" color="secondary" onClick={logout}>
+              Logout
+            </Button>
+          </Box>
+        </Paper>
       </ThemeProvider>
     );
   }
