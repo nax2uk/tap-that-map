@@ -148,8 +148,6 @@ class GoogleMap extends Component {
   }
 
   componentDidMount() {
-    const { marker } = this.state;
-
     const googleMapScript = document.createElement("script");
     googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places`;
     window.document.body.appendChild(googleMapScript);
