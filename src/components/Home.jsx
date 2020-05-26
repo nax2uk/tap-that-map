@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { auth } from "../firebaseInitialise";
 import { Link, navigate } from "@reach/router";
 import { Paper, Typography, Button, Box, Fade } from "@material-ui/core";
+import TextField from "@material-ui/core/TextField";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../resources/theme.jsx";
 import { Howl } from "howler";
@@ -13,7 +14,32 @@ const logout = () => {
 };
 
 class Home extends Component {
-  state = {};
+  state = {
+    nickname: "",
+    userImage: "https://image.flaticon.com/icons/png/512/63/63699.png",
+  };
+
+  updateUser = () => {
+    let user = auth.currentUser;
+    const { nickname, userImage } = this.state;
+
+    user
+      .updateProfile({
+        displayName: nickname,
+        photoURL: userImage,
+      })
+      .then()
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  handleChange = (event) => {
+    // console.log(event);
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+    // this.updateUser()
+  };
 
   componentDidMount() {
     this.loadMusic();
@@ -47,9 +73,40 @@ class Home extends Component {
                 Home
               </Typography>
             </Fade>
+            <form id="login-form">
+              <TextField
+                label="nickname"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                id="nickname"
+                name="nickname"
+                type="nickname"
+                value={this.state.nickname}
+                onChange={this.handleChange}
+                required
+              />
+              <TextField
+                label="image url"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                id="image url"
+                name="image url"
+                type="image url"
+                value={this.state.update}
+                onChange={this.handleChange}
+                
+              />
+            </form>
+
             <Box margin="normal" fullWidth className="two-button-wrapper">
               <Link to="/game">
-                <Button variant="contained" color="primary">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={this.updateUser}
+                >
                   Start Game
                 </Button>
               </Link>

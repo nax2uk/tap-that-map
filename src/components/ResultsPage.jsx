@@ -1,12 +1,15 @@
 import React from "react";
 import { Link } from "@reach/router";
 import Leaderboard from "./Leaderboard";
+import { auth } from "../firebaseInitialise";
 
 const ResultsPage = ({ scoreArr, totalScore }) => {
+  let user = auth.currentUser;
+
   return (
     <div>
       <h1>{"Thanks for playing TAP THAT MAP 🌎"}</h1>;
-      <h2>Here are your results:</h2>
+      <h2>{`Here are your results: ${user.displayName}`}</h2>
       <ul>
         <li>Round 1:{scoreArr[0]}</li>
         <li>Round 2:{scoreArr[1]}</li>
