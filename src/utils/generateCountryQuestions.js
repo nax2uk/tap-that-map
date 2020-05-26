@@ -1,32 +1,17 @@
 import countryNameList from "../Data/countryNameList";
 
-
-const checkRepeat = (array) => {
-    for (let i = 0; i < array.length; i++) {
-        for (let j = 0; j < array.length; j++) {
-            if (i !== j) {
-                if (array[i] === array[j]) {
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-};
-
 const generateCountryQuestions = (num) => {
-    let countryList = [];
+  const uniqueIndices = new Set();
+  while (uniqueIndices.size < num) {
+    const randomIndex = Math.round(Math.random() * countryNameList.length);
+    uniqueIndices.add(randomIndex);
+  }
 
-    for (let i = 0; i < num; i++) {
-        let country =
-            countryNameList[Math.round(Math.random() * countryNameList.length)];
-        countryList.push(country);
-    }
-    if (checkRepeat(countryList)) {
-        return countryList;
-    } else {
-        generateCountryQuestions(num);
-    }
+  const countryList = [...uniqueIndices].map(
+    (randomIndex) => countryNameList[randomIndex]
+  );
+
+  return countryList;
 };
 
 export default generateCountryQuestions;
