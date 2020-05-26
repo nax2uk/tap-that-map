@@ -21,7 +21,6 @@ class Login extends Component {
             .signInWithEmailAndPassword(this.state.email, this.state.password)
             .then()
             .catch((error) => {
-                console.log(error);
                 this.setState({ error: error.message });
             });
     };
@@ -32,7 +31,6 @@ class Login extends Component {
             .createUserWithEmailAndPassword(this.state.email, this.state.password)
             .then()
             .catch((error) => {
-                console.log(error);
                 this.setState({ error: error.message });
             });
     };
