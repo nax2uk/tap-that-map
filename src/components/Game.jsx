@@ -18,7 +18,7 @@ class Game extends Component {
     gameIsRunning: false,
     roundIsRunning: false,
     gameIsFinished: false,
-    questionArr: null,
+    questionArr: [],
     playerMarker: null,
     round: 0,
     roundScore: 0,
@@ -32,14 +32,15 @@ class Game extends Component {
 
     const questionsWithGeojson = questionArr.map((question) => {
       const amendedQuestion = { ...question };
-      const locationGeojson = borderGeojson.features.find(
-        (feature) => feature.location === question.location
+
+      const locationGeojson = borderGeojson.features.find((feature) =>
+        Object.values(feature.properties).includes(question.location)
       );
-      const questionBorderData = {
+      amendedQuestion.borderData = {
         type: "FeatureCollection",
         features: [locationGeojson],
       };
-      amendedQuestion.borderData = questionBorderData;
+
       return amendedQuestion;
     });
 
@@ -110,28 +111,28 @@ class Game extends Component {
 
   componentDidMount() {
     const countryArr = generateCountryQuestions(10);
+    this.setState({ countryArr });
 
-    const questionArr = countryArr.map((country) => {
-      return { location: country, position: null, borderData: null };
-    });
-
-    questionArr.forEach((question) => {
-      const request = database.ref(`countries/${question.location}`);
+    countryArr.forEach((country) => {
+      const request = database.ref(`countries/${country}`);
       request.once("value", (response) => {
-        question.position = response.val();
+        const responsePosition = response.val();
+        this.setState((currState) => {
+          return {
+            questionArr: [
+              ...currState.questionArr,
+              { location: country, position: responsePosition },
+            ],
+          };
+        });
       });
     });
-
-    setTimeout(() => {
-      this.setState(() => {
-        return { countryArr, questionArr };
-      });
-    }, 5000);
   }
 
   componentDidUpdate(prevProps, prevState) {
     const { questionArr, gameIsReady } = this.state;
-    const questionArrHasLoaded = questionArr !== prevState.questionArr;
+    const questionArrHasLoaded =
+      questionArr !== prevState.questionArr && questionArr.length === 10;
     if (questionArrHasLoaded && !gameIsReady) {
       this.getQuestionGeojson();
     }
