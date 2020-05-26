@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "@reach/router";
 import Leaderboard from "./Leaderboard";
+import { auth } from "../firebaseInitialise";
 import {
   Paper,
   Typography,
@@ -13,6 +14,8 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../resources/theme.jsx";
 
 const ResultsPage = ({ scoreArr, totalScore }) => {
+  let user = auth.currentUser;
+
   return (
     <ThemeProvider theme={theme}>
       <Box id="results-wrapper">
@@ -20,7 +23,7 @@ const ResultsPage = ({ scoreArr, totalScore }) => {
           <Typography variant="h1">
             {"Thanks for playing TAP THAT MAP 🌎"}
           </Typography>
-          <Typography variant="h2">Here are your results:</Typography>
+          <Typography variant="h2">{`Here are your results: ${user.displayName}`}</Typography>
           <List>
             <ListItem>Round 1:{scoreArr[0]}</ListItem>
             <ListItem>Round 2:{scoreArr[1]}</ListItem>
@@ -41,6 +44,7 @@ const ResultsPage = ({ scoreArr, totalScore }) => {
         <Leaderboard />
       </Box>
     </ThemeProvider>
+
   );
 };
 
