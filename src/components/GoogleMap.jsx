@@ -95,8 +95,8 @@ class GoogleMap extends Component {
       this.googleMap.data.setStyle({
         fillColor: "white",
         fillOpacity: 0.5,
-        strokeColor: "black",
-        strokeWeight: 0,
+        strokeColor: "white",
+        strokeWeight: 0.5,
       });
     }
   };
