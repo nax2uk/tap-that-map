@@ -61,12 +61,9 @@ class Game extends Component {
 
   endRound = () => {
     const { playerMarker } = this.state;
-    if (playerMarker !== null) {
-      this.calculateScoreAndDistance();
-    }
-    // else {
-    //   this.setState({ roundScore: 0 })
-    // }
+
+    this.calculateScoreAndDistance();
+
     this.setState((currState) => {
       return {
         totalScore: currState.totalScore + currState.roundScore,
@@ -92,18 +89,22 @@ class Game extends Component {
   };
 
   calculateScoreAndDistance = () => {
+    let score = 0;
+    let distance = 0;
     const { playerMarker, questionArr, round } = this.state;
-    const question = questionArr[round];
 
-    const markerPosition = {
-      lat: playerMarker.position.lat(),
-      lng: playerMarker.position.lng(),
-    };
+    if (playerMarker !== null) {
+      const question = questionArr[round];
 
-    const distance = Math.round(
-      calculate.distance(markerPosition, question.position)
-    );
-    const score = calculate.score(distance);
+      const markerPosition = {
+        lat: playerMarker.position.lat(),
+        lng: playerMarker.position.lng(),
+      };
+      score = calculate.score(markerPosition, question.position);
+      distance = Math.round(
+        calculate.distance(markerPosition, question.position)
+      );
+    }
 
     this.setState((currState) => {
       return {
@@ -113,6 +114,7 @@ class Game extends Component {
       };
     });
   };
+
 
   componentDidMount() {
     const countryArr = generateCountryQuestions(10);
