@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { database } from "../firebaseInitialise";
+import { Paper, Typography } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core/styles";
+import theme from "../resources/theme.jsx";
 
 class Leaderboard extends Component {
   state = {
@@ -33,18 +36,20 @@ class Leaderboard extends Component {
   render() {
     const { leaderArray } = this.state;
     return (
-      <div>
-        <h3>LeaderBoard</h3>
-        {leaderArray
-          ? leaderArray.map((result, index) => {
-              return (
-                <h2 key={index}>
-                  {index + 1}: {result.score}
-                </h2>
-              );
-            })
-          : null}
-      </div>
+      <ThemeProvider theme={theme}>
+        <Paper id="leaderboard-wrapper">
+          <Typography variant="h3">LeaderBoard</Typography>
+          {leaderArray
+            ? leaderArray.map((result, index) => {
+                return (
+                  <Typography variant="h2" key={index}>
+                    {index + 1}: {result.score}
+                  </Typography>
+                );
+              })
+            : null}
+        </Paper>
+      </ThemeProvider>
     );
   }
 }

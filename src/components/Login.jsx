@@ -40,51 +40,51 @@ class Login extends Component {
         this.setState({ email: "", password: "" });
     };
 
-    handleChange = (event) => {
-        console.log(event);
-        const { name, value } = event.target;
-        this.setState({ [name]: value });
-    };
-    render() {
+  handleChange = (event) => {
+    console.log(event);
+    const { name, value } = event.target;
+    this.setState({ [name]: value });
+  };
 
-        const { error } = this.state;
-        return (
-            <Paper elevation={3} id="login-form-wrapper">
-                <ThemeProvider theme={theme}>
-                    <form id="login-form">
-                        <TextField
-                            label="e-mail"
-                            variant="outlined"
-                            margin="normal"
-                            fullWidth
-                            id="email"
-                            name="email"
-                            type="email"
-                            value={this.state.email}
-                            onChange={this.handleChange}
-                            required
-                        />
-                        <TextField
-                            label="password"
-                            variant="outlined"
-                            margin="normal"
-                            fullWidth
-                            id="password"
-                            name="password"
-                            type="password"
-                            value={this.state.password}
-                            onChange={this.handleChange}
-                            required
-                        />
-                        <Box margin="normal" fullWidth className="two-button-wrapper">
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                type="submit"
-                                onClick={this.login}
-                                margin="normal"
-                            >
-                                Login
+  render() {
+    
+      const { error } = this.state;
+    return (
+      <Paper elevation={3} id="login-form-wrapper">
+        <ThemeProvider theme={theme}>
+          <form id="login-form">
+            <TextField
+              label="e-mail"
+              variant="outlined"
+              margin="normal"
+              id="email"
+              name="email"
+              type="email"
+              value={this.state.email}
+              onChange={this.handleChange}
+              required
+            />
+            <TextField
+              label="password"
+              variant="outlined"
+              margin="normal"
+              id="password"
+              name="password"
+              type="password"
+              value={this.state.password}
+              onChange={this.handleChange}
+              required
+            />
+            <Box margin="normal" className="two-button-wrapper">
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                onClick={this.login}
+                margin="normal"
+              >
+                Login
+
               </Button>
                             <Button
                                 variant="contained"

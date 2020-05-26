@@ -60,10 +60,7 @@ class Game extends Component {
   };
 
   endRound = () => {
-    const { playerMarker } = this.state;
-
     this.calculateScoreAndDistance();
-
     this.setState((currState) => {
       return {
         totalScore: currState.totalScore + currState.roundScore,
