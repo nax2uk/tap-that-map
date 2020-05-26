@@ -1,27 +1,18 @@
 import React, { Component, createRef } from "react";
-import API_KEY from "../API-KEYS/maps-api.js";
-import { Fab, Icon } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../resources/theme.jsx";
-import Timer from "./Timer";
-import mapStyle from "../Data/mapStyling";
-import Question from "./Question";
-import Score from "./Score.jsx";
-
+import { Paper } from "@material-ui/core";
 import { database } from "../firebaseInitialise";
-import calculateScore from "../utils/calculateScore";
-import generateCountryQuestions from "../utils/generateCountryQuestions";
+import API_KEY from "../API-KEYS/maps-api.js";
+import SubmitButton from "./SubmitButton";
+import CancelButton from "./CancelButton";
+import ResultsPage from "./ResultsPage";
+import mapStyle from "../Data/mapStyling";
+import customMarker from "../resources/customMarker";
+import customLine from "../resources/customLine";
 
 class GoogleMap extends Component {
   state = {
-    allMarkers: [],
     marker: null,
-    // markerAdded: false,
-    question: null,
-    countryArr: null,
-    totalScore: 0,
-    round: 0,
-    gameOver: false,
+    linkLine: null,
     scoreSubmitted: false,
   };
 
@@ -41,88 +32,90 @@ class GoogleMap extends Component {
   };
 
   placeMarker = (latLng) => {
-    console.log("PLACE MARKER FIRING!");
-    let newMarker = new window.google.maps.Marker({
+    const { recordPlayerMarker } = this.props;
+    const newMarker = new window.google.maps.Marker({
       position: latLng,
       map: this.googleMap,
-      animation: window.google.maps.Animation.DROP,
       draggable: true,
+      icon: customMarker,
     });
-    const { allMarkers } = this.state;
-    this.setState({ allMarkers: [newMarker, ...allMarkers] });
+    recordPlayerMarker(newMarker);
     return newMarker;
   };
 
-  setMapOnAll = (map) => {
-    const { allMarkers } = this.state;
-    console.log("setMap Func", this.googleMap);
-    for (var i = 0; i < allMarkers.length; i++) {
-      allMarkers[i].setMap(map);
-    }
-  };
-
   removeMarker = () => {
-    this.setMapOnAll(null);
+    const { marker } = this.state;
+    if (marker !== null) {
+      marker.setMap(null);
+    }
+    this.setState({ marker: null });
   };
 
-  //called when submit button is clicked
-  submitMarker = (event) => {
-    event.preventDefault();
-    const { marker, question } = this.state;
-    if (marker !== null) {
+  submitMarker = () => {
+    const { endRound } = this.props;
+    endRound();
+  };
+
+  plotLinkLine = () => {
+    const { marker } = this.state;
+    const { question } = this.props;
+    if (marker !== null && question.position !== null) {
       const markerPosition = {
         lat: marker.position.lat(),
         lng: marker.position.lng(),
       };
-      const score = calculateScore(markerPosition, question.position);
+      const linkPath = [markerPosition, question.position];
 
-      this.setState((currState) => {
-        return {
-          totalScore: currState.totalScore + score,
-          scoreSubmitted: true,
-        };
+      const linkLine = new window.google.maps.Polyline({
+        path: linkPath,
+        ...customLine,
       });
-    } else {
-      // need to look at adding material UI styling to the alert?
-      window.alert("You need to place a marker before submitting!");
+
+      linkLine.setMap(this.googleMap);
+
+      this.setState({ linkLine });
     }
   };
 
-  /******** QUESTION FUNCTIONS ********/
-  // called in componentDidMount and componentDidUpdate
-  getQuestion = () => {
-    const { countryArr, round } = this.state;
-    const location = countryArr[round];
-    console.log(location);
+  removeLinkLine = () => {
+    const { linkLine } = this.state;
+    if (linkLine !== null) {
+      linkLine.setMap(null);
+    }
 
-    var country = database.ref(`countries/${location}`);
-    country.on("value", (data) => {
-      const countryData = data.val();
-      const countryObj = { location: location, position: countryData };
-      this.setState({
-        question: countryObj,
-      });
-    });
+    this.setState({ linkLine: null });
   };
 
-  /********* ROUND FUNCTIONS ********/
-  updateRound = () => {
-    if (this.state.round < 9) {
-      this.setState((currState) => {
-        this.removeMarker();
-        return {
-          round: currState.round++,
-          scoreSubmitted: false,
-          marker: null,
-        };
+  plotCountryBorder = () => {
+    const { question } = this.props;
+    if (question.borderData) {
+      this.googleMap.data.addGeoJson(question.borderData);
+      this.googleMap.data.setStyle({
+        fillColor: "white",
+        fillOpacity: 0.5,
+        strokeColor: "white",
+        strokeWeight: 0.5,
       });
-    } else this.setState({ gameOver: true });
+    }
   };
 
-  setRound = (roundsNum) => {
-    this.setState({
-      round: roundsNum,
-    });
+  createAndPanToBounds = () => {
+    const { question } = this.props;
+    const { marker } = this.state;
+    if (marker !== null) {
+      const lat = marker.position.lat();
+      const lng = marker.position.lng();
+      let resultBounds = new window.google.maps.LatLngBounds();
+      resultBounds.extend({ lat, lng });
+      resultBounds.extend(question.position);
+      this.googleMap.fitBounds(resultBounds);
+      this.googleMap.panToBounds(resultBounds);
+    }
+  };
+
+  resetMapView = () => {
+    this.googleMap.setCenter({ lat: 0, lng: 0 });
+    this.googleMap.setZoom(2);
   };
 
   saveScore = () => {
@@ -135,81 +128,67 @@ class GoogleMap extends Component {
   };
 
   /******** REACT LIFE CYCLES ********/
-  componentDidUpdate(prevProp, prevState) {
-    if (prevState.round !== this.state.round) {
-      this.getQuestion();
+  componentDidUpdate(prevProps, prevState) {
+    const { round, roundIsRunning } = this.props;
+    const { marker } = this.state;
+    const roundHasStopped =
+      !roundIsRunning &&
+      roundIsRunning !== prevProps.roundIsRunning &&
+      marker !== null;
+    if (roundHasStopped) {
+      this.plotLinkLine();
+      this.plotCountryBorder();
+      this.createAndPanToBounds();
     }
-    if (prevState.gameOver !== this.state.gameOver) {
-      this.saveScore();
+    if (round !== prevProps.round) {
+      this.removeLinkLine();
+      this.removeMarker();
+      this.resetMapView();
     }
   }
 
   componentDidMount() {
     const googleMapScript = document.createElement("script");
-
     googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places`;
     window.document.body.appendChild(googleMapScript);
-
-    //this.generateQuestion(questionData.questions);
-    this.setState(
-      {
-        countryArr: generateCountryQuestions(10),
-      },
-      () => {
-        this.getQuestion();
-      }
-    );
 
     googleMapScript.addEventListener("load", () => {
       this.googleMap = this.createGoogleMap();
       window.google.maps.event.addListener(this.googleMap, "click", (e) => {
-        if (this.state.marker === null)
+        if (this.state.marker === null) {
           this.setState({
             marker: this.placeMarker(e.latLng),
-            // markerAdded: true,
           });
+        }
       });
     });
   }
 
   render() {
-    const {
-      totalScore,
-      round,
-      question,
-      gameOver,
-      scoreSubmitted,
-    } = this.state;
-    if (gameOver) return <h1>END OF GAME/Results... </h1>;
+    const { gameOver, scoreSubmitted, marker } = this.state;
+    const { roundIsRunning } = this.props;
+    if (gameOver) return <ResultsPage />;
     return (
       <>
-        {question !== null ? (
-          <Question location={question.location} round={round} />
-        ) : null}
-        <Score totalScore={totalScore} />
-
-        <div
+        <Paper
+          elevation={3}
+          square={true}
           id="google-map"
           ref={this.googleMapRef}
-          style={{ width: window.innerWidth, height: window.innerHeight }}
+          style={{
+            width: 0.95 * window.innerWidth,
+            height: 0.95 * window.innerHeight,
+          }}
         />
-        <div id="submit-wrapper">
-          <ThemeProvider theme={theme}>
-            <Fab
-              size="large"
-              onClick={this.submitMarker}
-              disabled={scoreSubmitted}
-              color="secondary"
-            >
-              <Icon fontSize="large">check_circle</Icon>
-            </Fab>
-          </ThemeProvider>
-        </div>
-        <Timer
-          updateRound={this.updateRound}
-          round={round}
-          setRound={this.setRound}
-        />
+        {marker !== null && roundIsRunning && (
+          <>
+            <SubmitButton
+              submitMarker={this.submitMarker}
+              scoreSubmitted={scoreSubmitted}
+            />
+            <CancelButton removeMarker={this.removeMarker} />
+          </>
+        )}
       </>
     );
   }

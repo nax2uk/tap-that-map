@@ -1,12 +1,11 @@
 import React, { Component } from "react";
 import "./App.css";
-import Title from "./components/Title";
-import GoogleMap from "./components/GoogleMap";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import { auth } from "./firebaseInitialise";
 import { Router } from "@reach/router";
 import Logout from "./components/Logout";
+import Game from "./components/Game";
 
 class App extends Component {
   state = {
@@ -27,12 +26,12 @@ class App extends Component {
   }
 
   render() {
-    // <GoogleMap />
+    const { currentUserId } = this.state;
     return (
       <Router>
         {this.state.currentUserId ? <Home path="/" /> : <Login path="/" />}
         <Logout path="/logout" />
-        <GoogleMap path="/googlemap" currentUserId={this.state.currentUserId} />
+        <Game path="/game" currentUserId={currentUserId} />
       </Router>
     );
   }

@@ -1,93 +1,81 @@
 import React, { Component } from "react";
-import { Typography, Paper, Button } from "@material-ui/core";
+import { Typography, Paper } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../resources/theme.jsx";
 
 class Timer extends Component {
   state = {
-    minutes: 0,
     seconds: 10,
+    timer: null,
   };
 
   startTimer = () => {
-    const { round } = this.props;
-    this.myInterval = setInterval(() => {
-      const { minutes, seconds } = this.state;
-      if (seconds > 0) {
-        this.setState(({ seconds }) => ({
-          seconds: seconds - 1,
-        }));
-        window.localStorage.setItem("seconds", `${seconds - 1}`);
-        window.localStorage.setItem("round", `${round}`);
-      } else if (seconds === 0) {
-        if (minutes === 0) {
-          clearInterval(this.myInterval);
-          window.localStorage.clear();
-        } else {
-          this.setState(({ minutes }) => ({
-            minutes: minutes - 1,
-            seconds: 59,
-          }));
-          window.localStorage.setItem("minutes", `${minutes - 1}`);
-          window.localStorage.setItem("seconds", "59");
-
-          // can't get localstorage to keep hold of the current round on refresh
-          window.localStorage.setItem("round", `${round}`);
-        }
-      }
-    }, 1000);
+    const timer = setInterval(this.timerFunction, 1000);
+    this.setState({ timer });
   };
 
-  startNewRound = (event) => {
-    event.preventDefault();
-    const { updateRound } = this.props;
-    updateRound();
+  stopTimer = () => {
+    const { timer } = this.state;
+    clearInterval(timer);
+  };
+
+  resetTimer = () => {
     this.setState({ seconds: 10 });
-    this.startTimer();
+  };
+
+  timerFunction = () => {
+    const { endRound } = this.props;
+    const { seconds, timer } = this.state;
+    if (seconds > 1) {
+      this.setState(({ seconds }) => ({
+        seconds: seconds - 1,
+      }));
+    } else {
+      this.setState({ seconds: 0 });
+      clearInterval(timer);
+      endRound();
+    }
+  };
+
+  formatAndDisplayTime = () => {
+    const { seconds } = this.state;
+
+    const minsToDisplay = Math.floor(seconds / 60).toString();
+    const secsToDisplay = seconds.toString().padStart(2, 0);
+
+    return `${minsToDisplay}:${secsToDisplay}`;
   };
 
   componentDidMount() {
-    const { setRound } = this.props;
-    if (
-      window.localStorage.getItem("minutes") ||
-      window.localStorage.getItem("seconds") ||
-      window.localStorage.getItem("round")
-    ) {
-      let previousMinutes = parseInt(
-        window.localStorage.getItem("minutes") || 0
-      );
-      let previousSeconds = parseInt(
-        window.localStorage.getItem("seconds") || 0
-      );
-      let previousRound = parseInt(window.localStorage.getItem("round") || 0);
-      //invoked a fuction
-      setRound(previousRound);
-      this.setState({ minutes: previousMinutes, seconds: previousSeconds });
-    }
+    this.resetTimer();
     this.startTimer();
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    const { roundIsRunning } = this.props;
+    const roundHasStopped =
+      !roundIsRunning && roundIsRunning !== prevProps.roundIsRunning;
+    const roundHasStarted =
+      roundIsRunning && roundIsRunning !== prevProps.roundIsRunning;
+
+    if (roundHasStarted) {
+      this.resetTimer();
+      this.startTimer();
+    }
+    if (roundHasStopped) {
+      this.stopTimer();
+    }
+  }
+
   render() {
-    const { minutes, seconds } = this.state;
     return (
-      <Paper id="timer-wrapper" elevation={3}>
-        <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
+        <Paper id="timer-wrapper" elevation={3}>
           <Typography variant="h2">
-            <span id="time">
-              {minutes}:{seconds < 10 ? `0${seconds}` : seconds}
-            </span>
-            {minutes === 0 && seconds === 0 && (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this.startNewRound}
-              >
-                Next
-              </Button>
-            )}
+            <span id="time">{this.formatAndDisplayTime()}</span>
           </Typography>
-        </ThemeProvider>
-      </Paper>
+        </Paper>
+      </ThemeProvider>
     );
   }
 }
