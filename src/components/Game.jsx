@@ -106,10 +106,10 @@ class Game extends Component {
         lat: playerMarker.position.lat(),
         lng: playerMarker.position.lng(),
       };
-      score = calculate.score(markerPosition, question.position);
       distance = Math.round(
         calculate.distance(markerPosition, question.position)
       );
+      score = calculate.score(distance);
     }
 
     this.setState((currState) => {
@@ -124,8 +124,9 @@ class Game extends Component {
   saveScore = () => {
     const scores = database.ref("scores");
     const data = {
-      score: this.state.totalScore,
+      UID: auth.currentUser.uid,
       username: auth.currentUser.displayName,
+      score: this.state.totalScore,
     };
     scores.push(data);
   };
