@@ -12,17 +12,26 @@ class Leaderboard extends Component {
   retrieveLeaderboard = () => {
     const scores = database.ref("scores");
     let scoreArray = [];
-    let count = 0;
+    let count = 5;
+
     scores
       .orderByChild("score")
       .limitToLast(5)
       .on("child_added", (snapshot) => {
         const data = snapshot.val();
-        scoreArray.unshift(data);
-        count++;
-        if (count > 4) {
+
+        if (count > -1) {
+          scoreArray[count] = data;
+          count--;
+        }
+        else {
+          // need to check if new data should be in the leaderboard
+
+        }
+
+        if (count === -1) {
           this.setState({
-            leaderArray: [...scoreArray],
+            leaderArray: [...scoreArray.slice(0, 5)],
           });
         }
       });
@@ -34,18 +43,20 @@ class Leaderboard extends Component {
 
   render() {
     const { leaderArray } = this.state;
+    console.log(leaderArray);
     return (
       <ThemeProvider theme={theme}>
         <Paper id="leaderboard-wrapper">
           <Typography variant="h3">LeaderBoard</Typography>
-          {leaderArray &&
-            leaderArray.map((result, index) => {
+          {leaderArray
+            ? leaderArray.map((result, index) => {
               return (
-                <Typography variant="h4" key={index}>
+                <Typography variant="h2" key={index}>
                   {index + 1}: {`${result.score} (${result.username})`}
                 </Typography>
               );
-            })}
+            })
+            : null}
         </Paper>
       </ThemeProvider>
     );
