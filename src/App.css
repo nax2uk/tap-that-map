@@ -1,3 +1,7 @@
+a {
+  text-decoration: none;
+}
+
 #google-map {
   position: relative;
   display: hidden;

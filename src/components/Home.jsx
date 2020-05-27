@@ -16,7 +16,8 @@ class Home extends Component {
   };
 
   componentDidMount() {
-    this.loadMusic();
+    // commenting out the music for my sanity now
+    //this.loadMusic();
     this.getUserNameAndImage();
   }
 
