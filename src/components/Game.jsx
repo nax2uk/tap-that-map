@@ -209,7 +209,6 @@ class Game extends Component {
             roundScore={roundScore}
             roundDistance={roundDistance}
           />
-          )}
         </>
       );
     } else if (gameIsFinished) {

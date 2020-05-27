@@ -35,7 +35,7 @@ class Leaderboard extends Component {
     const { leaderArray } = this.state;
     return (
       <ThemeProvider theme={theme}>
-        <Paper id="leaderboard-wrapper">
+        <Paper elevation={3} id="leaderboard-wrapper">
           <Typography variant="h3">LeaderBoard</Typography>
           {leaderArray
             ? leaderArray.map((result, index) => {
