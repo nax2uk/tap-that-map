@@ -17,7 +17,7 @@ const ResultsPage = ({ scoreArr, totalScore }) => {
           {scoreArr.map((score, index) => {
             return (
               <Typography variant="h4" key="index">
-                Round {index} : {score}
+                Round {index + 1} : {score}
               </Typography>
             );
           })}
