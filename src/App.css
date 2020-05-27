@@ -84,13 +84,20 @@
 }
 
 #login-form-wrapper {
-  width: 30vw;
+  width: 50vw;
   margin: 20vh auto;
   display: flex;
   flex-direction: column;
   padding: 5vh 5vw;
   justify-content: space-around;
   align-items: center;
+}
+#login-form {
+  width: 80%;
+  margin: 0 auto;
+}
+#login-form > * {
+  margin: 1vh 0;
 }
 
 #button-wrapper {
