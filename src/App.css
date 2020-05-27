@@ -122,12 +122,14 @@
 
 #results-wrapper {
   width: 95vw;
+  margin: 5vh auto;
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
 }
 
 #player-results-wrapper {
-  width: 40vw;
+  width: 50vw;
 }
 
 #leaderboard-wrapper {
