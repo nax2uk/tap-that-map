@@ -13,7 +13,6 @@ class GoogleMap extends Component {
   state = {
     marker: null,
     linkLine: null,
-    scoreSubmitted: false,
   };
 
   googleMapRef = createRef();
@@ -167,7 +166,7 @@ class GoogleMap extends Component {
   }
 
   render() {
-    const { gameOver, scoreSubmitted, marker } = this.state;
+    const { gameOver, marker } = this.state;
     const { roundIsRunning } = this.props;
     if (gameOver) return <ResultsPage />;
     return (
@@ -184,10 +183,7 @@ class GoogleMap extends Component {
         />
         {marker !== null && roundIsRunning && (
           <>
-            <SubmitButton
-              submitMarker={this.submitMarker}
-              scoreSubmitted={scoreSubmitted}
-            />
+            <SubmitButton submitMarker={this.submitMarker} />
             <CancelButton removeMarker={this.removeMarker} />
           </>
         )}
