@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { auth } from "../firebaseInitialise";
 import { Button, TextField, Typography } from "@material-ui/core";
+import UploadImage from "./UploadImage";
 
 class UserNameForm extends Component {
   state = {
@@ -8,6 +9,12 @@ class UserNameForm extends Component {
     userImage: "https://img.icons8.com/emoji/2x/duck-emoji.png",
     error: null,
   };
+
+  // UID = auth.currentUser.UID
+
+  // storageRef = storage.ref();
+  // imagesRef = this.storageRef.child(`images`)
+  // userAvatar = this.imagesRef.child(this.UID)
 
   updateUser = () => {
     const { updateUserNameAndImage } = this.props;
@@ -39,11 +46,17 @@ class UserNameForm extends Component {
     this.updateUser();
   };
 
+  updateMarker = (URL) => {
+    this.setState({
+      userImage: URL,
+    });
+  };
+
   render() {
     return (
       <>
         <Typography variant="h2" align="center">
-          Enter Username and PhotoID URL
+          Enter Username
         </Typography>
         <form id="username-form">
           <TextField
@@ -57,16 +70,7 @@ class UserNameForm extends Component {
             onChange={this.handleChange}
             required
           />
-          <TextField
-            label="Image URL"
-            variant="outlined"
-            margin="normal"
-            id="userImage"
-            name="userImage"
-            type="userImage"
-            value={this.state.update}
-            onChange={this.handleChange}
-          />
+          <UploadImage updateMarker={this.updateMarker} />
           <Button variant="contained" color="secondary" onClick={this.submit}>
             Submit
           </Button>
