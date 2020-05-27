@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import GoogleMap from "./GoogleMap";
 import generateCountryQuestions from "../utils/generateCountryQuestions";
-import * as borderGeojson from "../resources/hq-borders.json";
 import { database, auth } from "../firebaseInitialise";
 import Question from "./Question";
 import Timer from "./Timer";
@@ -27,24 +26,8 @@ class Game extends Component {
     scoreArr: [],
   };
 
-  getQuestionGeojson = () => {
-    const { questionArr } = this.state;
-
-    const questionsWithGeojson = questionArr.map((question) => {
-      const amendedQuestion = { ...question };
-
-      const locationGeojson = borderGeojson.features.find((feature) =>
-        Object.values(feature.properties).includes(question.location)
-      );
-      amendedQuestion.borderData = {
-        type: "FeatureCollection",
-        features: [locationGeojson],
-      };
-
-      return amendedQuestion;
-    });
-
-    this.setState({ questionArr: questionsWithGeojson, gameIsReady: true });
+  toggleGameIsReady = () => {
+    this.setState({ gameIsReady: true });
   };
 
   recordPlayerMarker = (marker) => {
@@ -136,14 +119,24 @@ class Game extends Component {
     this.setState({ countryArr });
 
     countryArr.forEach((country) => {
-      const request = database.ref(`countries/${country}`);
+      const request = database.ref(`countryList/${country}`);
       request.once("value", (response) => {
         const responsePosition = response.val();
+
         this.setState((currState) => {
           return {
             questionArr: [
               ...currState.questionArr,
-              { location: country, position: responsePosition },
+              {
+                location: country,
+                position: responsePosition.centroid,
+                borderData: {
+                  type: "FeatureCollection",
+                  features: [
+                    { type: "Feature", geometry: responsePosition.border },
+                  ],
+                },
+              },
             ],
           };
         });
@@ -156,7 +149,7 @@ class Game extends Component {
     const questionArrHasLoaded =
       questionArr !== prevState.questionArr && questionArr.length === 10;
     if (questionArrHasLoaded && !gameIsReady) {
-      this.getQuestionGeojson();
+      this.toggleGameIsReady();
     }
   }
 
