@@ -163,11 +163,6 @@ class GoogleMap extends Component {
 
     googleMapScript.addEventListener("load", () => {
       this.googleMap = this.createGoogleMap();
-      // window.google.maps.event.addListener(
-      //   this.googleMap,
-      //   "click",
-      //   this.handleMapClick
-      // );
     });
   }
 
