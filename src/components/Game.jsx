@@ -124,8 +124,9 @@ class Game extends Component {
   saveScore = () => {
     const scores = database.ref("scores");
     const data = {
-      score: this.state.totalScore,
+      UID: auth.currentUser.uid,
       username: auth.currentUser.displayName,
+      score: this.state.totalScore,
     };
     scores.push(data);
   };
