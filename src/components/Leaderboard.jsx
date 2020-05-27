@@ -36,11 +36,17 @@ class Leaderboard extends Component {
     return (
       <ThemeProvider theme={theme}>
         <Paper elevation={3} id="leaderboard-wrapper">
-          <Typography variant="h3">LeaderBoard</Typography>
+          <Typography variant="h3" align="center">
+            LeaderBoard
+          </Typography>
           {leaderArray
             ? leaderArray.map((result, index) => {
                 return (
-                  <Typography variant="h2" key={`${result}${index}`}>
+                  <Typography
+                    variant="h4"
+                    key={`${result}${index}`}
+                    align="center"
+                  >
                     {index + 1}: {`${result.score} (${result.username})`}
                   </Typography>
                 );

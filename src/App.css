@@ -123,6 +123,7 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 0 2vw;
 }
 
 #button-wrapper {
@@ -160,15 +161,18 @@ a {
 }
 
 #results-wrapper {
-  width: 95vw;
+  width: 85vw;
   margin: 5vh auto;
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
 }
+#results-wrapper > * {
+  margin: 5vh auto;
+}
 
 #player-results-wrapper {
-  width: 50vw;
+  width: 40vw;
 }
 
 #leaderboard-wrapper {
