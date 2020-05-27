@@ -86,22 +86,9 @@ class Home extends Component {
                     Single Player
                   </Button>
                 </Link>
-                <Link to="/multiplayer/some_id">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={this.updateUser}
-                  >
-                    Host Multiplayer
-                  </Button>
-                </Link>
-                <Link to="/lobby">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={this.updateUser}
-                  >
-                    Join Multiplayer
+                <Link to="/multiplayer">
+                  <Button variant="contained" color="primary">
+                    Multi Player
                   </Button>
                 </Link>
                 <Button
