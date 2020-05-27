@@ -181,12 +181,22 @@ class GoogleMap extends Component {
             height: 0.95 * window.innerHeight,
           }}
         />
-        {marker !== null && roundIsRunning && (
+        {/* {marker !== null && roundIsRunning && (
           <>
             <SubmitButton submitMarker={this.submitMarker} />
             <CancelButton removeMarker={this.removeMarker} />
           </>
-        )}
+        )} */}
+        <SubmitButton
+          submitMarker={this.submitMarker}
+          marker={marker}
+          roundIsRunning={roundIsRunning}
+        />
+        <CancelButton
+          removeMarker={this.removeMarker}
+          marker={marker}
+          roundIsRunning={roundIsRunning}
+        />
       </>
     );
   }
