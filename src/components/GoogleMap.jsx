@@ -1,6 +1,5 @@
 import React, { Component, createRef } from "react";
 import { Paper } from "@material-ui/core";
-
 import API_KEY from "../API-KEYS/maps-api.js";
 import SubmitButton from "./SubmitButton";
 import CancelButton from "./CancelButton";
