@@ -18,7 +18,6 @@ class Leaderboard extends Component {
       .limitToLast(5)
       .on("child_added", (snapshot) => {
         const data = snapshot.val();
-        console.log(data);
         scoreArray.unshift(data);
         count++;
         if (count > 4) {
@@ -41,12 +40,12 @@ class Leaderboard extends Component {
           <Typography variant="h3">LeaderBoard</Typography>
           {leaderArray
             ? leaderArray.map((result, index) => {
-                return (
-                  <Typography variant="h2" key={index}>
-                    {index + 1}: {result.score}
-                  </Typography>
-                );
-              })
+              return (
+                <Typography variant="h2" key={index}>
+                  {index + 1}: {`${result.score} (${result.username})`}
+                </Typography>
+              );
+            })
             : null}
         </Paper>
       </ThemeProvider>

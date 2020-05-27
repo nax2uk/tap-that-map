@@ -1,6 +1,6 @@
 import React, { Component, createRef } from "react";
 import { Paper } from "@material-ui/core";
-import { database } from "../firebaseInitialise";
+
 import API_KEY from "../API-KEYS/maps-api.js";
 import SubmitButton from "./SubmitButton";
 import CancelButton from "./CancelButton";
@@ -118,14 +118,7 @@ class GoogleMap extends Component {
     this.googleMap.setZoom(2);
   };
 
-  saveScore = () => {
-    const scores = database.ref("scores");
-    const data = {
-      UID: this.props.currentUserId,
-      score: this.state.totalScore,
-    };
-    scores.push(data);
-  };
+
 
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProps, prevState) {
