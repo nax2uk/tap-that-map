@@ -197,14 +197,18 @@ class Game extends Component {
             roundIsRunning={roundIsRunning}
             endRound={this.endRound}
           />
-          {gameIsRunning && !roundIsRunning && (
-            <>
-              <NextButton updateRound={this.updateRound} round={round} />
-              <Totaliser
-                roundScore={roundScore}
-                roundDistance={roundDistance}
-              />
-            </>
+          <NextButton
+            gameIsRunning={gameIsRunning}
+            roundIsRunning={roundIsRunning}
+            updateRound={this.updateRound}
+            round={round}
+          />
+          <Totaliser
+            gameIsRunning={gameIsRunning}
+            roundIsRunning={roundIsRunning}
+            roundScore={roundScore}
+            roundDistance={roundDistance}
+          />
           )}
         </>
       );
