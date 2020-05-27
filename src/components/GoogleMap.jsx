@@ -32,7 +32,6 @@ class GoogleMap extends Component {
 
   placeMarker = (latLng) => {
     let user = auth.currentUser;
-    console.log(user.photoURL);
     const { recordPlayerMarker } = this.props;
     const newMarker = new window.google.maps.Marker({
       position: latLng,
