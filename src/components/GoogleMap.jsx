@@ -118,7 +118,12 @@ class GoogleMap extends Component {
     this.googleMap.setZoom(2);
   };
 
-
+  handleMapClick = (e) => {
+    this.removeMarker();
+    this.setState({
+      marker: this.placeMarker(e.latLng),
+    });
+  };
 
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProps, prevState) {
@@ -128,10 +133,21 @@ class GoogleMap extends Component {
       !roundIsRunning &&
       roundIsRunning !== prevProps.roundIsRunning &&
       marker !== null;
+    const roundHasStarted =
+      roundIsRunning && roundIsRunning !== prevProps.roundIsRunning;
+
+    if (roundHasStarted) {
+      window.google.maps.event.addListener(
+        this.googleMap,
+        "click",
+        this.handleMapClick
+      );
+    }
     if (roundHasStopped) {
       this.plotLinkLine();
       this.plotCountryBorder();
       this.createAndPanToBounds();
+      window.google.maps.event.clearListeners(this.googleMap, "click");
     }
     if (round !== prevProps.round) {
       this.removeLinkLine();
@@ -147,12 +163,11 @@ class GoogleMap extends Component {
 
     googleMapScript.addEventListener("load", () => {
       this.googleMap = this.createGoogleMap();
-      window.google.maps.event.addListener(this.googleMap, "click", (e) => {
-        this.removeMarker();
-        this.setState({
-          marker: this.placeMarker(e.latLng),
-        });
-      });
+      // window.google.maps.event.addListener(
+      //   this.googleMap,
+      //   "click",
+      //   this.handleMapClick
+      // );
     });
   }
 
