@@ -6,8 +6,9 @@ import SubmitButton from "./SubmitButton";
 import CancelButton from "./CancelButton";
 import ResultsPage from "./ResultsPage";
 import mapStyle from "../Data/mapStyling";
-import customMarker from "../resources/customMarker";
+// import customMarker from "../resources/customMarker";
 import customLine from "../resources/customLine";
+import { auth } from "../firebaseInitialise";
 
 class GoogleMap extends Component {
   state = {
@@ -32,12 +33,17 @@ class GoogleMap extends Component {
   };
 
   placeMarker = (latLng) => {
+    let user = auth.currentUser;
+    console.log(user.photoURL);
     const { recordPlayerMarker } = this.props;
     const newMarker = new window.google.maps.Marker({
       position: latLng,
       map: this.googleMap,
       draggable: true,
-      icon: customMarker,
+      icon: {
+        url: user.photoURL,
+        scaledSize: new window.google.maps.Size(50, 50),
+      },
     });
     recordPlayerMarker(newMarker);
     return newMarker;
@@ -117,8 +123,6 @@ class GoogleMap extends Component {
     this.googleMap.setCenter({ lat: 0, lng: 0 });
     this.googleMap.setZoom(2);
   };
-
-
 
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProps, prevState) {
