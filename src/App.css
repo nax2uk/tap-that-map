@@ -93,11 +93,18 @@
   align-items: center;
 }
 
-.two-button-wrapper {
-  width: 100%;
+#button-wrapper {
+  width: 50%;
+  margin: 2vh auto;
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
+  align-items: center;
   margin-top: 1rem;
+}
+
+#button-wrapper > * {
+  margin: 1vh 0;
 }
 
 #logout-wrapper {
@@ -111,7 +118,7 @@
 }
 
 #home-wrapper {
-  width: 30vw;
+  width: 60vw;
   margin: 20vh auto;
   display: flex;
   flex-direction: column;
@@ -134,4 +141,9 @@
 
 #leaderboard-wrapper {
   width: 40vw;
+}
+
+#lobby-wrapper {
+  margin: 5vh auto;
+  width: 90vw;
 }

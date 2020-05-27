@@ -8,17 +8,17 @@ import { Howl } from "howler";
 import introSrc from "../resources/intro.m4a";
 import UserNameForm from "./UserNameForm";
 
-const logout = () => {
-  auth.signOut();
-  navigate(`/logout`);
-};
-
 class Home extends Component {
   state = {
     userName: "",
     userImage: "",
     userNameAndImageDoNotExist: true,
   };
+
+  componentDidMount() {
+    this.loadMusic();
+    this.getUserNameAndImage();
+  }
 
   updateUserNameAndImage = (userName, userImage) => {
     this.setState({
@@ -36,11 +36,6 @@ class Home extends Component {
       );
     }
   };
-
-  componentDidMount() {
-    this.loadMusic();
-    this.getUserNameAndImage();
-  }
 
   loadMusic = () => {
     const introMusic = new Howl({
@@ -60,13 +55,18 @@ class Home extends Component {
     });
   };
 
+  logout = () => {
+    auth.signOut();
+    navigate(`/logout`);
+  };
+
   render() {
-    const { userNameAndImageDoNotExist } = this.state;
+    const { userNameAndImageDoNotExist, userName } = this.state;
     return (
       <ThemeProvider theme={theme}>
         <Paper id="home-wrapper" elevation={3}>
           <Typography variant="h2" align="center">
-            Home
+            Hello {userName}
           </Typography>
           {userNameAndImageDoNotExist ? (
             <UserNameForm
@@ -76,20 +76,39 @@ class Home extends Component {
             />
           ) : (
             <>
-              <Typography variant="h2" align="center">
-                Hello {this.state.userName}
-              </Typography>
-              <Box margin="normal" className="two-button-wrapper">
-                <Link to="/game">
+              <Box id="button-wrapper">
+                <Link to="/singlePlayerGame">
                   <Button
                     variant="contained"
                     color="primary"
                     onClick={this.updateUser}
                   >
-                    Start Game
+                    Single Player
                   </Button>
                 </Link>
-                <Button variant="contained" color="secondary" onClick={logout}>
+                <Link to="/multiplayer/some_id">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={this.updateUser}
+                  >
+                    Host Multiplayer
+                  </Button>
+                </Link>
+                <Link to="/lobby">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={this.updateUser}
+                  >
+                    Join Multiplayer
+                  </Button>
+                </Link>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={this.logout}
+                >
                   Logout
                 </Button>
               </Box>
