@@ -1,6 +1,5 @@
 import React, { Component, createRef } from "react";
 import { Paper } from "@material-ui/core";
-
 import API_KEY from "../API-KEYS/maps-api.js";
 import SubmitButton from "./SubmitButton";
 import CancelButton from "./CancelButton";
@@ -14,7 +13,6 @@ class GoogleMap extends Component {
   state = {
     marker: null,
     linkLine: null,
-    scoreSubmitted: false,
   };
 
   googleMapRef = createRef();
@@ -34,7 +32,6 @@ class GoogleMap extends Component {
 
   placeMarker = (latLng) => {
     let user = auth.currentUser;
-    console.log(user.photoURL);
     const { recordPlayerMarker } = this.props;
     const newMarker = new window.google.maps.Marker({
       position: latLng,
@@ -124,6 +121,13 @@ class GoogleMap extends Component {
     this.googleMap.setZoom(2);
   };
 
+  handleMapClick = (e) => {
+    this.removeMarker();
+    this.setState({
+      marker: this.placeMarker(e.latLng),
+    });
+  };
+
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProps, prevState) {
     const { round, roundIsRunning } = this.props;
@@ -132,10 +136,21 @@ class GoogleMap extends Component {
       !roundIsRunning &&
       roundIsRunning !== prevProps.roundIsRunning &&
       marker !== null;
+    const roundHasStarted =
+      roundIsRunning && roundIsRunning !== prevProps.roundIsRunning;
+
+    if (roundHasStarted) {
+      window.google.maps.event.addListener(
+        this.googleMap,
+        "click",
+        this.handleMapClick
+      );
+    }
     if (roundHasStopped) {
       this.plotLinkLine();
       this.plotCountryBorder();
       this.createAndPanToBounds();
+      window.google.maps.event.clearListeners(this.googleMap, "click");
     }
     if (round !== prevProps.round) {
       this.removeLinkLine();
@@ -151,17 +166,11 @@ class GoogleMap extends Component {
 
     googleMapScript.addEventListener("load", () => {
       this.googleMap = this.createGoogleMap();
-      window.google.maps.event.addListener(this.googleMap, "click", (e) => {
-        this.removeMarker();
-        this.setState({
-          marker: this.placeMarker(e.latLng),
-        });
-      });
     });
   }
 
   render() {
-    const { gameOver, scoreSubmitted, marker } = this.state;
+    const { gameOver, marker } = this.state;
     const { roundIsRunning } = this.props;
     if (gameOver) return <ResultsPage />;
     return (
@@ -176,15 +185,16 @@ class GoogleMap extends Component {
             height: 0.95 * window.innerHeight,
           }}
         />
-        {marker !== null && roundIsRunning && (
-          <>
-            <SubmitButton
-              submitMarker={this.submitMarker}
-              scoreSubmitted={scoreSubmitted}
-            />
-            <CancelButton removeMarker={this.removeMarker} />
-          </>
-        )}
+        <SubmitButton
+          submitMarker={this.submitMarker}
+          marker={marker}
+          roundIsRunning={roundIsRunning}
+        />
+        <CancelButton
+          removeMarker={this.removeMarker}
+          marker={marker}
+          roundIsRunning={roundIsRunning}
+        />
       </>
     );
   }
