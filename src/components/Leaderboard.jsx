@@ -38,15 +38,14 @@ class Leaderboard extends Component {
       <ThemeProvider theme={theme}>
         <Paper id="leaderboard-wrapper">
           <Typography variant="h3">LeaderBoard</Typography>
-          {leaderArray
-            ? leaderArray.map((result, index) => {
+          {leaderArray &&
+            leaderArray.map((result, index) => {
               return (
-                <Typography variant="h2" key={index}>
+                <Typography variant="h4" key={index}>
                   {index + 1}: {`${result.score} (${result.username})`}
                 </Typography>
               );
-            })
-            : null}
+            })}
         </Paper>
       </ThemeProvider>
     );

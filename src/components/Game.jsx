@@ -17,7 +17,7 @@ class Game extends Component {
     userIsReady: false,
     gameIsRunning: false,
     roundIsRunning: false,
-    gameIsFinished: false,
+    gameIsFinished: false, // need to switch this back to false after work done
     questionArr: [],
     playerMarker: null,
     round: 0,
@@ -60,14 +60,13 @@ class Game extends Component {
   };
 
   endRound = () => {
-
     this.calculateScoreAndDistance();
 
     this.setState((currState) => {
       return {
         totalScore: currState.totalScore + currState.roundScore,
         roundIsRunning: false,
-        playerMarker: null
+        playerMarker: null,
       };
     });
   };
@@ -83,7 +82,13 @@ class Game extends Component {
           roundIsRunning: false,
         };
       } else {
-        return { round: currState.round++, roundIsRunning: true, playerMarker: null, roundDistance: 0, roundScore: 0 };
+        return {
+          round: currState.round++,
+          roundIsRunning: true,
+          playerMarker: null,
+          roundDistance: 0,
+          roundScore: 0,
+        };
       }
     });
   };
@@ -120,7 +125,7 @@ class Game extends Component {
     const scores = database.ref("scores");
     const data = {
       score: this.state.totalScore,
-      username: auth.currentUser.displayName
+      username: auth.currentUser.displayName,
     };
     scores.push(data);
   };
