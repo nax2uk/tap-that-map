@@ -16,7 +16,7 @@ class Game extends Component {
     userIsReady: false,
     gameIsRunning: false,
     roundIsRunning: false,
-    gameIsFinished: false, // need to switch this back to false after work done
+    gameIsFinished: false,
     questionArr: [],
     playerMarker: null,
     round: 0,

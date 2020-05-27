@@ -69,9 +69,9 @@ a {
 }
 #totaliser-wrapper {
   position: absolute;
-  width: 15rem;
+  width: 10rem;
   padding: 1vh 2vw 1vh 1vw;
-  top: 75vh;
+  top: 30vh;
   right: -1vh;
   text-align: left;
   z-index: 1;
