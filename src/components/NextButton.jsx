@@ -9,7 +9,7 @@ const NextButton = ({ updateRound, round, gameIsRunning, roundIsRunning }) => {
       <Slide direction="left" in={gameIsRunning && !roundIsRunning}>
         <Paper elevation={3} id="next-wrapper">
           <Button variant="contained" color="primary" onClick={updateRound}>
-            <Typography variant="h3">
+            <Typography variant="h4">
               {round !== 9 ? "Next" : "Results"}
             </Typography>
           </Button>
