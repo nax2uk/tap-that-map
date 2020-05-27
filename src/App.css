@@ -142,3 +142,8 @@
 #leaderboard-wrapper {
   width: 40vw;
 }
+
+#lobby-wrapper {
+  margin: 5vh auto;
+  width: 90vw;
+}
