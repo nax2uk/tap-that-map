@@ -95,11 +95,13 @@ class Game extends Component {
       score = calculate.score(distance);
     }
 
-    this.setState((currState) => {
+    this.setState(({ scoreArr, round }) => {
+      const updatedScoreArr = [...scoreArr];
+      updatedScoreArr[round] = score;
       return {
         roundScore: score,
         roundDistance: distance,
-        scoreArr: [...currState.scoreArr, score],
+        scoreArr: updatedScoreArr,
       };
     });
   };

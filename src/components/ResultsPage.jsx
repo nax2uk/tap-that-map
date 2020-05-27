@@ -16,7 +16,7 @@ const ResultsPage = ({ scoreArr, totalScore }) => {
           <Typography variant="h3">{`🌎  Results  🌎  ${totalScore}  🌎`}</Typography>
           {scoreArr.map((score, index) => {
             return (
-              <Typography variant="h4" key="index">
+              <Typography variant="h4" key={`${score}${index}`}>
                 Round {index + 1} : {score}
               </Typography>
             );
