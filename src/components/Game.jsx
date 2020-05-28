@@ -55,6 +55,7 @@ class Game extends Component {
   };
 
   updateRound = () => {
+    console.log("updateRound is firing");
     this.setState((currState) => {
       if (currState.round === 10) {
         this.saveScore();
@@ -66,7 +67,7 @@ class Game extends Component {
         };
       } else {
         return {
-          round: currState.round++,
+          round: currState.round + 1,
           roundIsRunning: true,
           playerMarker: null,
           roundDistance: 0,
@@ -171,6 +172,7 @@ class Game extends Component {
       scoreArr,
     } = this.state;
     if (gameIsReady && !gameIsFinished) {
+      console.log(questionArr);
       return (
         <>
           {!gameIsRunning && !userIsReady && (
