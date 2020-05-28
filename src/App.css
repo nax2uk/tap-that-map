@@ -183,5 +183,32 @@ a {
 
 #lobby-wrapper {
   margin: 5vh auto;
-  width: 90vw;
+  padding: 5vh 5vw;
+  width: 80vw;
+}
+#lobby-wrapper > * {
+  margin: 2vh auto;
+}
+
+#initialise-game-wrapper {
+  width: 60vw;
+  margin: 20vh auto;
+  display: flex;
+  flex-direction: column;
+  padding: 5vh 5vw;
+  justify-content: space-around;
+  align-content: stretch;
+}
+
+#initialise-button-wrapper {
+  width: 50%;
+  margin: 2vh auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  margin-top: 1rem;
+}
+#initialise-button-wrapper > * {
+  margin: 1vh 0;
 }

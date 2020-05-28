@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Paper, Typography, Button } from "@material-ui/core";
+import { Paper, Typography, Button, Slide } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../resources/theme.jsx";
 import { database } from "../firebaseInitialise";
@@ -29,23 +29,30 @@ class Lobby extends Component {
     const { participants } = this.state;
     return (
       <ThemeProvider theme={theme}>
-        <Paper id="lobby-wrapper">
+        <Paper elevation={3} id="lobby-wrapper">
           <Typography variant="h2" align="center">
             Game Lobby
           </Typography>
-        </Paper>
-        {gameId ? <h3>Game ID:{gameId}</h3> : null}
-        <h4>Send this id to your friends to join your game session</h4>
-        <ul>
+          {gameId && <Typography variant="h4">Game ID: {gameId}</Typography>}
+          <Typography variant="body1">
+            Send this id to your friends to join your game session
+          </Typography>
+          <Typography variant="body1">Current Players</Typography>
           {Object.values(participants).map((participant, index) => {
-            return <li key={index}>{participant.displayName}</li>;
+            return (
+              <Slide in={true} direction="right" timeout={100}>
+                <Typography variant="body2">
+                  {participant.displayName}
+                </Typography>
+              </Slide>
+            );
           })}
-        </ul>
-        {isHost && (
-          <Button variant="contained" color="primary" onClick={startGame}>
-            Start Game
-          </Button>
-        )}
+          {isHost && (
+            <Button variant="contained" color="primary" onClick={startGame}>
+              Start Game
+            </Button>
+          )}
+        </Paper>
       </ThemeProvider>
     );
   }

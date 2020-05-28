@@ -2,6 +2,9 @@ import React, { Component } from "react";
 import Lobby from "./Lobby";
 import { database, auth } from "../firebaseInitialise";
 import MultiplayerGame from "./MultiplayerGame";
+import { Paper, Button, Box, Typography, TextField } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core/styles";
+import theme from "../resources/theme.jsx";
 
 class Multiplayer extends Component {
   state = {
@@ -110,20 +113,47 @@ class Multiplayer extends Component {
   }
 
   render() {
-    const { hostOrJoin, lobbyOpen, gameId, isHost, gameIsStarted } = this.state;
+    const {
+      hostOrJoin,
+      lobbyOpen,
+      gameId,
+      isHost,
+      gameIsStarted,
+      inputtedId,
+    } = this.state;
     return (
       <div>
         {hostOrJoin ? (
-          <>
-            <button onClick={this.initGame}>Initialise Game</button>
-            <input
-              type="text"
-              onChange={this.updateID}
-              placeholder="Enter your game id"
-              value={this.state.inputtedId}
-            />
-            <button onClick={this.checkId}>Join Game</button>
-          </>
+          <ThemeProvider theme={theme}>
+            <Paper elevation={3} id="initialise-game-wrapper">
+              <Typography variant="h2" align="center">
+                Multiplayer
+              </Typography>
+              <Box id="initialise-button-wrapper">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={this.initGame}
+                >
+                  Start A Game
+                </Button>
+                <TextField
+                  variant="outlined"
+                  label="game-id"
+                  onChange={this.updateID}
+                  value={inputtedId}
+                />
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={this.checkId}
+                  disabled={inputtedId.length === 0}
+                >
+                  Join A Game
+                </Button>
+              </Box>
+            </Paper>
+          </ThemeProvider>
         ) : null}
         {lobbyOpen ? (
           <Lobby gameId={gameId} isHost={isHost} startGame={this.startGame} />
