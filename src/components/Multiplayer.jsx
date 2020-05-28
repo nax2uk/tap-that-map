@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Lobby from "./Lobby";
 import { database, auth } from "../firebaseInitialise";
+import MultiplayerGame from "./MultiplayerGame";
 
 class Multiplayer extends Component {
   state = {
@@ -97,7 +98,7 @@ class Multiplayer extends Component {
   }
 
   render() {
-    const { hostOrJoin, lobbyOpen, gameId, isHost } = this.state;
+    const { hostOrJoin, lobbyOpen, gameId, isHost, gameIsStarted } = this.state;
     return (
       <div>
         {hostOrJoin ? (
@@ -115,6 +116,13 @@ class Multiplayer extends Component {
         {lobbyOpen ? (
           <Lobby gameId={gameId} isHost={isHost} startGame={this.startGame} />
         ) : null}
+        {gameIsStarted && (
+          <MultiplayerGame
+            currentUserId={this.props.currentUserId}
+            isHost={isHost}
+            gameId={gameId}
+          />
+        )}
       </div>
     );
   }
