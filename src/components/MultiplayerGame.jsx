@@ -187,7 +187,7 @@ class Game extends Component {
               gameIsFinished: true,
               roundIsRunning: false,
             };
-          } else {
+          } else if (newRound !== 0) {
             return {
               round: newRound,
               roundIsRunning: true,
@@ -296,7 +296,7 @@ class Game extends Component {
     if (gameIsReady && !gameIsFinished) {
       return (
         <>
-          {!gameIsRunning && !userIsReady && (
+          {!gameIsRunning && (
             <MultiplayerStartButton
               startGame={this.startGame}
               userReady={this.userReady}
