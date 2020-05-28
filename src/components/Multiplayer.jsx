@@ -25,6 +25,7 @@ class Multiplayer extends Component {
         },
       },
       gameIsStarted: false,
+      startRound1: false,
     };
 
     this.setState({

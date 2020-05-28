@@ -48,11 +48,9 @@ class Game extends Component {
   };
 
   startGame = () => {
-    // this.setState({
-    //   userIsReady: true,
-    //   gameIsRunning: true,
-    //   roundIsRunning: true,
-    // });
+    const { gameId } = this.props;
+    const game = database.ref("multiplayerGame");
+    game.child(gameId).child("startRound1").set(true);
   };
 
   endRound = () => {
@@ -160,9 +158,30 @@ class Game extends Component {
       });
   };
 
+  listenForStartRound1 = () => {
+    const { gameId } = this.props;
+    const game = database.ref("multiplayerGame");
+
+    game
+      .child(gameId)
+      .child("startRound1")
+      .on("value", (snapshot) => {
+        const data = snapshot.val();
+        console.log("-->", data);
+        if (data === true) {
+          this.setState({
+            userIsReady: true,
+            gameIsRunning: true,
+            roundIsRunning: true,
+          });
+        }
+      });
+  };
+
   componentDidMount() {
     const { isHost, gameId } = this.props;
     this.listenForQuestionArray();
+    this.listenForStartRound1();
     if (isHost) {
       this.listenForPlayersAreReady();
       const countryArr = generateCountryQuestions(10);
