@@ -10,6 +10,7 @@ import MultiplayerStartButton from "./MultiplayerStartButton";
 import MultiplayerNextButton from "./MultiplayerNextButton";
 import Totaliser from "./Totaliser";
 import ResultsPage from "./ResultsPage";
+import MultiplayerScoresTracker from "./MultiplayerScoresTracker";
 
 class Game extends Component {
   state = {
@@ -339,6 +340,10 @@ class Game extends Component {
             roundIsRunning={roundIsRunning}
             roundScore={roundScore}
             roundDistance={roundDistance}
+          />
+          <MultiplayerScoresTracker
+            gameIsRunning={gameIsRunning}
+            roundIsRunning={roundIsRunning}
           />
         </>
       );

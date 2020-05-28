@@ -212,3 +212,13 @@ a {
 #initialise-button-wrapper > * {
   margin: 1vh 0;
 }
+
+#scores-tracker-wrapper {
+  position: absolute;
+  width: 12rem;
+  padding: 1vh 1vw 1vh 2vw;
+  top: 30vh;
+  left: -1vh;
+  text-align: right;
+  z-index: 1;
+}
