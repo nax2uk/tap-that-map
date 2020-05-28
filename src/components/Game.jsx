@@ -172,7 +172,6 @@ class Game extends Component {
       scoreArr,
     } = this.state;
     if (gameIsReady && !gameIsFinished) {
-      console.log(questionArr);
       return (
         <>
           {!gameIsRunning && !userIsReady && (

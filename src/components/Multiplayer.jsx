@@ -22,10 +22,12 @@ class Multiplayer extends Component {
         [auth.currentUser.uid]: {
           displayName: auth.currentUser.displayName,
           userIsReady: false,
+          roundIsRunning: false,
         },
       },
       gameIsStarted: false,
       startRound1: false,
+      round: 0,
     };
 
     this.setState({
@@ -91,7 +93,6 @@ class Multiplayer extends Component {
     const game = database.ref("multiplayerGame");
     game.child(inputtedId).once("value", (snapshot) => {
       const data = snapshot.val();
-      console.log(data);
       if (data) {
         console.log("game connected");
         this.setState({ gameId: inputtedId });

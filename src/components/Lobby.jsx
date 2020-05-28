@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Paper, Typography, Button } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../resources/theme.jsx";
-import { database, auth } from "../firebaseInitialise";
+import { database } from "../firebaseInitialise";
 
 class Lobby extends Component {
   state = {
@@ -16,7 +16,6 @@ class Lobby extends Component {
       .child("participants")
       .on("value", (snapshot) => {
         const data = snapshot.val();
-        // console.log(data);
         this.setState({ participants: data });
       });
   };
