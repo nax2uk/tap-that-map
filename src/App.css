@@ -38,10 +38,11 @@ a {
 
 #submit-wrapper {
   position: absolute;
+  border-radius: 2rem;
   width: 4rem;
   height: 4rem;
-  right: 2.5vw;
-  bottom: 2.5vh;
+  right: 1.5vw;
+  bottom: 1.5vh;
   z-index: 2;
   display: flex;
   justify-content: center;
@@ -49,10 +50,11 @@ a {
 }
 #cancel-wrapper {
   position: absolute;
+  border-radius: 2rem;
   width: 4rem;
   height: 4rem;
-  left: 2.5vw;
-  bottom: 2.5vh;
+  left: 1.5vw;
+  bottom: 1.5vh;
   z-index: 2;
   display: flex;
   justify-content: center;
