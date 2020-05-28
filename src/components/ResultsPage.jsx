@@ -12,22 +12,27 @@ const ResultsPage = ({ scoreArr, totalScore }) => {
   return (
     <ThemeProvider theme={theme}>
       <Box id="results-wrapper">
-        <Paper id="player-results-wrapper">
-          <Typography variant="h3">{`🌎  Results  🌎  ${totalScore}  🌎`}</Typography>
+        <Paper elevation={3} id="player-results-wrapper">
+          <Box className="two-item-box">
+            <Typography variant="h3">Your result</Typography>
+            <Typography variant="h3">{totalScore}</Typography>
+          </Box>
           {scoreArr.map((score, index) => {
             return (
-              <Typography variant="h4" key="index">
+              <Typography variant="h4" key={`${score}${index}`} align="center">
                 Round {index + 1} : {score}
               </Typography>
             );
           })}
         </Paper>
         <Leaderboard />
-        <Link to="/">
-          <Button variant="contained" color="primary">
-            BACK HOME
-          </Button>
-        </Link>
+        <Box>
+          <Link to="/">
+            <Button variant="contained" color="primary">
+              BACK HOME
+            </Button>
+          </Link>
+        </Box>
       </Box>
     </ThemeProvider>
   );

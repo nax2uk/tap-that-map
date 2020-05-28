@@ -16,7 +16,8 @@ class Home extends Component {
   };
 
   componentDidMount() {
-    this.loadMusic();
+    // commenting out the music for my sanity now
+    //this.loadMusic();
     this.getUserNameAndImage();
   }
 
@@ -62,48 +63,62 @@ class Home extends Component {
 
   render() {
     const { userNameAndImageDoNotExist, userName } = this.state;
-    return (
-      <ThemeProvider theme={theme}>
-        <Paper id="home-wrapper" elevation={3}>
-          <Typography variant="h2" align="center">
-            Hello {userName}
-          </Typography>
-          {userNameAndImageDoNotExist ? (
-            <UserNameForm
-              nickname={this.userName}
-              userImage={this.userImage}
-              updateUserNameAndImage={this.updateUserNameAndImage}
-            />
-          ) : (
-            <>
-              <Box id="button-wrapper">
-                <Link to="/singlePlayerGame">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={this.updateUser}
-                  >
-                    Single Player
-                  </Button>
-                </Link>
-                <Link to="/multiplayer">
-                  <Button variant="contained" color="primary">
-                    Multi Player
-                  </Button>
-                </Link>
+    if (userNameAndImageDoNotExist) {
+      return (
+        <UserNameForm
+          nickname={this.userName}
+          userImage={this.userImage}
+          updateUserNameAndImage={this.updateUserNameAndImage}
+        />
+      );
+    } else {
+      return (
+        <ThemeProvider theme={theme}>
+          <Paper id="home-wrapper" elevation={3}>
+            <Typography variant="h2" align="center">
+              Hello {userName}
+            </Typography>
+            <Box id="button-wrapper">
+              <Link to="/singlePlayerGame">
                 <Button
                   variant="contained"
-                  color="secondary"
-                  onClick={this.logout}
+                  color="primary"
+                  onClick={this.updateUser}
                 >
-                  Logout
+                  Single Player
                 </Button>
-              </Box>
-            </>
-          )}
-        </Paper>
-      </ThemeProvider>
-    );
+              </Link>
+              <Link to="/multiplayer/some_id">
+
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={this.updateUser}
+                >
+                  Host Multiplayer
+                </Button>
+              </Link>
+              <Link to="/lobby">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={this.updateUser}
+                >
+                  Join Multiplayer
+                </Button>
+              </Link>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={this.logout}
+              >
+                Logout
+              </Button>
+            </Box>
+          </Paper>
+        </ThemeProvider>
+      );
+    }
   }
 }
 

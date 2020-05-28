@@ -1,16 +1,29 @@
 import React from "react";
-import { Paper, Typography } from "@material-ui/core";
+import { Paper, Typography, Slide } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../resources/theme.jsx";
 
-const Totaliser = ({ roundScore, roundDistance }) => {
+const Totaliser = ({
+  roundScore,
+  roundDistance,
+  gameIsRunning,
+  roundIsRunning,
+}) => {
   return (
     <ThemeProvider theme={theme}>
-      <Paper elevation={3} id="totaliser-wrapper">
-        <Typography variant="body1">
-          Distance: {roundDistance} <br /> Score: {roundScore}
-        </Typography>
-      </Paper>
+      <Slide direction="left" in={gameIsRunning && !roundIsRunning}>
+        <Paper elevation={3} id="totaliser-wrapper">
+          <Typography variant="h4">
+            Distance:
+            <br />
+            {roundDistance}km
+            <br />
+            Points:
+            <br />
+            {roundScore}
+          </Typography>
+        </Paper>
+      </Slide>
     </ThemeProvider>
   );
 };

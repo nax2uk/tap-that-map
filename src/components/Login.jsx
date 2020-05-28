@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import { auth } from "../firebaseInitialise";
-import TextField from "@material-ui/core/TextField";
-import Box from "@material-ui/core/Box";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import ErrorMessage from "./ErrorMessage";
+import { FormGroup, TextField, Button, Paper } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../resources/theme.jsx";
 
@@ -16,9 +12,10 @@ class Login extends Component {
   };
 
   login = (event) => {
+    const { email, password } = this.state;
     event.preventDefault();
     auth
-      .signInWithEmailAndPassword(this.state.email, this.state.password)
+      .signInWithEmailAndPassword(email, password)
       .then()
       .catch((error) => {
         this.setState({ error: error.message });
@@ -26,9 +23,10 @@ class Login extends Component {
   };
 
   signup = (event) => {
+    const { email, password } = this.state;
     event.preventDefault();
     auth
-      .createUserWithEmailAndPassword(this.state.email, this.state.password)
+      .createUserWithEmailAndPassword(email, password)
       .then()
       .catch((error) => {
         this.setState({ error: error.message });
@@ -46,11 +44,11 @@ class Login extends Component {
   };
 
   render() {
-    const { error } = this.state;
+    const { error, email, password } = this.state;
     return (
-      <Paper elevation={3} id="login-form-wrapper">
-        <ThemeProvider theme={theme}>
-          <form id="login-form">
+      <ThemeProvider theme={theme}>
+        <Paper elevation={3} id="login-form-wrapper">
+          <FormGroup id="login-form">
             <TextField
               label="e-mail"
               variant="outlined"
@@ -58,7 +56,9 @@ class Login extends Component {
               id="email"
               name="email"
               type="email"
-              value={this.state.email}
+              error={error !== null}
+              helperText={error}
+              value={email}
               onChange={this.handleChange}
               required
             />
@@ -69,34 +69,31 @@ class Login extends Component {
               id="password"
               name="password"
               type="password"
-              value={this.state.password}
+              value={password}
               onChange={this.handleChange}
               required
             />
-            <Box margin="normal" className="two-button-wrapper">
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                onClick={this.login}
-                margin="normal"
-              >
-                Login
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                type="submit"
-                onClick={this.signup}
-                margin="normal"
-              >
-                Sign Up
-              </Button>
-            </Box>
-          </form>
-          {error && <ErrorMessage message={error} />}
-        </ThemeProvider>
-      </Paper>
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              onClick={this.login}
+              margin="normal"
+            >
+              Login
+            </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              onClick={this.signup}
+              margin="normal"
+            >
+              Sign Up
+            </Button>
+          </FormGroup>
+        </Paper>
+      </ThemeProvider>
     );
   }
 }

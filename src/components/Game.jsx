@@ -16,7 +16,7 @@ class Game extends Component {
     userIsReady: false,
     gameIsRunning: false,
     roundIsRunning: false,
-    gameIsFinished: false, // need to switch this back to false after work done
+    gameIsFinished: false,
     questionArr: [],
     playerMarker: null,
     round: 0,
@@ -95,11 +95,13 @@ class Game extends Component {
       score = calculate.score(distance);
     }
 
-    this.setState((currState) => {
+    this.setState(({ scoreArr, round }) => {
+      const updatedScoreArr = [...scoreArr];
+      updatedScoreArr[round] = score;
       return {
         roundScore: score,
         roundDistance: distance,
-        scoreArr: [...currState.scoreArr, score],
+        scoreArr: updatedScoreArr,
       };
     });
   };
@@ -195,15 +197,18 @@ class Game extends Component {
             roundIsRunning={roundIsRunning}
             endRound={this.endRound}
           />
-          {gameIsRunning && !roundIsRunning && (
-            <>
-              <NextButton updateRound={this.updateRound} round={round} />
-              <Totaliser
-                roundScore={roundScore}
-                roundDistance={roundDistance}
-              />
-            </>
-          )}
+          <NextButton
+            gameIsRunning={gameIsRunning}
+            roundIsRunning={roundIsRunning}
+            updateRound={this.updateRound}
+            round={round}
+          />
+          <Totaliser
+            gameIsRunning={gameIsRunning}
+            roundIsRunning={roundIsRunning}
+            roundScore={roundScore}
+            roundDistance={roundDistance}
+          />
         </>
       );
     } else if (gameIsFinished) {

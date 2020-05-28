@@ -11,29 +11,19 @@ class Leaderboard extends Component {
 
   retrieveLeaderboard = () => {
     const scores = database.ref("scores");
-    let scoreArray = [];
-    let count = 5;
-
     scores
       .orderByChild("score")
       .limitToLast(5)
-      .on("child_added", (snapshot) => {
-        const data = snapshot.val();
-
-        if (count > -1) {
-          scoreArray[count] = data;
-          count--;
-        }
-        else {
-          // need to check if new data should be in the leaderboard
-
-        }
-
-        if (count === -1) {
-          this.setState({
-            leaderArray: [...scoreArray.slice(0, 5)],
-          });
-        }
+      .once("value")
+      .then((data) => {
+        const scoreObjects = data.val();
+        const arrayOfScoresAndNames = Object.values(scoreObjects).map(
+          ({ score, username }) => {
+            return { score, username };
+          }
+        );
+        arrayOfScoresAndNames.sort((a, b) => b.score - a.score);
+        this.setState({ leaderArray: arrayOfScoresAndNames });
       });
   };
 
@@ -43,19 +33,24 @@ class Leaderboard extends Component {
 
   render() {
     const { leaderArray } = this.state;
-    console.log(leaderArray);
     return (
       <ThemeProvider theme={theme}>
-        <Paper id="leaderboard-wrapper">
-          <Typography variant="h3">LeaderBoard</Typography>
+        <Paper elevation={3} id="leaderboard-wrapper">
+          <Typography variant="h3" align="center">
+            LeaderBoard
+          </Typography>
           {leaderArray
             ? leaderArray.map((result, index) => {
-              return (
-                <Typography variant="h2" key={index}>
-                  {index + 1}: {`${result.score} (${result.username})`}
-                </Typography>
-              );
-            })
+                return (
+                  <Typography
+                    variant="h4"
+                    key={`${result}${index}`}
+                    align="center"
+                  >
+                    {index + 1}: {`${result.score} (${result.username})`}
+                  </Typography>
+                );
+              })
             : null}
         </Paper>
       </ThemeProvider>
