@@ -6,7 +6,7 @@ import { auth } from "./firebaseInitialise";
 import { Router } from "@reach/router";
 import Logout from "./components/Logout";
 import Game from "./components/Game";
-import Lobby from "./components/Lobby";
+import Multiplayer from "./components/Multiplayer";
 
 class App extends Component {
   state = {
@@ -33,7 +33,7 @@ class App extends Component {
         {this.state.currentUserId ? <Home path="/" /> : <Login path="/" />}
         <Logout path="/logout" />
         <Game path="/singlePlayerGame" currentUserId={currentUserId} />
-        <Lobby path="/lobby" />
+        <Multiplayer path="/multiplayer" />
       </Router>
     );
   }
