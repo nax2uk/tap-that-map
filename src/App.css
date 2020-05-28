@@ -1,3 +1,7 @@
+a {
+  text-decoration: none;
+}
+
 #google-map {
   position: relative;
   display: hidden;
@@ -34,10 +38,11 @@
 
 #submit-wrapper {
   position: absolute;
+  border-radius: 2rem;
   width: 4rem;
   height: 4rem;
-  right: 2.5vw;
-  bottom: 2.5vh;
+  right: 1.5vw;
+  bottom: 1.5vh;
   z-index: 2;
   display: flex;
   justify-content: center;
@@ -45,10 +50,11 @@
 }
 #cancel-wrapper {
   position: absolute;
+  border-radius: 2rem;
   width: 4rem;
   height: 4rem;
-  left: 2.5vw;
-  bottom: 2.5vh;
+  left: 1.5vw;
+  bottom: 1.5vh;
   z-index: 2;
   display: flex;
   justify-content: center;
@@ -56,18 +62,21 @@
 }
 #next-wrapper {
   position: absolute;
-  width: 10rem;
+  width: 12rem;
   padding: 1vh 2vw 1vh 1vw;
   bottom: 2vh;
   right: -1vh;
   text-align: left;
   z-index: 1;
 }
+#next-wrapper > button {
+  width: 100%;
+}
 #totaliser-wrapper {
   position: absolute;
-  width: 15rem;
+  width: 12rem;
   padding: 1vh 2vw 1vh 1vw;
-  top: 75vh;
+  top: 30vh;
   right: -1vh;
   text-align: left;
   z-index: 1;
@@ -84,13 +93,39 @@
 }
 
 #login-form-wrapper {
-  width: 30vw;
+  width: 50vw;
   margin: 20vh auto;
   display: flex;
   flex-direction: column;
   padding: 5vh 5vw;
   justify-content: space-around;
   align-items: center;
+}
+#login-form {
+  width: 80%;
+  margin: 0 auto;
+}
+#login-form > * {
+  margin: 1vh 0;
+}
+
+#username-form-wrapper {
+  width: 50vw;
+  margin: 20vh auto;
+  display: flex;
+  flex-direction: column;
+  padding: 5vh 5vw;
+  justify-content: space-around;
+  align-items: center;
+}
+#upload-image-wrapper > * {
+  margin: 2vh 0;
+}
+.two-item-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2vw;
 }
 
 #button-wrapper {
@@ -128,15 +163,18 @@
 }
 
 #results-wrapper {
-  width: 95vw;
+  width: 85vw;
   margin: 5vh auto;
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
 }
+#results-wrapper > * {
+  margin: 5vh auto;
+}
 
 #player-results-wrapper {
-  width: 50vw;
+  width: 40vw;
 }
 
 #leaderboard-wrapper {

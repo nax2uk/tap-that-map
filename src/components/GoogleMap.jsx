@@ -36,10 +36,10 @@ class GoogleMap extends Component {
     const newMarker = new window.google.maps.Marker({
       position: latLng,
       map: this.googleMap,
-      draggable: true,
       icon: {
         url: user.photoURL,
         scaledSize: new window.google.maps.Size(50, 50),
+        anchor: new window.google.maps.Point(25, 25),
       },
     });
     recordPlayerMarker(newMarker);

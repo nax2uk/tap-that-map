@@ -1,6 +1,14 @@
 import React, { Component } from "react";
 import { auth } from "../firebaseInitialise";
-import { Button, TextField, Typography } from "@material-ui/core";
+import {
+  Paper,
+  Button,
+  Typography,
+  TextField,
+  FormGroup,
+} from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core/styles";
+import theme from "../resources/theme.jsx";
 import UploadImage from "./UploadImage";
 
 class UserNameForm extends Component {
@@ -54,28 +62,30 @@ class UserNameForm extends Component {
 
   render() {
     return (
-      <>
-        <Typography variant="h2" align="center">
-          Enter Username
-        </Typography>
-        <form id="username-form">
-          <TextField
-            label="nickname"
-            variant="outlined"
-            margin="normal"
-            id="nickname"
-            name="nickname"
-            type="nickname"
-            value={this.state.nickname}
-            onChange={this.handleChange}
-            required
-          />
-          <UploadImage updateMarker={this.updateMarker} />
-          <Button variant="contained" color="secondary" onClick={this.submit}>
-            Submit
-          </Button>
-        </form>
-      </>
+      <ThemeProvider theme={theme}>
+        <Paper elevation={3} id="username-form-wrapper">
+          <Typography variant="h2" align="center">
+            Enter Username
+          </Typography>
+          <FormGroup id="username-form">
+            <TextField
+              label="nickname"
+              variant="outlined"
+              margin="normal"
+              id="nickname"
+              name="nickname"
+              type="nickname"
+              value={this.state.nickname}
+              onChange={this.handleChange}
+              required
+            />
+            <UploadImage updateMarker={this.updateMarker} />
+            <Button variant="contained" color="primary" onClick={this.submit}>
+              Submit
+            </Button>
+          </FormGroup>
+        </Paper>
+      </ThemeProvider>
     );
   }
 }
