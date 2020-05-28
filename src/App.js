@@ -33,7 +33,7 @@ class App extends Component {
         {this.state.currentUserId ? <Home path="/" /> : <Login path="/" />}
         <Logout path="/logout" />
         <Game path="/singlePlayerGame" currentUserId={currentUserId} />
-        <Multiplayer path="/multiplayer" />
+        <Multiplayer path="/multiplayer" currentUserId={currentUserId} />
       </Router>
     );
   }
