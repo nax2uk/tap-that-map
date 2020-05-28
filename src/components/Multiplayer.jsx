@@ -18,9 +18,15 @@ class Multiplayer extends Component {
     const game = database.ref("multiplayerGame");
     const data = {
       host: auth.currentUser.uid,
-      participants: [auth.currentUser.displayName],
+      participants: {
+        [auth.currentUser.uid]: {
+          displayName: auth.currentUser.displayName,
+          userIsReady: false,
+        },
+      },
       gameIsStarted: false,
     };
+
     this.setState({
       gameId: game.push(data).key,
       hostOrJoin: false,
@@ -62,10 +68,14 @@ class Multiplayer extends Component {
       .child(gameId)
       .child("participants")
       .once("value", (snapshot) => {
-        const participantsArray = snapshot.val();
-        participantsArray.push(auth.currentUser.displayName);
+        const participantsObj = snapshot.val();
+        const participantData = {
+          displayName: auth.currentUser.displayName,
+          userIsReady: false,
+        };
+        participantsObj[auth.currentUser.uid] = participantData;
 
-        game.child(gameId).child("participants").set(participantsArray);
+        game.child(gameId).child("participants").set(participantsObj);
       });
 
     this.setState({

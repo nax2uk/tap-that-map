@@ -16,7 +16,8 @@ class Lobby extends Component {
       .child("participants")
       .on("value", (snapshot) => {
         const data = snapshot.val();
-        this.setState({ participants: [...data] });
+        // console.log(data);
+        this.setState({ participants: data });
       });
   };
 
@@ -37,8 +38,8 @@ class Lobby extends Component {
         {gameId ? <h3>Game ID:{gameId}</h3> : null}
         <h4>Send this id to your friends to join your game session</h4>
         <ul>
-          {participants.map((participant, index) => {
-            return <li key={index}>{participant}</li>;
+          {Object.values(participants).map((participant, index) => {
+            return <li key={index}>{participant.displayName}</li>;
           })}
         </ul>
         {isHost && (

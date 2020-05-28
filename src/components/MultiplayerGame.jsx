@@ -6,7 +6,7 @@ import Question from "./Question";
 import Timer from "./Timer";
 import * as calculate from "../utils/calculateFunctions";
 import Score from "./Score";
-import StartButton from "./StartButton";
+import MultiplayerStartButton from "./MultiplayerStartButton";
 import NextButton from "./NextButton";
 import Totaliser from "./Totaliser";
 import ResultsPage from "./ResultsPage";
@@ -14,6 +14,7 @@ import ResultsPage from "./ResultsPage";
 class Game extends Component {
   state = {
     userIsReady: false,
+    participantsAreReady: false,
     gameIsRunning: false,
     roundIsRunning: false,
     gameIsFinished: false,
@@ -34,12 +35,24 @@ class Game extends Component {
     this.setState({ playerMarker: marker });
   };
 
+  userReady = () => {
+    const { gameId, currentUserId } = this.props;
+    console.log(gameId, currentUserId);
+    const game = database.ref("multiplayerGame");
+    game
+      .child(gameId)
+      .child("participants")
+      .child(currentUserId)
+      .child("userIsReady")
+      .set(true);
+  };
+
   startGame = () => {
-    this.setState({
-      userIsReady: true,
-      gameIsRunning: true,
-      roundIsRunning: true,
-    });
+    // this.setState({
+    //   userIsReady: true,
+    //   gameIsRunning: true,
+    //   roundIsRunning: true,
+    // });
   };
 
   endRound = () => {
@@ -129,10 +142,29 @@ class Game extends Component {
       });
   };
 
+  listenForPlayersAreReady = () => {
+    const { gameId } = this.props;
+    const game = database.ref("multiplayerGame");
+
+    game
+      .child(gameId)
+      .child("participants")
+      .on("value", (snapshot) => {
+        const data = snapshot.val();
+        const userIdList = Object.keys(data);
+        if (userIdList.every((user) => data[user].userIsReady === true)) {
+          this.setState({
+            participantsAreReady: true,
+          });
+        }
+      });
+  };
+
   componentDidMount() {
     const { isHost, gameId } = this.props;
     this.listenForQuestionArray();
     if (isHost) {
+      this.listenForPlayersAreReady();
       const countryArr = generateCountryQuestions(10);
       this.setState({ countryArr });
 
@@ -178,7 +210,7 @@ class Game extends Component {
   }
 
   render() {
-    const { currentUserId } = this.props;
+    const { currentUserId, isHost } = this.props;
     const {
       gameIsReady,
       gameIsFinished,
@@ -191,12 +223,18 @@ class Game extends Component {
       roundDistance,
       totalScore,
       scoreArr,
+      participantsAreReady,
     } = this.state;
     if (gameIsReady && !gameIsFinished) {
       return (
         <>
           {!gameIsRunning && !userIsReady && (
-            <StartButton startGame={this.startGame} />
+            <MultiplayerStartButton
+              startGame={this.startGame}
+              userReady={this.userReady}
+              isHost={isHost}
+              participantsAreReady={participantsAreReady}
+            />
           )}
           {gameIsRunning && (
             <>
