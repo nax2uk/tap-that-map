@@ -9,14 +9,16 @@ class Multiplayer extends Component {
     inputtedId: "",
     gameId: null,
     lobbyOpen: false,
+    gameIsStarted: false,
   };
 
-  startGame = (e) => {
+  initGame = (e) => {
     e.preventDefault();
     const game = database.ref("multiplayerGame");
     const data = {
       host: auth.currentUser.uid,
       participants: [auth.currentUser.displayName],
+      gameIsStarted: false,
     };
     this.setState({
       gameId: game.push(data).key,
@@ -24,6 +26,26 @@ class Multiplayer extends Component {
       isHost: true,
       lobbyOpen: true,
     });
+  };
+
+  startGame = () => {
+    const { gameId } = this.state;
+    const game = database.ref("multiplayerGame");
+    game.child(gameId).child("gameIsStarted").set(true);
+  };
+
+  listenForGameStart = () => {
+    const { gameId } = this.state;
+    const game = database.ref("multiplayerGame");
+    game
+      .child(gameId)
+      .child("gameIsStarted")
+      .on("value", (snapshot) => {
+        const gameIsStarted = snapshot.val();
+        if (gameIsStarted) {
+          this.setState({ gameIsStarted, lobbyOpen: false });
+        }
+      });
   };
 
   updateID = (e) => {
@@ -68,13 +90,19 @@ class Multiplayer extends Component {
 
   componentDidMount() {}
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.gameId !== this.state.gameId) {
+      this.listenForGameStart();
+    }
+  }
+
   render() {
     const { hostOrJoin, lobbyOpen, gameId, isHost } = this.state;
     return (
       <div>
         {hostOrJoin ? (
           <>
-            <button onClick={this.startGame}>Initialise Game</button>
+            <button onClick={this.initGame}>Initialise Game</button>
             <input
               type="text"
               onChange={this.updateID}
@@ -84,7 +112,9 @@ class Multiplayer extends Component {
             <button onClick={this.checkId}>Join Game</button>
           </>
         ) : null}
-        {lobbyOpen ? <Lobby gameId={gameId} isHost={isHost} /> : null}
+        {lobbyOpen ? (
+          <Lobby gameId={gameId} isHost={isHost} startGame={this.startGame} />
+        ) : null}
       </div>
     );
   }
