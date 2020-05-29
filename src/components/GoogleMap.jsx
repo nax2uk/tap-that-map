@@ -199,6 +199,7 @@ class GoogleMap extends Component {
       this.createAndPanToBounds();
       if (allPlayersMarkers) {
         this.plotOtherMarkers();
+        this.createAndPanToOtherBounds();
       }
       window.google.maps.event.clearListeners(this.googleMap, "click");
     }
