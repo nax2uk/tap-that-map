@@ -8,6 +8,7 @@ import mapStyle from "../Data/mapStyling";
 // import customMarker from "../resources/customMarker";
 import customLine from "../resources/customLine";
 import { auth } from "../firebaseInitialise";
+import { Grid } from "@material-ui/core";
 
 class GoogleMap extends Component {
   state = {
@@ -199,8 +200,8 @@ class GoogleMap extends Component {
     const { roundIsRunning } = this.props;
     if (gameOver) return <ResultsPage />;
     return (
-      <>
-        <Paper
+      <Grid container>
+        <Grid container item xs={12}
           elevation={3}
           square={true}
           id="google-map"
@@ -210,17 +211,23 @@ class GoogleMap extends Component {
             height: 0.95 * dimensions.height,
           }}
         />
-        <SubmitButton
-          submitMarker={this.submitMarker}
-          marker={marker}
-          roundIsRunning={roundIsRunning}
-        />
-        <CancelButton
-          removeMarker={this.removeMarker}
-          marker={marker}
-          roundIsRunning={roundIsRunning}
-        />
-      </>
+        <Grid container item xs={12}>
+          <Grid item xs={6}>
+            <SubmitButton
+              submitMarker={this.submitMarker}
+              marker={marker}
+              roundIsRunning={roundIsRunning}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <CancelButton
+              removeMarker={this.removeMarker}
+              marker={marker}
+              roundIsRunning={roundIsRunning}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
     );
   }
 }
