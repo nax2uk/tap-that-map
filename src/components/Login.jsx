@@ -46,54 +46,54 @@ class Login extends Component {
   render() {
     const { error, email, password } = this.state;
     return (
-      <ThemeProvider theme={theme}>
-        <Paper elevation={3} id="login-form-wrapper">
-          <FormGroup id="login-form">
-            <TextField
-              label="e-mail"
-              variant="outlined"
-              margin="normal"
-              id="email"
-              name="email"
-              type="email"
-              error={error !== null}
-              helperText={error}
-              value={email}
-              onChange={this.handleChange}
-              required
-            />
-            <TextField
-              label="password"
-              variant="outlined"
-              margin="normal"
-              id="password"
-              name="password"
-              type="password"
-              value={password}
-              onChange={this.handleChange}
-              required
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              onClick={this.login}
-              margin="normal"
-            >
-              Login
+
+      <Paper elevation={3} id="login-form-wrapper">
+        <FormGroup id="login-form">
+          <TextField
+            label="e-mail"
+            variant="outlined"
+            margin="normal"
+            id="email"
+            name="email"
+            type="email"
+            error={error !== null}
+            helperText={error}
+            value={email}
+            onChange={this.handleChange}
+            required
+          />
+          <TextField
+            label="password"
+            variant="outlined"
+            margin="normal"
+            id="password"
+            name="password"
+            type="password"
+            value={password}
+            onChange={this.handleChange}
+            required
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            onClick={this.login}
+            margin="normal"
+          >
+            Login
             </Button>
-            <Button
-              variant="contained"
-              color="primary"
-              type="submit"
-              onClick={this.signup}
-              margin="normal"
-            >
-              Sign Up
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            onClick={this.signup}
+            margin="normal"
+          >
+            Sign Up
             </Button>
-          </FormGroup>
-        </Paper>
-      </ThemeProvider>
+        </FormGroup>
+      </Paper>
+
     );
   }
 }

@@ -73,35 +73,35 @@ class Home extends Component {
       );
     } else {
       return (
-        <ThemeProvider theme={theme}>
-          <Paper id="home-wrapper" elevation={3}>
-            <Typography variant="h2" align="center">
-              Hello {userName}
-            </Typography>
-            <Box id="button-wrapper">
-              <Link to="/singlePlayerGame">
-                <Button
-                  variant="contained"
-                  color="primary"
-                >
-                  Single Player
-                </Button>
-              </Link>
-              <Link to="/multiplayer">
-                <Button variant="contained" color="primary">
-                  Multiplayer
-                </Button>
-              </Link>
+
+        <Paper id="home-wrapper" elevation={3}>
+          <Typography variant="h2" align="center">
+            Hello {userName}
+          </Typography>
+          <Box id="button-wrapper">
+            <Link to="/singlePlayerGame">
               <Button
                 variant="contained"
-                color="secondary"
-                onClick={this.logout}
+                color="primary"
               >
-                Logout
+                Single Player
+                </Button>
+            </Link>
+            <Link to="/multiplayer">
+              <Button variant="contained" color="primary">
+                Multiplayer
+                </Button>
+            </Link>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={this.logout}
+            >
+              Logout
               </Button>
-            </Box>
-          </Paper>
-        </ThemeProvider>
+          </Box>
+        </Paper>
+
       );
     }
   }
