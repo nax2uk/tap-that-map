@@ -62,30 +62,30 @@ class UserNameForm extends Component {
 
   render() {
     return (
-      <ThemeProvider theme={theme}>
-        <Paper elevation={3} id="username-form-wrapper">
-          <Typography variant="h2" align="center">
-            Enter Username
+
+      <Paper elevation={3} id="username-form-wrapper">
+        <Typography variant="h2" align="center">
+          Enter Username
           </Typography>
-          <FormGroup id="username-form">
-            <TextField
-              label="nickname"
-              variant="outlined"
-              margin="normal"
-              id="nickname"
-              name="nickname"
-              type="nickname"
-              value={this.state.nickname}
-              onChange={this.handleChange}
-              required
-            />
-            <UploadImage updateMarker={this.updateMarker} />
-            <Button variant="contained" color="primary" onClick={this.submit}>
-              Submit
+        <FormGroup id="username-form">
+          <TextField
+            label="nickname"
+            variant="outlined"
+            margin="normal"
+            id="nickname"
+            name="nickname"
+            type="nickname"
+            value={this.state.nickname}
+            onChange={this.handleChange}
+            required
+          />
+          <UploadImage updateMarker={this.updateMarker} />
+          <Button variant="contained" color="primary" onClick={this.submit}>
+            Submit
             </Button>
-          </FormGroup>
-        </Paper>
-      </ThemeProvider>
+        </FormGroup>
+      </Paper>
+
     );
   }
 }

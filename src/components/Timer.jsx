@@ -69,13 +69,13 @@ class Timer extends Component {
 
   render() {
     return (
-      <ThemeProvider theme={theme}>
-        <Paper id="timer-wrapper" elevation={3}>
-          <Typography variant="h2">
-            <span id="time">{this.formatAndDisplayTime()}</span>
-          </Typography>
-        </Paper>
-      </ThemeProvider>
+
+      <Paper id="timer-wrapper" elevation={3}>
+        <Typography variant="h2">
+          <span id="time">{this.formatAndDisplayTime()}</span>
+        </Typography>
+      </Paper>
+
     );
   }
 }

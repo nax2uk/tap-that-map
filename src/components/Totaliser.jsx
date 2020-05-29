@@ -10,21 +10,21 @@ const Totaliser = ({
   roundIsRunning,
 }) => {
   return (
-    <ThemeProvider theme={theme}>
-      <Slide direction="left" in={gameIsRunning && !roundIsRunning}>
-        <Paper elevation={3} id="totaliser-wrapper">
-          <Typography variant="h4">
-            Distance:
+
+    <Slide direction="left" in={gameIsRunning && !roundIsRunning}>
+      <Paper elevation={3} id="totaliser-wrapper">
+        <Typography variant="h4">
+          Distance:
             <br />
-            {roundDistance}km
+          {roundDistance}km
             <br />
             Points:
             <br />
-            {roundScore}
-          </Typography>
-        </Paper>
-      </Slide>
-    </ThemeProvider>
+          {roundScore}
+        </Typography>
+      </Paper>
+    </Slide>
+
   );
 };
 
