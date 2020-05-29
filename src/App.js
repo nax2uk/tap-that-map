@@ -7,7 +7,7 @@ import { Router } from "@reach/router";
 import Logout from "./components/Logout";
 import Game from "./components/Game";
 import Multiplayer from "./components/Multiplayer";
-import { ThemeProvider } from "@material-ui/core/styles"; ovide
+import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./resources/theme";
 
 
