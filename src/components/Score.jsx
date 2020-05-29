@@ -7,9 +7,7 @@ const Score = (props) => {
   const { totalScore } = props;
   return (
     <Paper elevation={3} id="score-wrapper">
-      <ThemeProvider theme={theme}>
-        <Typography variant="h4">Score: {totalScore}</Typography>
-      </ThemeProvider>
+      <Typography variant="h4">Score: {totalScore}</Typography>
     </Paper>
   );
 };

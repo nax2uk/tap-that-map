@@ -7,9 +7,9 @@ const Question = (props) => {
   const { location, round } = props;
   return (
     <Paper elevation={12 - round} id="question-wrapper">
-      <ThemeProvider theme={theme}>
-        <Typography variant="h2">{`${round + 1}. ${location}`}</Typography>
-      </ThemeProvider>
+
+      <Typography variant="h2">{`${round + 1}. ${location}`}</Typography>
+
     </Paper>
   );
 };
