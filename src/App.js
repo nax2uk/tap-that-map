@@ -7,6 +7,9 @@ import { Router } from "@reach/router";
 import Logout from "./components/Logout";
 import Game from "./components/Game";
 import Multiplayer from "./components/Multiplayer";
+import { ThemeProvider } from "@material-ui/core/styles";
+import theme from "./resources/theme";
+
 
 class App extends Component {
   state = {
@@ -29,12 +32,16 @@ class App extends Component {
   render() {
     const { currentUserId } = this.state;
     return (
-      <Router>
-        {this.state.currentUserId ? <Home path="/" /> : <Login path="/" />}
-        <Logout path="/logout" />
-        <Game path="/singlePlayerGame" currentUserId={currentUserId} />
-        <Multiplayer path="/multiplayer" currentUserId={currentUserId} />
-      </Router>
+      <ThemeProvider theme={theme}>
+        <Router>
+          {this.state.currentUserId ? <Home path="/" /> : <Login path="/" />}
+          <Logout path="/logout" />
+          <Game path="/singlePlayerGame" currentUserId={currentUserId} />
+          <Multiplayer path="/multiplayer" currentUserId={currentUserId} />
+        </Router>
+      </ThemeProvider>
+
+
     );
   }
 }
