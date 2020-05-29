@@ -40,6 +40,7 @@ class Game extends Component {
   userReady = () => {
     const { gameId, currentUserId } = this.props;
     const game = database.ref("multiplayerGame");
+
     game
       .child(gameId)
       .child("participants")
@@ -52,6 +53,7 @@ class Game extends Component {
   startGame = () => {
     const { gameId } = this.props;
     const game = database.ref("multiplayerGame");
+
     game.child(gameId).child("startRound1").set(true);
   };
 
@@ -71,6 +73,7 @@ class Game extends Component {
     const { gameId } = this.props;
     const { round } = this.state;
     const game = database.ref("multiplayerGame");
+
     game
       .child(gameId)
       .child("round")
