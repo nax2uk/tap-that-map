@@ -27,6 +27,8 @@ class Multiplayer extends Component {
           userIsReady: false,
           roundIsRunning: false,
           marker: null,
+          roundScore: 0,
+          totalScore: 0,
         },
       },
       gameIsStarted: false,
@@ -81,6 +83,8 @@ class Multiplayer extends Component {
           userIsReady: false,
           roundIsRunning: false,
           marker: null,
+          roundScore: 0,
+          totalScore: 0,
         };
         participantsObj[auth.currentUser.uid] = participantData;
 

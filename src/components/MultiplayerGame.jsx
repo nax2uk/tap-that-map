@@ -27,6 +27,7 @@ class Game extends Component {
     totalScore: 0,
     scoreArr: [],
     allPlayersMarkers: {},
+    allPlayersScores: [],
   };
 
   toggleGameIsReady = () => {
@@ -256,6 +257,32 @@ class Game extends Component {
       });
   };
 
+  listenForParticipantScores = () => {
+    const { gameId } = this.props;
+    const game = database.ref("multiplayerGame");
+
+    game
+      .child(gameId)
+      .child("participants")
+      .once("value")
+      .then((snapshot) => {
+        const data = snapshot.val();
+        const participantsIds = Object.keys(data);
+        const partRoundScoreArray = [];
+
+        participantsIds.forEach((participantId) => {
+          if (participantId !== auth.currentUser.uid) {
+            partRoundScoreArray.push({
+              displayName: data[participantId].displayName,
+              roundScore: data[participantId].roundScore,
+            });
+          }
+        });
+
+        this.setState({ allPlayersScores: partRoundScoreArray });
+      });
+  };
+
   componentDidMount() {
     const { isHost, gameId } = this.props;
 
@@ -306,6 +333,8 @@ class Game extends Component {
       roundIsRunning,
       userIsReady,
       playerMarker,
+      roundScore,
+      totalScore,
     } = this.state;
     const { gameId, currentUserId } = this.props;
 
@@ -350,6 +379,24 @@ class Game extends Component {
         .child(currentUserId)
         .child("marker")
         .set(markerLatLng);
+    }
+
+    if (totalScore !== prevState.totalScore) {
+      game
+        .child(gameId)
+        .child("participants")
+        .child(currentUserId)
+        .child("totalScore")
+        .set(totalScore);
+    }
+
+    if (roundScore !== prevState.roundScore) {
+      game
+        .child(gameId)
+        .child("participants")
+        .child(currentUserId)
+        .child("roundScore")
+        .set(roundScore);
     }
   }
 
