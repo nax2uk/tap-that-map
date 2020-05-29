@@ -146,16 +146,18 @@ class GoogleMap extends Component {
 
     const foreignMarkerArray = [];
     Object.values(allPlayersMarkers).forEach(({ marker, photoURL }) => {
-      const newMarker = new window.google.maps.Marker({
-        position: marker,
-        map: this.googleMap,
-        icon: {
-          url: photoURL,
-          scaledSize: new window.google.maps.Size(40, 40),
-          anchor: new window.google.maps.Point(20, 20),
-        },
-      });
-      foreignMarkerArray.push(newMarker);
+      if (marker !== null) {
+        const newMarker = new window.google.maps.Marker({
+          position: marker,
+          map: this.googleMap,
+          icon: {
+            url: photoURL,
+            scaledSize: new window.google.maps.Size(40, 40),
+            anchor: new window.google.maps.Point(20, 20),
+          },
+        });
+        foreignMarkerArray.push(newMarker);
+      }
     });
     this.setState({
       foreignMarkerArray,
