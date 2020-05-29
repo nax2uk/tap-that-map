@@ -135,12 +135,10 @@ class GoogleMap extends Component {
   updateDimensions = () => {
 
     this.setState({ dimensions: { width: window.innerWidth, height: window.innerHeight } }, () => {
-      console.log(`window is resized to ${this.state.dimensions.width} x ${this.state.dimensions.height} `);
+      //console.log(`window is resized to ${this.state.dimensions.width} x ${this.state.dimensions.height} `);
     });
   }
-  handleResize = () => {
 
-  }
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProps, prevState) {
     const { round, roundIsRunning } = this.props;

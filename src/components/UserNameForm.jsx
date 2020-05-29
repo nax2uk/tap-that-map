@@ -16,12 +16,6 @@ class UserNameForm extends Component {
     error: null,
   };
 
-  // UID = auth.currentUser.UID
-
-  // storageRef = storage.ref();
-  // imagesRef = this.storageRef.child(`images`)
-  // userAvatar = this.imagesRef.child(this.UID)
-
   updateUser = () => {
     const { updateUserNameAndImage } = this.props;
     const { nickname, userImage } = this.state;
@@ -36,15 +30,14 @@ class UserNameForm extends Component {
         updateUserNameAndImage(nickname, userImage);
       })
       .catch((error) => {
-        console.log(error);
+        this.setState({ error: error.message })
       });
   };
 
   handleChange = (event) => {
-    // console.log(event);
+
     const { name, value } = event.target;
     this.setState({ [name]: value });
-    // this.updateUser()
   };
 
   submit = (event) => {
@@ -59,6 +52,7 @@ class UserNameForm extends Component {
   };
 
   render() {
+    const { error } = this.state;
     return (
 
       <Paper elevation={3} id="username-form-wrapper">
@@ -73,6 +67,8 @@ class UserNameForm extends Component {
             id="nickname"
             name="nickname"
             type="nickname"
+            error={error !== null}
+            helperText={error}
             value={this.state.nickname}
             onChange={this.handleChange}
             required
