@@ -75,6 +75,25 @@ class Game extends Component {
       .child(gameId)
       .child("round")
       .set(round + 1);
+
+    game
+      .child(gameId)
+      .child("participants")
+      .once("value")
+      .then((data) => {
+        const participantsObj = data.val();
+        return Object.keys(participantsObj);
+      })
+      .then((keys) =>
+        keys.forEach((key) => {
+          game
+            .child(gameId)
+            .child("participants")
+            .child(key)
+            .child("userIsReady")
+            .set(false);
+        })
+      );
   };
 
   calculateScoreAndDistance = () => {
