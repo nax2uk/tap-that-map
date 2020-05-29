@@ -266,6 +266,7 @@ class Game extends Component {
       gameIsReady,
       roundIsRunning,
       userIsReady,
+      playerMarker,
     } = this.state;
     const { gameId, currentUserId } = this.props;
 
@@ -294,6 +295,22 @@ class Game extends Component {
         .child(currentUserId)
         .child("userIsReady")
         .set(userIsReady);
+    }
+    if (playerMarker !== prevState.playerMarker) {
+      let markerLatLng = null;
+      if (playerMarker !== null) {
+        markerLatLng = {
+          lat: playerMarker.position.lat(),
+          lng: playerMarker.position.lng(),
+        };
+      }
+
+      game
+        .child(gameId)
+        .child("participants")
+        .child(currentUserId)
+        .child("marker")
+        .set(markerLatLng);
     }
   }
 

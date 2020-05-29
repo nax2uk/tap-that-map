@@ -26,6 +26,7 @@ class Multiplayer extends Component {
           displayName: auth.currentUser.displayName,
           userIsReady: false,
           roundIsRunning: false,
+          marker: null,
         },
       },
       gameIsStarted: false,
@@ -79,6 +80,7 @@ class Multiplayer extends Component {
           displayName: auth.currentUser.displayName,
           userIsReady: false,
           roundIsRunning: false,
+          marker: null,
         };
         participantsObj[auth.currentUser.uid] = participantData;
 
