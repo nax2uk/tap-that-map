@@ -290,6 +290,7 @@ class Game extends Component {
     this.listenForStartRound1();
     this.listenForRoundChange();
     this.listenForParticipantMarkers();
+    this.listenForParticipantScores();
 
     if (isHost) {
       this.listenForPlayersAreReady();
