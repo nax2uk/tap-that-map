@@ -57,7 +57,6 @@ class Game extends Component {
   updateRound = () => {
     this.setState((currState) => {
       if (currState.round === 9) {
-        this.saveScore();
         return {
           gameIsReady: false,
           gameIsRunning: false,
@@ -147,11 +146,15 @@ class Game extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { questionArr, gameIsReady } = this.state;
+    const { questionArr, gameIsReady, gameIsFinished } = this.state;
     const questionArrHasLoaded =
       questionArr !== prevState.questionArr && questionArr.length === 10;
     if (questionArrHasLoaded && !gameIsReady) {
       this.toggleGameIsReady();
+    }
+
+    if (gameIsFinished !== prevState.gameIsFinished) {
+      this.saveScore();
     }
   }
 

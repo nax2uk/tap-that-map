@@ -204,7 +204,6 @@ class Game extends Component {
         const newRound = snapshot.val();
         this.setState(() => {
           if (newRound === 10) {
-            this.saveScore();
             return {
               gameIsReady: false,
               gameIsRunning: false,
@@ -330,6 +329,7 @@ class Game extends Component {
     const {
       questionArr,
       gameIsReady,
+      gameIsFinished,
       roundIsRunning,
       userIsReady,
       playerMarker,
@@ -397,6 +397,10 @@ class Game extends Component {
         .child(currentUserId)
         .child("roundScore")
         .set(roundScore);
+    }
+
+    if (gameIsFinished !== prevState.gameIsFinished) {
+      this.saveScore();
     }
   }
 
