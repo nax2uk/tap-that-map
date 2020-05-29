@@ -264,8 +264,7 @@ class Game extends Component {
     game
       .child(gameId)
       .child("participants")
-      .once("value")
-      .then((snapshot) => {
+      .on("value", (snapshot) => {
         const data = snapshot.val();
         const participantsIds = Object.keys(data);
         const partRoundScoreArray = [];
