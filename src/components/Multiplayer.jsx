@@ -24,6 +24,7 @@ class Multiplayer extends Component {
       participants: {
         [auth.currentUser.uid]: {
           displayName: auth.currentUser.displayName,
+          photoURL: auth.currentUser.photoURL,
           userIsReady: false,
           roundIsRunning: false,
           marker: null,
@@ -80,6 +81,7 @@ class Multiplayer extends Component {
         const participantsObj = snapshot.val();
         const participantData = {
           displayName: auth.currentUser.displayName,
+          photoURL: auth.currentUser.photoURL,
           userIsReady: false,
           roundIsRunning: false,
           marker: null,

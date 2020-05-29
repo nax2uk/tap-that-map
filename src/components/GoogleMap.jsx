@@ -145,15 +145,15 @@ class GoogleMap extends Component {
     const { allPlayersMarkers } = this.props;
 
     const foreignMarkerArray = [];
-    Object.values(allPlayersMarkers).forEach((latLng) => {
+    Object.values(allPlayersMarkers).forEach(({ marker, photoURL }) => {
       const newMarker = new window.google.maps.Marker({
-        position: latLng,
+        position: marker,
         map: this.googleMap,
-        // icon: {
-        //   url: user.photoURL,
-        //   scaledSize: new window.google.maps.Size(50, 50),
-        //   anchor: new window.google.maps.Point(25, 25),
-        // },
+        icon: {
+          url: photoURL,
+          scaledSize: new window.google.maps.Size(40, 40),
+          anchor: new window.google.maps.Point(20, 20),
+        },
       });
       foreignMarkerArray.push(newMarker);
     });
@@ -171,9 +171,9 @@ class GoogleMap extends Component {
       let resultBounds = new window.google.maps.LatLngBounds();
       resultBounds.extend({ lat, lng });
       resultBounds.extend(question.position);
-      Object.values(allPlayersMarkers).forEach((markerObj) => {
-        if (markerObj !== null) {
-          resultBounds.extend(markerObj);
+      Object.values(allPlayersMarkers).forEach(({ marker }) => {
+        if (marker !== null) {
+          resultBounds.extend(marker);
         }
       });
       this.googleMap.fitBounds(resultBounds);
