@@ -5,8 +5,9 @@ a {
 #google-map {
   position: relative;
   display: hidden;
-  top: 2.5vh;
-  left: 2.5vw;
+  top: 0vh;
+  left: 0vw;
+  margin:1px;
   z-index: 0;
 }
 
