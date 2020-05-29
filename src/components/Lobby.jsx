@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Paper, Typography, Button, Slide } from "@material-ui/core";
+import { Paper, Typography, Button, Fade } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "../resources/theme.jsx";
 import { database } from "../firebaseInitialise";
@@ -40,11 +40,11 @@ class Lobby extends Component {
           <Typography variant="body1">Current Players</Typography>
           {Object.values(participants).map((participant, index) => {
             return (
-              <Slide in={true} direction="right" timeout={100}>
+              <Fade in={true} direction="right" timeout={1000}>
                 <Typography variant="body2">
                   {participant.displayName}
                 </Typography>
-              </Slide>
+              </Fade>
             );
           })}
           {isHost && (
