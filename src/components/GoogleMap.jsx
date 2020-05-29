@@ -13,6 +13,7 @@ class GoogleMap extends Component {
   state = {
     marker: null,
     linkLine: null,
+    foreignMarkerArray: [],
   };
 
   googleMapRef = createRef();
@@ -47,11 +48,19 @@ class GoogleMap extends Component {
   };
 
   removeMarker = () => {
-    const { marker } = this.state;
+    const { marker, foreignMarkerArray } = this.state;
+
     if (marker !== null) {
       marker.setMap(null);
     }
-    this.setState({ marker: null });
+
+    foreignMarkerArray.forEach((marker) => {
+      if (marker !== null) {
+        marker.setMap(null);
+      }
+    });
+    //edited for multiplayer
+    this.setState({ marker: null, foreignMarkerArray: [] });
   };
 
   submitMarker = () => {
@@ -128,9 +137,30 @@ class GoogleMap extends Component {
     });
   };
 
+  plotOtherMarkers = () => {
+    const { allPlayersMarkers } = this.props;
+
+    const foreignMarkerArray = [];
+    Object.values(allPlayersMarkers).forEach((latLng) => {
+      const newMarker = new window.google.maps.Marker({
+        position: latLng,
+        map: this.googleMap,
+        // icon: {
+        //   url: user.photoURL,
+        //   scaledSize: new window.google.maps.Size(50, 50),
+        //   anchor: new window.google.maps.Point(25, 25),
+        // },
+      });
+      foreignMarkerArray.push(newMarker);
+    });
+    this.setState({
+      foreignMarkerArray,
+    });
+  };
+
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProps, prevState) {
-    const { round, roundIsRunning } = this.props;
+    const { round, roundIsRunning, allPlayersMarkers } = this.props;
     const { marker } = this.state;
     const roundHasStopped =
       !roundIsRunning &&
@@ -150,12 +180,18 @@ class GoogleMap extends Component {
       this.plotLinkLine();
       this.plotCountryBorder();
       this.createAndPanToBounds();
+      if (allPlayersMarkers) {
+        this.plotOtherMarkers();
+      }
       window.google.maps.event.clearListeners(this.googleMap, "click");
     }
     if (round !== prevProps.round) {
       this.removeLinkLine();
       this.removeMarker();
       this.resetMapView();
+    }
+    if (allPlayersMarkers !== prevProps.allPlayersMarkers && !roundIsRunning) {
+      this.plotOtherMarkers();
     }
   }
 
