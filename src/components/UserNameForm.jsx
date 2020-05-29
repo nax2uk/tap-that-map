@@ -41,8 +41,13 @@ class UserNameForm extends Component {
   };
 
   submit = (event) => {
+
     event.preventDefault();
-    this.updateUser();
+    if (this.state.nickname === "") {
+      this.setState({ error: "please enter a nickname to proceed." })
+    }
+    else
+      this.updateUser();
   };
 
   updateMarker = (URL) => {
