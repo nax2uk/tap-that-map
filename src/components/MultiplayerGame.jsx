@@ -233,20 +233,22 @@ class Game extends Component {
         const participantsIds = Object.keys(data);
 
         participantsIds.forEach((participantId) => {
-          game
-            .child(gameId)
-            .child("participants")
-            .child(participantId)
-            .child("marker")
-            .on("value", (markerSnap) => {
-              const partMarker = markerSnap.val();
+          if (participantId !== auth.currentUser.uid) {
+            game
+              .child(gameId)
+              .child("participants")
+              .child(participantId)
+              .child("marker")
+              .on("value", (markerSnap) => {
+                const partMarker = markerSnap.val();
 
-              this.setState((currentState) => {
-                const workingCopy = { ...currentState.allPlayersMarkers };
-                workingCopy[participantId] = partMarker;
-                return { allPlayersMarkers: workingCopy };
+                this.setState((currentState) => {
+                  const workingCopy = { ...currentState.allPlayersMarkers };
+                  workingCopy[participantId] = partMarker;
+                  return { allPlayersMarkers: workingCopy };
+                });
               });
-            });
+          }
         });
       });
   };
@@ -363,6 +365,7 @@ class Game extends Component {
       totalScore,
       scoreArr,
       participantsAreReady,
+      allPlayersMarkers,
     } = this.state;
     if (gameIsReady && !gameIsFinished) {
       return (
@@ -395,6 +398,7 @@ class Game extends Component {
             gameIsRunning={gameIsRunning}
             roundIsRunning={roundIsRunning}
             endRound={this.endRound}
+            allPlayersMarkers={allPlayersMarkers}
           />
           <MultiplayerNextButton
             gameIsRunning={gameIsRunning}
