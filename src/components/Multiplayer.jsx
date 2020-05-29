@@ -78,6 +78,7 @@ class Multiplayer extends Component {
         const participantData = {
           displayName: auth.currentUser.displayName,
           userIsReady: false,
+          roundIsRunning: false,
         };
         participantsObj[auth.currentUser.uid] = participantData;
 
