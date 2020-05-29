@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { auth } from "../firebaseInitialise";
 import { Link, navigate } from "@reach/router";
 import { Paper, Typography, Button, Box } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../resources/theme.jsx";
 import { Howl } from "howler";
 import introSrc from "../resources/intro.m4a";
 import UserNameForm from "./UserNameForm";
@@ -73,36 +71,35 @@ class Home extends Component {
       );
     } else {
       return (
-        <ThemeProvider theme={theme}>
-          <Paper id="home-wrapper" elevation={3}>
-            <Typography variant="h2" align="center">
-              Hello {userName}
-            </Typography>
-            <Box id="button-wrapper">
-              <Link to="/singlePlayerGame">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.updateUser}
-                >
-                  Single Player
-                </Button>
-              </Link>
-              <Link to="/multiplayer">
-                <Button variant="contained" color="primary">
-                  Multiplayer
-                </Button>
-              </Link>
+
+        <Paper id="home-wrapper" elevation={3}>
+          <Typography variant="h2" align="center">
+            Hello {userName}
+          </Typography>
+          <Box id="button-wrapper">
+            <Link to="/singlePlayerGame">
               <Button
                 variant="contained"
-                color="secondary"
-                onClick={this.logout}
+                color="primary"
               >
-                Logout
+                Single Player
+                </Button>
+            </Link>
+            <Link to="/multiplayer">
+              <Button variant="contained" color="primary">
+                Multiplayer
+                </Button>
+            </Link>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={this.logout}
+            >
+              Logout
               </Button>
-            </Box>
-          </Paper>
-        </ThemeProvider>
+          </Box>
+        </Paper>
+
       );
     }
   }

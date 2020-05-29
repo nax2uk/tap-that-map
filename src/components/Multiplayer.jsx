@@ -3,8 +3,7 @@ import Lobby from "./Lobby";
 import { database, auth } from "../firebaseInitialise";
 import MultiplayerGame from "./MultiplayerGame";
 import { Paper, Button, Box, Typography, TextField } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../resources/theme.jsx";
+
 
 class Multiplayer extends Component {
   state = {
@@ -104,7 +103,7 @@ class Multiplayer extends Component {
     });
   };
 
-  componentDidMount() {}
+  componentDidMount() { }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.gameId !== this.state.gameId) {
@@ -124,48 +123,53 @@ class Multiplayer extends Component {
     return (
       <div>
         {hostOrJoin ? (
-          <ThemeProvider theme={theme}>
-            <Paper elevation={3} id="initialise-game-wrapper">
-              <Typography variant="h2" align="center">
-                Multiplayer
+
+          <Paper elevation={3} id="initialise-game-wrapper">
+            <Typography variant="h2" align="center">
+              Multiplayer
               </Typography>
-              <Box id="initialise-button-wrapper">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.initGame}
-                >
-                  Start A Game
+            <Box id="initialise-button-wrapper">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.initGame}
+              >
+                Start A Game
                 </Button>
-                <TextField
-                  variant="outlined"
-                  label="game-id"
-                  onChange={this.updateID}
-                  value={inputtedId}
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={this.checkId}
-                  disabled={inputtedId.length === 0}
-                >
-                  Join A Game
+              <TextField
+                variant="outlined"
+                label="game-id"
+                onChange={this.updateID}
+                value={inputtedId}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.checkId}
+                disabled={inputtedId.length === 0}
+              >
+                Join A Game
                 </Button>
-              </Box>
-            </Paper>
-          </ThemeProvider>
-        ) : null}
-        {lobbyOpen ? (
-          <Lobby gameId={gameId} isHost={isHost} startGame={this.startGame} />
-        ) : null}
-        {gameIsStarted && (
-          <MultiplayerGame
-            currentUserId={this.props.currentUserId}
-            isHost={isHost}
-            gameId={gameId}
-          />
-        )}
-      </div>
+            </Box>
+          </Paper>
+
+        ) : null
+        }
+        {
+          lobbyOpen ? (
+            <Lobby gameId={gameId} isHost={isHost} startGame={this.startGame} />
+          ) : null
+        }
+        {
+          gameIsStarted && (
+            <MultiplayerGame
+              currentUserId={this.props.currentUserId}
+              isHost={isHost}
+              gameId={gameId}
+            />
+          )
+        }
+      </div >
     );
   }
 }
