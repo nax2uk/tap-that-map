@@ -13,13 +13,15 @@ class GoogleMap extends Component {
   state = {
     marker: null,
     linkLine: null,
-    dimensions: { width: null, height: null }
+    dimensions: { width: null, height: null },
+    googleMap: null,
   };
 
   googleMapRef = createRef();
 
   /******** MAP FUNCTIONS ********/
   createGoogleMap = () => {
+
     return new window.google.maps.Map(this.googleMapRef.current, {
       zoom: 2,
       center: {
@@ -36,7 +38,7 @@ class GoogleMap extends Component {
     const { recordPlayerMarker } = this.props;
     const newMarker = new window.google.maps.Marker({
       position: latLng,
-      map: this.googleMap,
+      map: this.state.googleMap,
       icon: {
         url: user.photoURL,
         scaledSize: new window.google.maps.Size(50, 50),
@@ -75,7 +77,7 @@ class GoogleMap extends Component {
         ...customLine,
       });
 
-      linkLine.setMap(this.googleMap);
+      linkLine.setMap(this.state.googleMap);
 
       this.setState({ linkLine });
     }
@@ -93,8 +95,8 @@ class GoogleMap extends Component {
   plotCountryBorder = () => {
     const { question } = this.props;
     if (question.borderData) {
-      this.googleMap.data.addGeoJson(question.borderData);
-      this.googleMap.data.setStyle({
+      this.state.googleMap.data.addGeoJson(question.borderData);
+      this.state.googleMap.data.setStyle({
         fillColor: "white",
         fillOpacity: 0.5,
         strokeColor: "white",
@@ -112,14 +114,14 @@ class GoogleMap extends Component {
       let resultBounds = new window.google.maps.LatLngBounds();
       resultBounds.extend({ lat, lng });
       resultBounds.extend(question.position);
-      this.googleMap.fitBounds(resultBounds);
-      this.googleMap.panToBounds(resultBounds);
+      this.state.googleMap.fitBounds(resultBounds);
+      this.state.googleMap.panToBounds(resultBounds);
     }
   };
 
   resetMapView = () => {
-    this.googleMap.setCenter({ lat: 0, lng: 0 });
-    this.googleMap.setZoom(2);
+    this.state.googleMap.setCenter({ lat: 0, lng: 0 });
+    this.state.googleMap.setZoom(2);
   };
 
   handleMapClick = (e) => {
@@ -152,7 +154,7 @@ class GoogleMap extends Component {
 
     if (roundHasStarted) {
       window.google.maps.event.addListener(
-        this.googleMap,
+        this.state.googleMap,
         "click",
         this.handleMapClick
       );
@@ -161,7 +163,7 @@ class GoogleMap extends Component {
       this.plotLinkLine();
       this.plotCountryBorder();
       this.createAndPanToBounds();
-      window.google.maps.event.clearListeners(this.googleMap, "click");
+      window.google.maps.event.clearListeners(this.state.googleMap, "click");
     }
     if (round !== prevProps.round) {
       this.removeLinkLine();
@@ -176,7 +178,7 @@ class GoogleMap extends Component {
     window.document.body.appendChild(googleMapScript);
 
     googleMapScript.addEventListener("load", () => {
-      this.googleMap = this.createGoogleMap();
+      this.state.googleMap = this.createGoogleMap();
     });
 
     this.updateDimensions()
@@ -185,7 +187,8 @@ class GoogleMap extends Component {
   }
 
   componentWillUnmount() {
-    window.removeEventListener("resize", this.updateDimensions);
+    //   window.removeEventListener("resize", this.updateDimensions);
+    window.google = {}
   }
 
   render() {
