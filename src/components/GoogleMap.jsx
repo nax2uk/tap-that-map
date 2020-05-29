@@ -2,7 +2,6 @@ import React, { Component, createRef } from "react";
 import API_KEY from "../API-KEYS/maps-api.js";
 import SubmitButton from "./SubmitButton";
 import CancelButton from "./CancelButton";
-import ResultsPage from "./ResultsPage";
 import mapStyle from "../Data/mapStyling";
 // import customMarker from "../resources/customMarker";
 import customLine from "../resources/customLine";
