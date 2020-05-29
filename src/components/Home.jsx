@@ -83,7 +83,6 @@ class Home extends Component {
                 <Button
                   variant="contained"
                   color="primary"
-                  onClick={this.updateUser}
                 >
                   Single Player
                 </Button>
