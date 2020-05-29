@@ -5,35 +5,40 @@ a {
 #google-map {
   position: relative;
   display: hidden;
-  top: 2.5vh;
-  left: 2.5vw;
+  top: 0vh;
+  left: 0vw;
+  margin:1px;
   z-index: 0;
 }
 
 #start-wrapper {
   position: absolute;
-  width: 20vw;
-  top: 40vh;
-  left: 40vw;
   z-index: 10;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 #timer-wrapper {
   position: absolute;
-  width: 10rem;
-  padding: 1vh 2vw 1vh 1vw;
-  top: 2vh;
-  right: -1vh;
-  text-align: left;
+  padding: 1vh 2vw 1vh 2vw;
+  bottom: 4vh;
+  text-align: center;
   z-index: 1;
+  left: 50%;
+
+  transform: translate(-50%);
 }
 
 #question-wrapper {
+  margin-top: 4vh;
   position: absolute;
   padding: 1vh 1vw 1vh 2vw;
-  top: 2vh;
-  left: -1vh;
   z-index: 1;
+  left: 50%;
+  text-align: center;
+
+  transform: translate(-50%);
 }
 
 #submit-wrapper {
@@ -62,8 +67,7 @@ a {
 }
 #next-wrapper {
   position: absolute;
-  width: 12rem;
-  padding: 1vh 2vw 1vh 1vw;
+  padding: 1vh 2vw 1vh 2vw;
   bottom: 2vh;
   right: -1vh;
   text-align: left;
@@ -74,21 +78,19 @@ a {
 }
 #totaliser-wrapper {
   position: absolute;
-  width: 12rem;
-  padding: 1vh 2vw 1vh 1vw;
-  top: 30vh;
-  right: -1vh;
-  text-align: left;
+  padding: 1vh 2vw 1vh 5vw;
+  top: 31vh;
+  left: -1vh;
+  text-align: right;
   z-index: 1;
 }
 
 #score-wrapper {
   position: absolute;
-  width: 10rem;
-  padding: 1vh 2vw 1vh 1vw;
-  top: 15vh;
-  right: -1vh;
-  text-align: left;
+  padding: 1vh 2vw 1vh 5vw;
+  top: 20vh;
+  left: -1vh;
+  text-align: right;
   z-index: 1;
 }
 
@@ -183,42 +185,5 @@ a {
 
 #lobby-wrapper {
   margin: 5vh auto;
-  padding: 5vh 5vw;
-  width: 80vw;
-}
-#lobby-wrapper > * {
-  margin: 2vh auto;
-}
-
-#initialise-game-wrapper {
-  width: 60vw;
-  margin: 20vh auto;
-  display: flex;
-  flex-direction: column;
-  padding: 5vh 5vw;
-  justify-content: space-around;
-  align-content: stretch;
-}
-
-#initialise-button-wrapper {
-  width: 50%;
-  margin: 2vh auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-  margin-top: 1rem;
-}
-#initialise-button-wrapper > * {
-  margin: 1vh 0;
-}
-
-#scores-tracker-wrapper {
-  position: absolute;
-  width: 12rem;
-  padding: 1vh 1vw 1vh 2vw;
-  top: 30vh;
-  left: -1vh;
-  text-align: right;
-  z-index: 1;
+  width: 90vw;
 }

@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { Typography, Paper } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../resources/theme.jsx";
 
 class Timer extends Component {
   state = {
@@ -69,13 +67,13 @@ class Timer extends Component {
 
   render() {
     return (
-      <ThemeProvider theme={theme}>
-        <Paper id="timer-wrapper" elevation={3}>
-          <Typography variant="h2">
-            <span id="time">{this.formatAndDisplayTime()}</span>
-          </Typography>
-        </Paper>
-      </ThemeProvider>
+
+      <Paper id="timer-wrapper" elevation={3}>
+        <Typography variant="h2">
+          <span id="time">{this.formatAndDisplayTime()}</span>
+        </Typography>
+      </Paper>
+
     );
   }
 }
