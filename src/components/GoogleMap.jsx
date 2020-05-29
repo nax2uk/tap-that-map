@@ -195,7 +195,7 @@ class GoogleMap extends Component {
   render() {
     const { gameOver, marker, dimensions } = this.state;
     const { roundIsRunning } = this.props;
-    if (gameOver) return <ResultsPage />;
+
     return (
       <Grid container>
         <Grid container item xs={12}
