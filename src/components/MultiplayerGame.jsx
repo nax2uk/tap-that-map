@@ -416,6 +416,7 @@ class Game extends Component {
       scoreArr,
       participantsAreReady,
       allPlayersMarkers,
+      allPlayersScores,
     } = this.state;
     if (gameIsReady && !gameIsFinished) {
       return (
@@ -468,6 +469,7 @@ class Game extends Component {
           <MultiplayerScoresTracker
             gameIsRunning={gameIsRunning}
             roundIsRunning={roundIsRunning}
+            allPlayersScores={allPlayersScores}
           />
         </>
       );
