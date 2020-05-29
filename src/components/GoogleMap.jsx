@@ -54,9 +54,9 @@ class GoogleMap extends Component {
       marker.setMap(null);
     }
 
-    foreignMarkerArray.forEach((marker) => {
-      if (marker !== null) {
-        marker.setMap(null);
+    foreignMarkerArray.forEach((foreignMarker) => {
+      if (foreignMarker !== null) {
+        foreignMarker.setMap(null);
       }
     });
     //edited for multiplayer
