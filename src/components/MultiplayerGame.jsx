@@ -26,6 +26,7 @@ class Game extends Component {
     roundDistance: 0,
     totalScore: 0,
     scoreArr: [],
+    allPlayersMarkers: {},
   };
 
   toggleGameIsReady = () => {
@@ -62,7 +63,6 @@ class Game extends Component {
         totalScore: currState.totalScore + currState.roundScore,
         roundIsRunning: false,
         userIsReady: false,
-        playerMarker: null,
       };
     });
   };
@@ -220,11 +220,45 @@ class Game extends Component {
       });
   };
 
+  listenForParticipantMarkers = () => {
+    const { gameId } = this.props;
+    const game = database.ref("multiplayerGame");
+
+    game
+      .child(gameId)
+      .child("participants")
+      .once("value")
+      .then((snapshot) => {
+        const data = snapshot.val();
+        const participantsIds = Object.keys(data);
+
+        participantsIds.forEach((participantId) => {
+          game
+            .child(gameId)
+            .child("participants")
+            .child(participantId)
+            .child("marker")
+            .on("value", (markerSnap) => {
+              const partMarker = markerSnap.val();
+
+              this.setState((currentState) => {
+                const workingCopy = { ...currentState.allPlayersMarkers };
+                workingCopy[participantId] = partMarker;
+                return { allPlayersMarkers: workingCopy };
+              });
+            });
+        });
+      });
+  };
+
   componentDidMount() {
     const { isHost, gameId } = this.props;
+
     this.listenForQuestionArray();
     this.listenForStartRound1();
     this.listenForRoundChange();
+    this.listenForParticipantMarkers();
+
     if (isHost) {
       this.listenForPlayersAreReady();
       const countryArr = generateCountryQuestions(10);
