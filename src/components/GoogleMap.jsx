@@ -13,6 +13,7 @@ class GoogleMap extends Component {
   state = {
     marker: null,
     linkLine: null,
+    dimensions: { width: null, height: null }
   };
 
   googleMapRef = createRef();
@@ -128,6 +129,16 @@ class GoogleMap extends Component {
     });
   };
 
+  /** RESIZE WINDOW TO RERENDER GOOGLEMAP */
+  updateDimensions = () => {
+
+    this.setState({ dimensions: { width: window.innerWidth, height: window.innerHeight } }, () => {
+      console.log(`window is resized to ${this.state.dimensions.width} x ${this.state.dimensions.height} `);
+    });
+  }
+  handleResize = () => {
+
+  }
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProps, prevState) {
     const { round, roundIsRunning } = this.props;
@@ -167,10 +178,18 @@ class GoogleMap extends Component {
     googleMapScript.addEventListener("load", () => {
       this.googleMap = this.createGoogleMap();
     });
+
+    this.updateDimensions()
+
+    window.addEventListener('resize', this.updateDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
   }
 
   render() {
-    const { gameOver, marker } = this.state;
+    const { gameOver, marker, dimensions } = this.state;
     const { roundIsRunning } = this.props;
     if (gameOver) return <ResultsPage />;
     return (
@@ -181,8 +200,8 @@ class GoogleMap extends Component {
           id="google-map"
           ref={this.googleMapRef}
           style={{
-            width: 0.95 * window.innerWidth,
-            height: 0.95 * window.innerHeight,
+            width: 0.95 * dimensions.width,
+            height: 0.95 * dimensions.height,
           }}
         />
         <SubmitButton
