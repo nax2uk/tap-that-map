@@ -1,7 +1,5 @@
 import React from "react";
 import { Paper, Button, Typography, Slide } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../resources/theme.jsx";
 
 const NextButton = ({ updateRound, round, gameIsRunning, roundIsRunning }) => {
   return (

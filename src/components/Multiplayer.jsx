@@ -3,8 +3,7 @@ import Lobby from "./Lobby";
 import { database, auth } from "../firebaseInitialise";
 import MultiplayerGame from "./MultiplayerGame";
 import { Paper, Button, Box, Typography, TextField } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../resources/theme.jsx";
+
 
 class Multiplayer extends Component {
   state = {

@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { storage } from "../firebaseInitialise";
 import { Button, Typography, Box, LinearProgress } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../resources/theme.jsx";
 
 class UploadImage extends Component {
   state = {

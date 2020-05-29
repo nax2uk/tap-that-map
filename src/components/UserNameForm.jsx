@@ -7,8 +7,6 @@ import {
   TextField,
   FormGroup,
 } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../resources/theme.jsx";
 import UploadImage from "./UploadImage";
 
 class UserNameForm extends Component {

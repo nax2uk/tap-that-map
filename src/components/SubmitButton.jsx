@@ -1,7 +1,6 @@
 import React from "react";
 import { Button, Icon, Paper, Zoom } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../resources/theme.jsx";
+
 
 const SubmitButton = ({ submitMarker, marker, roundIsRunning }) => {
   return (

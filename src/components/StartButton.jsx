@@ -1,7 +1,5 @@
 import React from "react";
 import { Paper, Button, Typography } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../resources/theme.jsx";
 
 const StartButton = ({ startGame }) => {
   return (
