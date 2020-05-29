@@ -193,7 +193,7 @@ class GoogleMap extends Component {
   }
 
   render() {
-    const { gameOver, marker, dimensions } = this.state;
+    const { marker, dimensions } = this.state;
     const { roundIsRunning } = this.props;
 
     return (
