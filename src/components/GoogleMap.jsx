@@ -158,6 +158,23 @@ class GoogleMap extends Component {
     });
   };
 
+  createAndPanToOtherBounds = () => {
+    const { allPlayersMarkers, question } = this.props;
+    const { marker } = this.state;
+    if (marker !== null) {
+      const lat = marker.position.lat();
+      const lng = marker.position.lng();
+      let resultBounds = new window.google.maps.LatLngBounds();
+      resultBounds.extend({ lat, lng });
+      resultBounds.extend(question.position);
+      Object.values(allPlayersMarkers).forEach((markerObj) => {
+        resultBounds.extend(markerObj);
+      });
+      this.googleMap.fitBounds(resultBounds);
+      this.googleMap.panToBounds(resultBounds);
+    }
+  };
+
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProps, prevState) {
     const { round, roundIsRunning, allPlayersMarkers } = this.props;
@@ -192,6 +209,7 @@ class GoogleMap extends Component {
     }
     if (allPlayersMarkers !== prevProps.allPlayersMarkers && !roundIsRunning) {
       this.plotOtherMarkers();
+      this.createAndPanToOtherBounds();
     }
   }
 
