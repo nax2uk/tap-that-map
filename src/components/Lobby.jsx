@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { Paper, Typography, Button, Fade } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../resources/theme.jsx";
 import { database } from "../firebaseInitialise";
 
 class Lobby extends Component {

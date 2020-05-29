@@ -1,8 +1,6 @@
 import React from "react";
 import { Link } from "@reach/router";
 import { Paper, Typography, Button } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../resources/theme.jsx";
 
 const Logout = () => {
   return (

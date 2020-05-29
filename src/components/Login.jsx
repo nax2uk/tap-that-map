@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import { auth } from "../firebaseInitialise";
 import { FormGroup, TextField, Button, Paper } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../resources/theme.jsx";
 
 class Login extends Component {
   state = {

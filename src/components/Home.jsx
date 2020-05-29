@@ -2,8 +2,6 @@ import React, { Component } from "react";
 import { auth } from "../firebaseInitialise";
 import { Link, navigate } from "@reach/router";
 import { Paper, Typography, Button, Box } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../resources/theme.jsx";
 import { Howl } from "howler";
 import introSrc from "../resources/intro.m4a";
 import UserNameForm from "./UserNameForm";
