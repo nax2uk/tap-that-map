@@ -55,7 +55,6 @@ class Game extends Component {
   };
 
   updateRound = () => {
-    console.log("updateRound is firing");
     this.setState((currState) => {
       if (currState.round === 9) {
         this.saveScore();
