@@ -168,7 +168,9 @@ class GoogleMap extends Component {
       resultBounds.extend({ lat, lng });
       resultBounds.extend(question.position);
       Object.values(allPlayersMarkers).forEach((markerObj) => {
-        resultBounds.extend(markerObj);
+        if (markerObj !== null) {
+          resultBounds.extend(markerObj);
+        }
       });
       this.googleMap.fitBounds(resultBounds);
       this.googleMap.panToBounds(resultBounds);
