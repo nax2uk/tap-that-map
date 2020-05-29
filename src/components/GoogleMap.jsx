@@ -47,10 +47,10 @@ class GoogleMap extends Component {
     return newMarker;
   };
 
-  removeMarker = () => {
+  removeMarker = (justForeign) => {
     const { marker, foreignMarkerArray } = this.state;
 
-    if (marker !== null) {
+    if (marker !== null && !justForeign) {
       marker.setMap(null);
     }
 
@@ -60,7 +60,11 @@ class GoogleMap extends Component {
       }
     });
     //edited for multiplayer
-    this.setState({ marker: null, foreignMarkerArray: [] });
+    if (justForeign) {
+      this.setState({ foreignMarkerArray: [] });
+    } else {
+      this.setState({ marker: null, foreignMarkerArray: [] });
+    }
   };
 
   submitMarker = () => {
@@ -211,6 +215,7 @@ class GoogleMap extends Component {
       this.resetMapView();
     }
     if (allPlayersMarkers !== prevProps.allPlayersMarkers && !roundIsRunning) {
+      this.removeMarker(true);
       this.plotOtherMarkers();
       this.createAndPanToOtherBounds();
     }
