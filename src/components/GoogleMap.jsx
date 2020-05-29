@@ -178,7 +178,8 @@ class GoogleMap extends Component {
     window.document.body.appendChild(googleMapScript);
 
     googleMapScript.addEventListener("load", () => {
-      this.state.googleMap = this.createGoogleMap();
+      this.setState({ googleMap: this.createGoogleMap() })
+      // this.state.googleMap = this.createGoogleMap();
     });
 
     this.updateDimensions()
