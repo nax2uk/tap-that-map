@@ -111,8 +111,6 @@ class Multiplayer extends Component {
     });
   };
 
-  componentDidMount() {}
-
   componentDidUpdate(prevProps, prevState) {
     if (prevState.gameId !== this.state.gameId) {
       this.listenForGameStart();
@@ -129,8 +127,8 @@ class Multiplayer extends Component {
       inputtedId,
     } = this.state;
     return (
-      <div>
-        {hostOrJoin ? (
+      <>
+        {hostOrJoin && (
           <Paper elevation={3} id="initialise-game-wrapper">
             <Typography variant="h2" align="center">
               Multiplayer
@@ -159,7 +157,7 @@ class Multiplayer extends Component {
               </Button>
             </Box>
           </Paper>
-        ) : null}
+        )}
         {lobbyOpen && (
           <Lobby gameId={gameId} isHost={isHost} startGame={this.startGame} />
         )}
@@ -170,7 +168,7 @@ class Multiplayer extends Component {
             gameId={gameId}
           />
         )}
-      </div>
+      </>
     );
   }
 }
