@@ -182,7 +182,6 @@ class MultiplayerGame extends Component {
       .child("startRound1")
       .on("value", (snapshot) => {
         const data = snapshot.val();
-        console.log(data);
         if (data === true) {
           this.setState({
             userIsReady: true,
