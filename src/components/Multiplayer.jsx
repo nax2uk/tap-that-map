@@ -12,6 +12,7 @@ class Multiplayer extends Component {
     gameId: null,
     lobbyOpen: false,
     gameIsStarted: false,
+    participants: {},
   };
 
   initGame = (e) => {
@@ -166,6 +167,7 @@ class Multiplayer extends Component {
       isHost,
       gameIsStarted,
       inputtedId,
+      participants,
     } = this.state;
     return (
       <>
@@ -207,6 +209,7 @@ class Multiplayer extends Component {
             currentUserId={this.props.currentUserId}
             isHost={isHost}
             gameId={gameId}
+            participants={participants}
           />
         )}
       </>
