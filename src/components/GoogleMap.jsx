@@ -150,7 +150,7 @@ class GoogleMap extends Component {
       if (marker !== null) {
         const newMarker = new window.google.maps.Marker({
           position: marker,
-          map: this.googleMap,
+          map: this.state.googleMap,
           icon: {
             url: photoURL,
             scaledSize: new window.google.maps.Size(40, 40),
@@ -174,13 +174,15 @@ class GoogleMap extends Component {
       let resultBounds = new window.google.maps.LatLngBounds();
       resultBounds.extend({ lat, lng });
       resultBounds.extend(question.position);
-      Object.values(allPlayersMarkers).forEach(({ marker }) => {
-        if (marker !== null) {
-          resultBounds.extend(marker);
-        }
-      });
-      this.googleMap.fitBounds(resultBounds);
-      this.googleMap.panToBounds(resultBounds);
+      if (Object.keys(allPlayersMarkers).length !== 0) {
+        Object.values(allPlayersMarkers).forEach(({ marker }) => {
+          if (marker !== null) {
+            resultBounds.extend(marker);
+          }
+        });
+      }
+      this.state.googleMap.fitBounds(resultBounds);
+      this.state.googleMap.panToBounds(resultBounds);
     }
   };
   /** RESIZE WINDOW TO RERENDER GOOGLEMAP */

@@ -236,36 +236,36 @@ class Game extends Component {
         const participantsIds = Object.keys(data);
 
         participantsIds.forEach((participantId) => {
-          // if (participantId !== auth.currentUser.uid) {
-          //   game
-          //     .child(gameId)
-          //     .child("participants")
-          //     .child(participantId)
-          //     .child("marker")
-          //     .on("value", (markerSnap) => {
-          //       const partMarker = markerSnap.val();
-
-          //       this.setState((currentState) => {
-          //         const workingCopy = { ...currentState.allPlayersMarkers };
-          //         workingCopy[participantId] = partMarker;
-          //         return { allPlayersMarkers: workingCopy };
-          //       });
-          //     });
-          // }
           if (participantId !== auth.currentUser.uid) {
             game
               .child(gameId)
               .child("participants")
               .child(participantId)
-              .on("value", (snapshot) => {
-                const { photoURL, marker } = snapshot.val();
+              .child("marker")
+              .on("value", (markerSnap) => {
+                const partMarker = markerSnap.val();
+
                 this.setState((currentState) => {
                   const workingCopy = { ...currentState.allPlayersMarkers };
-                  workingCopy[participantId] = { photoURL, marker };
+                  workingCopy[participantId].marker = partMarker;
                   return { allPlayersMarkers: workingCopy };
                 });
               });
           }
+          // if (participantId !== auth.currentUser.uid) {
+          //   game
+          //     .child(gameId)
+          //     .child("participants")
+          //     .child(participantId)
+          //     .on("value", (snapshot) => {
+          //       const { photoURL, marker } = snapshot.val();
+          //       this.setState((currentState) => {
+          //         const workingCopy = { ...currentState.allPlayersMarkers };
+          //         workingCopy[participantId] = { photoURL, marker };
+          //         return { allPlayersMarkers: workingCopy };
+          //       });
+          //     });
+          // }
         });
       });
   };
