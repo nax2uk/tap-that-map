@@ -222,8 +222,23 @@ class MultiplayerGame extends Component {
       });
   };
 
+  fetchParticipantInfo = () => {
+    const { gameId, currentUserId } = this.props;
+    const game = database.ref("multiplayerGame");
+    game
+      .child(gameId)
+      .child("participants")
+      .once("value")
+      .then((dbParticipantsObj) => {
+        const participantsObj = dbParticipantsObj.val();
+        const workingCopy = { ...participantsObj };
+        delete workingCopy[currentUserId];
+        this.setState({ allPlayersMarkers: workingCopy });
+      });
+  };
+
   listenForParticipantMarkers = () => {
-    const { gameId } = this.props;
+    const { gameId, currentUserId } = this.props;
     const game = database.ref("multiplayerGame");
 
     game
@@ -235,7 +250,7 @@ class MultiplayerGame extends Component {
         const participantsIds = Object.keys(data);
 
         participantsIds.forEach((participantId) => {
-          if (participantId !== auth.currentUser.uid) {
+          if (participantId !== currentUserId) {
             game
               .child(gameId)
               .child("participants")
@@ -246,7 +261,7 @@ class MultiplayerGame extends Component {
 
                 this.setState((currentState) => {
                   const workingCopy = { ...currentState.allPlayersMarkers };
-                  workingCopy[participantId] = partMarker;
+                  workingCopy[participantId].marker = partMarker;
                   return { allPlayersMarkers: workingCopy };
                 });
               });
@@ -297,6 +312,7 @@ class MultiplayerGame extends Component {
   componentDidMount() {
     const { isHost, gameId } = this.props;
 
+    this.fetchParticipantInfo();
     this.listenForQuestionArray();
     this.listenForStartRound1();
     this.listenForRoundChange();

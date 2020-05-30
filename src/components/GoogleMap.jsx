@@ -146,7 +146,7 @@ class GoogleMap extends Component {
     const { allPlayersMarkers } = this.props;
 
     const foreignMarkerArray = [];
-    Object.values(allPlayersMarkers).forEach((marker) => {
+    Object.values(allPlayersMarkers).forEach(({ marker }) => {
       if (marker !== null) {
         const newMarker = new window.google.maps.Marker({
           position: marker,
@@ -175,7 +175,7 @@ class GoogleMap extends Component {
       resultBounds.extend({ lat, lng });
       resultBounds.extend(question.position);
       if (Object.keys(allPlayersMarkers).length !== 0) {
-        Object.values(allPlayersMarkers).forEach((marker) => {
+        Object.values(allPlayersMarkers).forEach(({ marker }) => {
           if (marker !== null) {
             resultBounds.extend(marker);
           }
