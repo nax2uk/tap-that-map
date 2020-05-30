@@ -146,16 +146,16 @@ class GoogleMap extends Component {
     const { allPlayersMarkers } = this.props;
 
     const foreignMarkerArray = [];
-    Object.values(allPlayersMarkers).forEach(({ marker, photoURL }) => {
+    Object.values(allPlayersMarkers).forEach((marker) => {
       if (marker !== null) {
         const newMarker = new window.google.maps.Marker({
           position: marker,
           map: this.state.googleMap,
-          icon: {
-            url: photoURL,
-            scaledSize: new window.google.maps.Size(40, 40),
-            anchor: new window.google.maps.Point(20, 20),
-          },
+          // icon: {
+          //   url: photoURL,
+          //   scaledSize: new window.google.maps.Size(40, 40),
+          //   anchor: new window.google.maps.Point(20, 20),
+          // },
         });
         foreignMarkerArray.push(newMarker);
       }
@@ -175,7 +175,7 @@ class GoogleMap extends Component {
       resultBounds.extend({ lat, lng });
       resultBounds.extend(question.position);
       if (Object.keys(allPlayersMarkers).length !== 0) {
-        Object.values(allPlayersMarkers).forEach(({ marker }) => {
+        Object.values(allPlayersMarkers).forEach((marker) => {
           if (marker !== null) {
             resultBounds.extend(marker);
           }

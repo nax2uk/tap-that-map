@@ -3,7 +3,7 @@ import { Typography, Paper } from "@material-ui/core";
 
 class Timer extends Component {
   state = {
-    seconds: 10,
+    seconds: 60,
     timer: null,
   };
 
@@ -18,7 +18,7 @@ class Timer extends Component {
   };
 
   resetTimer = () => {
-    this.setState({ seconds: 10 });
+    this.setState({ seconds: 60 });
   };
 
   timerFunction = () => {
@@ -67,13 +67,11 @@ class Timer extends Component {
 
   render() {
     return (
-
       <Paper id="timer-wrapper" elevation={3}>
         <Typography variant="h2">
           <span id="time">{this.formatAndDisplayTime()}</span>
         </Typography>
       </Paper>
-
     );
   }
 }

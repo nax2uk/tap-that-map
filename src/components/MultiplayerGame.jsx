@@ -12,7 +12,7 @@ import Totaliser from "./Totaliser";
 import ResultsPage from "./ResultsPage";
 import MultiplayerScoresTracker from "./MultiplayerScoresTracker";
 
-class Game extends Component {
+class MultiplayerGame extends Component {
   state = {
     userIsReady: false,
     participantsAreReady: false,
@@ -247,7 +247,7 @@ class Game extends Component {
 
                 this.setState((currentState) => {
                   const workingCopy = { ...currentState.allPlayersMarkers };
-                  workingCopy[participantId].marker = partMarker;
+                  workingCopy[participantId] = partMarker;
                   return { allPlayersMarkers: workingCopy };
                 });
               });
@@ -499,4 +499,4 @@ class Game extends Component {
   }
 }
 
-export default Game;
+export default MultiplayerGame;
