@@ -26,22 +26,19 @@ class Lobby extends Component {
     const { gameId, isHost, startGame } = this.props;
     const { participants } = this.state;
     return (
-
       <Paper elevation={3} id="lobby-wrapper">
         <Typography variant="h2" align="center">
           Game Lobby
-          </Typography>
+        </Typography>
         {gameId && <Typography variant="h4">Game ID: {gameId}</Typography>}
         <Typography variant="body1">
           Send this id to your friends to join your game session
-          </Typography>
+        </Typography>
         <Typography variant="body1">Current Players</Typography>
         {Object.values(participants).map((participant, index) => {
           return (
-            <Fade in={true} direction="right" timeout={1000}>
-              <Typography variant="body2">
-                {participant.displayName}
-              </Typography>
+            <Fade in={true} direction="right" timeout={1000} key={index}>
+              <Typography variant="body2">{participant.displayName}</Typography>
             </Fade>
           );
         })}
@@ -51,7 +48,6 @@ class Lobby extends Component {
           </Button>
         )}
       </Paper>
-
     );
   }
 }

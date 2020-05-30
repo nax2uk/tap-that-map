@@ -4,7 +4,6 @@ import { database, auth } from "../firebaseInitialise";
 import MultiplayerGame from "./MultiplayerGame";
 import { Paper, Button, Box, Typography, TextField } from "@material-ui/core";
 
-
 class Multiplayer extends Component {
   state = {
     hostOrJoin: true,
@@ -112,7 +111,7 @@ class Multiplayer extends Component {
     });
   };
 
-  componentDidMount() { }
+  componentDidMount() {}
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.gameId !== this.state.gameId) {
@@ -132,11 +131,10 @@ class Multiplayer extends Component {
     return (
       <div>
         {hostOrJoin ? (
-
           <Paper elevation={3} id="initialise-game-wrapper">
             <Typography variant="h2" align="center">
               Multiplayer
-              </Typography>
+            </Typography>
             <Box id="initialise-button-wrapper">
               <Button
                 variant="contained"
@@ -144,7 +142,7 @@ class Multiplayer extends Component {
                 onClick={this.initGame}
               >
                 Start A Game
-                </Button>
+              </Button>
               <TextField
                 variant="outlined"
                 label="game-id"
@@ -158,27 +156,21 @@ class Multiplayer extends Component {
                 disabled={inputtedId.length === 0}
               >
                 Join A Game
-                </Button>
+              </Button>
             </Box>
           </Paper>
-
-        ) : null
-        }
-        {
-          lobbyOpen ? (
-            <Lobby gameId={gameId} isHost={isHost} startGame={this.startGame} />
-          ) : null
-        }
-        {
-          gameIsStarted && (
-            <MultiplayerGame
-              currentUserId={this.props.currentUserId}
-              isHost={isHost}
-              gameId={gameId}
-            />
-          )
-        }
-      </div >
+        ) : null}
+        {lobbyOpen && (
+          <Lobby gameId={gameId} isHost={isHost} startGame={this.startGame} />
+        )}
+        {gameIsStarted && (
+          <MultiplayerGame
+            currentUserId={this.props.currentUserId}
+            isHost={isHost}
+            gameId={gameId}
+          />
+        )}
+      </div>
     );
   }
 }
