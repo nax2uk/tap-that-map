@@ -49,20 +49,6 @@ class Multiplayer extends Component {
     game.child(gameId).child("gameIsStarted").set(true);
   };
 
-  listenForGameStart = () => {
-    const { gameId } = this.state;
-    const game = database.ref("multiplayerGame");
-    game
-      .child(gameId)
-      .child("gameIsStarted")
-      .on("value", (snapshot) => {
-        const gameIsStarted = snapshot.val();
-        if (gameIsStarted) {
-          this.setState({ gameIsStarted, lobbyOpen: false });
-        }
-      });
-  };
-
   updateID = (e) => {
     this.setState({
       inputtedId: e.target.value,
@@ -111,9 +97,64 @@ class Multiplayer extends Component {
     });
   };
 
+  gameIsStartedListenerFunction = (changeInGameIsStarted) => {
+    const newGameIsStarted = changeInGameIsStarted.val();
+    if (newGameIsStarted) {
+      this.setState({ gameIsStarted: newGameIsStarted, lobbyOpen: false });
+    }
+  };
+
+  addGameIsStartedListener = () => {
+    const { gameId } = this.state;
+    const game = database.ref("multiplayerGame");
+    game
+      .child(gameId)
+      .child("gameIsStarted")
+      .on("value", this.gameIsStartedListenerFunction);
+  };
+
+  removeGameIsStartedListener = () => {
+    const { gameId } = this.state;
+    const game = database.ref("multiplayerGame");
+    game
+      .child(gameId)
+      .child("gameIsStarted")
+      .off("value", this.gameIsStartedListenerFunction);
+  };
+
+  participantsListenerFunction = (changeInParticipants) => {
+    const newParticipants = changeInParticipants.val();
+    this.setState({ participants: newParticipants });
+  };
+
+  addParticipantsListener = () => {
+    const { gameId } = this.state;
+    const game = database.ref("multiplayerGame");
+    game
+      .child(gameId)
+      .child("participants")
+      .on("value", this.participantsListenerFunction);
+  };
+
+  removeParticipantsListener = () => {
+    const { gameId } = this.state;
+    const game = database.ref("multiplayerGame");
+    game
+      .child(gameId)
+      .child("participants")
+      .off("value", this.participantsListenerFunction);
+  };
+
+  componentWillUnmount() {
+    this.removeParticipantsListener();
+    this.removeGameStartListener();
+  }
+
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.gameId !== this.state.gameId) {
-      this.listenForGameStart();
+    const { gameId } = this.state;
+    if (prevState.gameId !== gameId) {
+      this.addGameIsStartedListener();
+      this.addParticipantsListener();
     }
   }
 
