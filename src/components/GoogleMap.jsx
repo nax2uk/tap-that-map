@@ -3,7 +3,6 @@ import API_KEY from "../API-KEYS/maps-api.js";
 import SubmitButton from "./SubmitButton";
 import CancelButton from "./CancelButton";
 import mapStyle from "../Data/mapStyling";
-// import customMarker from "../resources/customMarker";
 import customLine from "../resources/customLine";
 import { auth } from "../firebaseInitialise";
 import { Grid } from "@material-ui/core";
@@ -119,15 +118,15 @@ class GoogleMap extends Component {
   createAndPanToBounds = () => {
     const { question } = this.props;
     const { marker } = this.state;
+    let resultBounds = new window.google.maps.LatLngBounds();
     if (marker !== null) {
       const lat = marker.position.lat();
       const lng = marker.position.lng();
-      let resultBounds = new window.google.maps.LatLngBounds();
       resultBounds.extend({ lat, lng });
-      resultBounds.extend(question.position);
-      this.state.googleMap.fitBounds(resultBounds);
-      this.state.googleMap.panToBounds(resultBounds);
     }
+    resultBounds.extend(question.position);
+    this.state.googleMap.fitBounds(resultBounds);
+    this.state.googleMap.panToBounds(resultBounds);
   };
 
   resetMapView = () => {
@@ -143,47 +142,54 @@ class GoogleMap extends Component {
   };
 
   plotOtherMarkers = () => {
-    const { allPlayersMarkers } = this.props;
+    const { participants, currentUserId } = this.props;
+    const { googleMap } = this.state;
 
     const foreignMarkerArray = [];
-    Object.values(allPlayersMarkers).forEach(({ marker, photoURL }) => {
-      if (marker !== null) {
-        const newMarker = new window.google.maps.Marker({
-          position: marker,
-          map: this.state.googleMap,
-          icon: {
-            url: photoURL,
-            scaledSize: new window.google.maps.Size(40, 40),
-            anchor: new window.google.maps.Point(20, 20),
-          },
-        });
-        foreignMarkerArray.push(newMarker);
+    Object.entries(participants).forEach(
+      ([id, { marker, photoURL, roundIsRunning }]) => {
+        if (id !== currentUserId && marker !== null && !roundIsRunning) {
+          const newMarker = new window.google.maps.Marker({
+            position: marker,
+            map: googleMap,
+            animation: window.google.maps.Animation.DROP,
+            icon: {
+              url: photoURL,
+              scaledSize: new window.google.maps.Size(40, 40),
+              anchor: new window.google.maps.Point(20, 20),
+            },
+          });
+          foreignMarkerArray.push(newMarker);
+        }
       }
-    });
+    );
     this.setState({
       foreignMarkerArray,
     });
   };
 
   createAndPanToOtherBounds = () => {
-    const { allPlayersMarkers, question } = this.props;
+    const { participants, currentUserId, question } = this.props;
     const { marker } = this.state;
+
+    let resultBounds = new window.google.maps.LatLngBounds();
     if (marker !== null) {
       const lat = marker.position.lat();
       const lng = marker.position.lng();
-      let resultBounds = new window.google.maps.LatLngBounds();
       resultBounds.extend({ lat, lng });
-      resultBounds.extend(question.position);
-      if (Object.keys(allPlayersMarkers).length !== 0) {
-        Object.values(allPlayersMarkers).forEach(({ marker }) => {
-          if (marker !== null) {
+    }
+    resultBounds.extend(question.position);
+    if (participants) {
+      Object.entries(participants).forEach(
+        ([id, { marker, roundIsRunning }]) => {
+          if (id !== currentUserId && marker !== null && !roundIsRunning) {
             resultBounds.extend(marker);
           }
-        });
-      }
-      this.state.googleMap.fitBounds(resultBounds);
-      this.state.googleMap.panToBounds(resultBounds);
+        }
+      );
     }
+    this.state.googleMap.fitBounds(resultBounds);
+    this.state.googleMap.panToBounds(resultBounds);
   };
   /** RESIZE WINDOW TO RERENDER GOOGLEMAP */
   updateDimensions = () => {
@@ -197,7 +203,7 @@ class GoogleMap extends Component {
 
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProps, prevState) {
-    const { round, roundIsRunning, allPlayersMarkers } = this.props;
+    const { round, roundIsRunning, participants } = this.props;
     const { marker } = this.state;
     const roundHasStopped =
       !roundIsRunning &&
@@ -217,10 +223,6 @@ class GoogleMap extends Component {
       this.plotLinkLine();
       this.plotCountryBorder();
       this.createAndPanToBounds();
-      if (allPlayersMarkers) {
-        this.plotOtherMarkers();
-        this.createAndPanToOtherBounds();
-      }
       window.google.maps.event.clearListeners(this.state.googleMap, "click");
     }
     if (round !== prevProps.round) {
@@ -228,8 +230,13 @@ class GoogleMap extends Component {
       this.removeMarker();
       this.resetMapView();
     }
-    if (allPlayersMarkers !== prevProps.allPlayersMarkers && !roundIsRunning) {
-      this.removeMarker(true);
+
+    // if participants exists on props, then this means it's multiplayer
+    if (participants && roundHasStopped) {
+      this.plotOtherMarkers();
+      this.createAndPanToOtherBounds();
+    }
+    if (participants !== prevProps.participants && roundHasStopped) {
       this.plotOtherMarkers();
       this.createAndPanToOtherBounds();
     }
@@ -242,7 +249,6 @@ class GoogleMap extends Component {
 
     googleMapScript.addEventListener("load", () => {
       this.setState({ googleMap: this.createGoogleMap() });
-      // this.state.googleMap = this.createGoogleMap();
     });
 
     this.updateDimensions();
