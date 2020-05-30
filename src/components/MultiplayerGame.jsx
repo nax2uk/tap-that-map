@@ -167,23 +167,33 @@ class MultiplayerGame extends Component {
     }
   };
 
-  listenForStartRound1 = () => {
+  startRound1ListenerFunction = (dbStartRound1) => {
+    const newStartRound1 = dbStartRound1.val();
+    if (newStartRound1 === true) {
+      this.setState({
+        userIsReady: true,
+        gameIsRunning: true,
+        roundIsRunning: true,
+      });
+    }
+  };
+
+  addStartRound1Listener = () => {
     const { gameId } = this.props;
     const game = database.ref("multiplayerGame");
-
     game
       .child(gameId)
       .child("startRound1")
-      .on("value", (snapshot) => {
-        const data = snapshot.val();
-        if (data === true) {
-          this.setState({
-            userIsReady: true,
-            gameIsRunning: true,
-            roundIsRunning: true,
-          });
-        }
-      });
+      .on("value", this.startRound1ListenerFunction);
+  };
+
+  removeStartRound1Listener = () => {
+    const { gameId } = this.props;
+    const game = database.ref("multiplayerGame");
+    game
+      .child(gameId)
+      .child("startRound1")
+      .off("value", this.startRound1ListenerFunction);
   };
 
   listenForRoundChange = () => {
@@ -308,7 +318,7 @@ class MultiplayerGame extends Component {
 
     this.fetchParticipantInfo();
     this.addQuestionArrListener();
-    this.listenForStartRound1();
+    this.addStartRound1Listener();
     this.listenForRoundChange();
     this.listenForParticipantMarkers();
     this.listenForParticipantScores();
@@ -431,6 +441,7 @@ class MultiplayerGame extends Component {
 
   componentWillUnmount() {
     this.removeQuestionArrListener();
+    this.removeStartRound1Listener();
   }
 
   render() {
