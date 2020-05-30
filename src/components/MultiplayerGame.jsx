@@ -153,24 +153,18 @@ class MultiplayerGame extends Component {
       .off("value", this.questionArrListenerFunction);
   };
 
-  listenForPlayersAreReady = () => {
-    const { gameId } = this.props;
-    const game = database.ref("multiplayerGame");
-
-    game
-      .child(gameId)
-      .child("participants")
-      .on("value", (snapshot) => {
-        const data = snapshot.val();
-        const userIdList = Object.keys(data);
-        if (userIdList.every((user) => data[user].userIsReady === true)) {
-          this.setState({
-            participantsAreReady: true,
-          });
-        } else {
-          this.setState({ participantsAreReady: false });
-        }
-      });
+  checkAllPlayersAreReady = () => {
+    const { participants } = this.props;
+    const arrayOfParticipants = Object.values(participants);
+    if (
+      arrayOfParticipants.every(
+        (participant) => participant.userIsReady === true
+      )
+    ) {
+      this.setState({ participantsAreReady: true });
+    } else {
+      this.setState({ participantsAreReady: false });
+    }
   };
 
   listenForStartRound1 = () => {
@@ -320,7 +314,6 @@ class MultiplayerGame extends Component {
     this.listenForParticipantScores();
 
     if (isHost) {
-      this.listenForPlayersAreReady();
       const countryArr = generateCountryQuestions(10);
       this.setState({ countryArr });
 
@@ -365,7 +358,7 @@ class MultiplayerGame extends Component {
       roundScore,
       totalScore,
     } = this.state;
-    const { gameId, currentUserId } = this.props;
+    const { gameId, currentUserId, participants, isHost } = this.props;
 
     const questionArrHasLoaded =
       questionArr !== null &&
@@ -373,6 +366,9 @@ class MultiplayerGame extends Component {
       questionArr.length === 10;
 
     const game = database.ref("multiplayerGame");
+    if (isHost && participants !== prevProps.participants) {
+      this.checkAllPlayersAreReady();
+    }
 
     if (questionArrHasLoaded && !gameIsReady) {
       this.toggleGameIsReady();
