@@ -148,7 +148,7 @@ class Multiplayer extends Component {
 
   componentWillUnmount() {
     this.removeParticipantsListener();
-    this.removeGameStartListener();
+    this.removeGameIsStartedListener();
   }
 
   componentDidUpdate(prevProps, prevState) {

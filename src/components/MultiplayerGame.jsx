@@ -130,17 +130,27 @@ class MultiplayerGame extends Component {
     scores.push(data);
   };
 
-  listenForQuestionArray = () => {
-    const { gameId } = this.props;
+  questionArrListenerFunction = (dbQuestionArr) => {
+    const newQuestionArr = dbQuestionArr.val();
+    this.setState({ questionArr: newQuestionArr });
+  };
 
+  addQuestionArrListener = () => {
+    const { gameId } = this.props;
     const game = database.ref("multiplayerGame");
     game
       .child(gameId)
       .child("questionArr")
-      .on("value", (snapshot) => {
-        const databaseQuestionArr = snapshot.val();
-        this.setState({ questionArr: databaseQuestionArr });
-      });
+      .on("value", this.questionArrListenerFunction);
+  };
+
+  removeQuestionArrListener = () => {
+    const { gameId } = this.props;
+    const game = database.ref("multiplayerGame");
+    game
+      .child(gameId)
+      .child("questionArr")
+      .off("value", this.questionArrListenerFunction);
   };
 
   listenForPlayersAreReady = () => {
@@ -303,7 +313,7 @@ class MultiplayerGame extends Component {
     const { isHost, gameId } = this.props;
 
     this.fetchParticipantInfo();
-    this.listenForQuestionArray();
+    this.addQuestionArrListener();
     this.listenForStartRound1();
     this.listenForRoundChange();
     this.listenForParticipantMarkers();
@@ -421,6 +431,10 @@ class MultiplayerGame extends Component {
     if (gameIsFinished !== prevState.gameIsFinished) {
       this.saveScore();
     }
+  }
+
+  componentWillUnmount() {
+    this.removeQuestionArrListener();
   }
 
   render() {
