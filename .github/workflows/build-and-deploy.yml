@@ -15,6 +15,9 @@ jobs:
       run:  npm install 
     - name: Run build function
       run: npm run build
+      env:
+        REACT_APP_MAPS_API_KEY: ${{secrets.REACT_APP_MAPS_API_KEY}}
+        REACT_APP_FIREBASE_API_KEY: ${{secrets.REACT_APP_FIREBASE_API_KEY}}
     - name: Deploy to Firebase
       uses: w9jds/firebase-action@master
       with:

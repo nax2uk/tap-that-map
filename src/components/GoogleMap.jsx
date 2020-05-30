@@ -1,19 +1,20 @@
 import React, { Component, createRef } from "react";
-import { Paper } from "@material-ui/core";
 import API_KEY from "../API-KEYS/maps-api.js";
 import SubmitButton from "./SubmitButton";
 import CancelButton from "./CancelButton";
-import ResultsPage from "./ResultsPage";
 import mapStyle from "../Data/mapStyling";
 // import customMarker from "../resources/customMarker";
 import customLine from "../resources/customLine";
 import { auth } from "../firebaseInitialise";
+import { Grid } from "@material-ui/core";
 
 class GoogleMap extends Component {
   state = {
     marker: null,
     linkLine: null,
     foreignMarkerArray: [],
+    dimensions: { width: null, height: null },
+    googleMap: null,
   };
 
   googleMapRef = createRef();
@@ -36,7 +37,7 @@ class GoogleMap extends Component {
     const { recordPlayerMarker } = this.props;
     const newMarker = new window.google.maps.Marker({
       position: latLng,
-      map: this.googleMap,
+      map: this.state.googleMap,
       icon: {
         url: user.photoURL,
         scaledSize: new window.google.maps.Size(50, 50),
@@ -87,7 +88,7 @@ class GoogleMap extends Component {
         ...customLine,
       });
 
-      linkLine.setMap(this.googleMap);
+      linkLine.setMap(this.state.googleMap);
 
       this.setState({ linkLine });
     }
@@ -105,8 +106,8 @@ class GoogleMap extends Component {
   plotCountryBorder = () => {
     const { question } = this.props;
     if (question.borderData) {
-      this.googleMap.data.addGeoJson(question.borderData);
-      this.googleMap.data.setStyle({
+      this.state.googleMap.data.addGeoJson(question.borderData);
+      this.state.googleMap.data.setStyle({
         fillColor: "white",
         fillOpacity: 0.5,
         strokeColor: "white",
@@ -124,14 +125,14 @@ class GoogleMap extends Component {
       let resultBounds = new window.google.maps.LatLngBounds();
       resultBounds.extend({ lat, lng });
       resultBounds.extend(question.position);
-      this.googleMap.fitBounds(resultBounds);
-      this.googleMap.panToBounds(resultBounds);
+      this.state.googleMap.fitBounds(resultBounds);
+      this.state.googleMap.panToBounds(resultBounds);
     }
   };
 
   resetMapView = () => {
-    this.googleMap.setCenter({ lat: 0, lng: 0 });
-    this.googleMap.setZoom(2);
+    this.state.googleMap.setCenter({ lat: 0, lng: 0 });
+    this.state.googleMap.setZoom(2);
   };
 
   handleMapClick = (e) => {
@@ -182,6 +183,15 @@ class GoogleMap extends Component {
       this.googleMap.panToBounds(resultBounds);
     }
   };
+  /** RESIZE WINDOW TO RERENDER GOOGLEMAP */
+  updateDimensions = () => {
+    this.setState(
+      { dimensions: { width: window.innerWidth, height: window.innerHeight } },
+      () => {
+        //console.log(`window is resized to ${this.state.dimensions.width} x ${this.state.dimensions.height} `);
+      }
+    );
+  };
 
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProps, prevState) {
@@ -196,7 +206,7 @@ class GoogleMap extends Component {
 
     if (roundHasStarted) {
       window.google.maps.event.addListener(
-        this.googleMap,
+        this.state.googleMap,
         "click",
         this.handleMapClick
       );
@@ -209,7 +219,7 @@ class GoogleMap extends Component {
         this.plotOtherMarkers();
         this.createAndPanToOtherBounds();
       }
-      window.google.maps.event.clearListeners(this.googleMap, "click");
+      window.google.maps.event.clearListeners(this.state.googleMap, "click");
     }
     if (round !== prevProps.round) {
       this.removeLinkLine();
@@ -229,37 +239,58 @@ class GoogleMap extends Component {
     window.document.body.appendChild(googleMapScript);
 
     googleMapScript.addEventListener("load", () => {
-      this.googleMap = this.createGoogleMap();
+      this.setState({ googleMap: this.createGoogleMap() });
+      // this.state.googleMap = this.createGoogleMap();
     });
+
+    this.updateDimensions();
+
+    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("orientationchange", this.updateDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
+    window.removeEventListener("orientationchange", this.updateDimensions);
+    window.google = {};
   }
 
   render() {
-    const { gameOver, marker } = this.state;
+    const { marker, dimensions } = this.state;
     const { roundIsRunning } = this.props;
-    if (gameOver) return <ResultsPage />;
+
     return (
-      <>
-        <Paper
+      <Grid container>
+        <Grid
+          container
+          item
+          xs={12}
           elevation={3}
           square={true}
           id="google-map"
           ref={this.googleMapRef}
           style={{
-            width: 0.95 * window.innerWidth,
-            height: 0.95 * window.innerHeight,
+            width: 0.95 * dimensions.width,
+            height: 0.95 * dimensions.height,
           }}
         />
-        <SubmitButton
-          submitMarker={this.submitMarker}
-          marker={marker}
-          roundIsRunning={roundIsRunning}
-        />
-        <CancelButton
-          removeMarker={this.removeMarker}
-          marker={marker}
-          roundIsRunning={roundIsRunning}
-        />
-      </>
+        <Grid container item xs={12}>
+          <Grid item xs={6}>
+            <SubmitButton
+              submitMarker={this.submitMarker}
+              marker={marker}
+              roundIsRunning={roundIsRunning}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <CancelButton
+              removeMarker={this.removeMarker}
+              marker={marker}
+              roundIsRunning={roundIsRunning}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
     );
   }
 }
