@@ -7,19 +7,35 @@ class Lobby extends Component {
     participants: [],
   };
 
-  getParticipants = () => {
+  participantsListenerFunction = (changeInParticipants) => {
+    const newParticipants = changeInParticipants.val();
+    this.setState({ participants: newParticipants });
+  };
+
+  startParticipantsListener = () => {
+    const { gameId } = this.props;
     const game = database.ref("multiplayerGame");
     game
-      .child(this.props.gameId)
+      .child(gameId)
       .child("participants")
-      .on("value", (snapshot) => {
-        const data = snapshot.val();
-        this.setState({ participants: data });
-      });
+      .on("value", this.participantsListenerFunction);
+  };
+
+  removeParticipantsListener = () => {
+    const { gameId } = this.props;
+    const game = database.ref("multiplayerGame");
+    game
+      .child(gameId)
+      .child("participants")
+      .off("value", this.participantsListenerFunction);
   };
 
   componentDidMount() {
-    this.getParticipants();
+    this.startParticipantsListener();
+  }
+
+  componentWillUnmount() {
+    this.removeParticipantsListener();
   }
 
   render() {
