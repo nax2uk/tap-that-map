@@ -231,103 +231,11 @@ class MultiplayerGame extends Component {
 
     game.child(gameId).child("round").off("value", this.roundListenerFunction);
   };
-
-  fetchParticipantInfo = () => {
-    const { gameId, currentUserId } = this.props;
-    const game = database.ref("multiplayerGame");
-    game
-      .child(gameId)
-      .child("participants")
-      .once("value")
-      .then((dbParticipantsObj) => {
-        const participantsObj = dbParticipantsObj.val();
-        const workingCopy = { ...participantsObj };
-        delete workingCopy[currentUserId];
-        this.setState({ allPlayersMarkers: workingCopy });
-      });
-  };
-
-  listenForParticipantMarkers = () => {
-    const { gameId, currentUserId } = this.props;
-    const game = database.ref("multiplayerGame");
-
-    game
-      .child(gameId)
-      .child("participants")
-      .once("value")
-      .then((snapshot) => {
-        const data = snapshot.val();
-        const participantsIds = Object.keys(data);
-
-        participantsIds.forEach((participantId) => {
-          if (participantId !== currentUserId) {
-            game
-              .child(gameId)
-              .child("participants")
-              .child(participantId)
-              .child("marker")
-              .on("value", (markerSnap) => {
-                const partMarker = markerSnap.val();
-
-                this.setState((currentState) => {
-                  const workingCopy = { ...currentState.allPlayersMarkers };
-                  workingCopy[participantId].marker = partMarker;
-                  return { allPlayersMarkers: workingCopy };
-                });
-              });
-          }
-          // if (participantId !== auth.currentUser.uid) {
-          //   game
-          //     .child(gameId)
-          //     .child("participants")
-          //     .child(participantId)
-          //     .on("value", (snapshot) => {
-          //       const { photoURL, marker } = snapshot.val();
-          //       this.setState((currentState) => {
-          //         const workingCopy = { ...currentState.allPlayersMarkers };
-          //         workingCopy[participantId] = { photoURL, marker };
-          //         return { allPlayersMarkers: workingCopy };
-          //       });
-          //     });
-          // }
-        });
-      });
-  };
-
-  listenForParticipantScores = () => {
-    const { gameId } = this.props;
-    const game = database.ref("multiplayerGame");
-
-    game
-      .child(gameId)
-      .child("participants")
-      .on("value", (snapshot) => {
-        const data = snapshot.val();
-        const participantsIds = Object.keys(data);
-        const partRoundScoreArray = [];
-
-        participantsIds.forEach((participantId) => {
-          if (participantId !== auth.currentUser.uid) {
-            partRoundScoreArray.push({
-              displayName: data[participantId].displayName,
-              roundScore: data[participantId].roundScore,
-            });
-          }
-        });
-
-        this.setState({ allPlayersScores: partRoundScoreArray });
-      });
-  };
-
   componentDidMount() {
     const { isHost, gameId } = this.props;
-
-    this.fetchParticipantInfo();
     this.addQuestionArrListener();
     this.addStartRound1Listener();
     this.addRoundListener();
-    this.listenForParticipantMarkers();
-    this.listenForParticipantScores();
 
     if (isHost) {
       const countryArr = generateCountryQuestions(10);
@@ -452,7 +360,7 @@ class MultiplayerGame extends Component {
   }
 
   render() {
-    const { currentUserId, isHost } = this.props;
+    const { currentUserId, isHost, participants } = this.props;
     const {
       gameIsReady,
       gameIsFinished,
@@ -466,8 +374,6 @@ class MultiplayerGame extends Component {
       totalScore,
       scoreArr,
       participantsAreReady,
-      allPlayersMarkers,
-      allPlayersScores,
     } = this.state;
     if (gameIsReady && !gameIsFinished) {
       return (
@@ -500,7 +406,7 @@ class MultiplayerGame extends Component {
             gameIsRunning={gameIsRunning}
             roundIsRunning={roundIsRunning}
             endRound={this.endRound}
-            allPlayersMarkers={allPlayersMarkers}
+            participants={participants}
           />
           <MultiplayerNextButton
             gameIsRunning={gameIsRunning}
@@ -520,7 +426,7 @@ class MultiplayerGame extends Component {
           <MultiplayerScoresTracker
             gameIsRunning={gameIsRunning}
             roundIsRunning={roundIsRunning}
-            allPlayersScores={allPlayersScores}
+            participants={participants}
           />
         </>
       );
