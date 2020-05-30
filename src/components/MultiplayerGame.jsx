@@ -87,24 +87,6 @@ class MultiplayerGame extends Component {
         .child("userIsReady")
         .set("false");
     });
-    // game
-    //   .child(gameId)
-    //   .child("participants")
-    //   .once("value")
-    //   .then((data) => {
-    //     const participantsObj = data.val();
-    //     return Object.keys(participantsObj);
-    //   })
-    //   .then((keys) =>
-    //     keys.forEach((key) => {
-    //       game
-    //         .child(gameId)
-    //         .child("participants")
-    //         .child(key)
-    //         .child("userIsReady")
-    //         .set(false);
-    //     })
-    //   );
   };
 
   calculateScoreAndDistance = () => {
@@ -139,10 +121,11 @@ class MultiplayerGame extends Component {
 
   saveScore = () => {
     const scores = database.ref("scores");
+    const { totalScore } = this.state;
     const data = {
       UID: auth.currentUser.uid,
       username: auth.currentUser.displayName,
-      score: this.state.totalScore,
+      score: totalScore,
     };
     scores.push(data);
   };
