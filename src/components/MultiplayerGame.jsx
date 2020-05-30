@@ -130,6 +130,20 @@ class MultiplayerGame extends Component {
     scores.push(data);
   };
 
+  checkAllPlayersAreReady = () => {
+    const { participants } = this.props;
+    const arrayOfParticipants = Object.values(participants);
+    if (
+      arrayOfParticipants.every(
+        (participant) => participant.userIsReady === true
+      )
+    ) {
+      this.setState({ participantsAreReady: true });
+    } else {
+      this.setState({ participantsAreReady: false });
+    }
+  };
+
   questionArrListenerFunction = (dbQuestionArr) => {
     const newQuestionArr = dbQuestionArr.val();
     this.setState({ questionArr: newQuestionArr });
@@ -151,20 +165,6 @@ class MultiplayerGame extends Component {
       .child(gameId)
       .child("questionArr")
       .off("value", this.questionArrListenerFunction);
-  };
-
-  checkAllPlayersAreReady = () => {
-    const { participants } = this.props;
-    const arrayOfParticipants = Object.values(participants);
-    if (
-      arrayOfParticipants.every(
-        (participant) => participant.userIsReady === true
-      )
-    ) {
-      this.setState({ participantsAreReady: true });
-    } else {
-      this.setState({ participantsAreReady: false });
-    }
   };
 
   startRound1ListenerFunction = (dbStartRound1) => {
@@ -196,34 +196,40 @@ class MultiplayerGame extends Component {
       .off("value", this.startRound1ListenerFunction);
   };
 
-  listenForRoundChange = () => {
+  roundListenerFunction = (dbRound) => {
+    const newRound = dbRound.val();
+    this.setState(() => {
+      if (newRound === 10) {
+        return {
+          gameIsReady: false,
+          gameIsRunning: false,
+          gameIsFinished: true,
+          roundIsRunning: false,
+        };
+      } else if (newRound !== 0) {
+        return {
+          round: newRound,
+          roundIsRunning: true,
+          playerMarker: null,
+          roundDistance: 0,
+          roundScore: 0,
+        };
+      }
+    });
+  };
+
+  addRoundListener = () => {
     const { gameId } = this.props;
     const game = database.ref("multiplayerGame");
 
-    game
-      .child(gameId)
-      .child("round")
-      .on("value", (snapshot) => {
-        const newRound = snapshot.val();
-        this.setState(() => {
-          if (newRound === 10) {
-            return {
-              gameIsReady: false,
-              gameIsRunning: false,
-              gameIsFinished: true,
-              roundIsRunning: false,
-            };
-          } else if (newRound !== 0) {
-            return {
-              round: newRound,
-              roundIsRunning: true,
-              playerMarker: null,
-              roundDistance: 0,
-              roundScore: 0,
-            };
-          }
-        });
-      });
+    game.child(gameId).child("round").on("value", this.roundListenerFunction);
+  };
+
+  removeRoundListener = () => {
+    const { gameId } = this.props;
+    const game = database.ref("multiplayerGame");
+
+    game.child(gameId).child("round").off("value", this.roundListenerFunction);
   };
 
   fetchParticipantInfo = () => {
@@ -319,7 +325,7 @@ class MultiplayerGame extends Component {
     this.fetchParticipantInfo();
     this.addQuestionArrListener();
     this.addStartRound1Listener();
-    this.listenForRoundChange();
+    this.addRoundListener();
     this.listenForParticipantMarkers();
     this.listenForParticipantScores();
 
@@ -442,6 +448,7 @@ class MultiplayerGame extends Component {
   componentWillUnmount() {
     this.removeQuestionArrListener();
     this.removeStartRound1Listener();
+    this.removeRoundListener();
   }
 
   render() {
