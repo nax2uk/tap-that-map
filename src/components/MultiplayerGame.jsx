@@ -424,6 +424,7 @@ class MultiplayerGame extends Component {
             roundDistance={roundDistance}
           />
           <MultiplayerScoresTracker
+            currentUserId={currentUserId}
             gameIsRunning={gameIsRunning}
             roundIsRunning={roundIsRunning}
             participants={participants}
