@@ -383,6 +383,7 @@ class MultiplayerGame extends Component {
               startGame={this.startGame}
               userReady={this.userReady}
               isHost={isHost}
+              userIsReady={userIsReady}
               participantsAreReady={participantsAreReady}
             />
           )}
