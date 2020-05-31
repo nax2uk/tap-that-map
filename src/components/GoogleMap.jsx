@@ -11,7 +11,7 @@ class GoogleMap extends Component {
   state = {
     marker: null,
     linkLine: null,
-    foreignMarkerArray: [],
+    otherMarkers: [],
     dimensions: { width: null, height: null },
     googleMap: null,
   };
@@ -47,24 +47,18 @@ class GoogleMap extends Component {
     return newMarker;
   };
 
-  removeMarker = (justForeign) => {
-    const { marker, foreignMarkerArray } = this.state;
+  removeMarker = () => {
+    const { marker, otherMarkers } = this.state;
 
-    if (marker !== null && !justForeign) {
+    if (marker !== null) {
       marker.setMap(null);
     }
 
-    foreignMarkerArray.forEach((foreignMarker) => {
-      if (foreignMarker !== null) {
-        foreignMarker.setMap(null);
+    otherMarkers.forEach((othermMarker) => {
+      if (othermMarker !== null) {
+        othermMarker.setMap(null);
       }
     });
-    //edited for multiplayer
-    if (justForeign) {
-      this.setState({ foreignMarkerArray: [] });
-    } else {
-      this.setState({ marker: null, foreignMarkerArray: [] });
-    }
   };
 
   submitMarker = () => {
@@ -145,7 +139,7 @@ class GoogleMap extends Component {
     const { participants, currentUserId } = this.props;
     const { googleMap } = this.state;
 
-    const foreignMarkerArray = [];
+    const otherMarkers = [];
     Object.entries(participants).forEach(
       ([id, { marker, photoURL, roundIsRunning }]) => {
         if (id !== currentUserId && marker !== null && !roundIsRunning) {
@@ -159,12 +153,12 @@ class GoogleMap extends Component {
               anchor: new window.google.maps.Point(20, 20),
             },
           });
-          foreignMarkerArray.push(newMarker);
+          otherMarkers.push(newMarker);
         }
       }
     );
     this.setState({
-      foreignMarkerArray,
+      otherMarkers,
     });
   };
 
@@ -235,10 +229,10 @@ class GoogleMap extends Component {
     if (participants && roundHasStopped) {
       this.plotOtherMarkers();
       this.createAndPanToOtherBounds();
-    }
-    if (participants !== prevProps.participants && roundHasStopped) {
-      this.plotOtherMarkers();
-      this.createAndPanToOtherBounds();
+      if (participants !== prevProps.participants) {
+        this.plotOtherMarkers();
+        this.createAndPanToOtherBounds();
+      }
     }
   }
 
