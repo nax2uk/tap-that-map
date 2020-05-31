@@ -31,28 +31,49 @@ class Leaderboard extends Component {
 
   render() {
     const { leaderArray } = this.state;
-    return (
-
-      <Paper elevation={3} id="leaderboard-wrapper">
-        <Typography variant="h3" align="center">
-          LeaderBoard
+    const { participants } = this.props;
+    if (participants) {
+      return (
+        <Paper elevation={3} id="leaderboard-wrapper">
+          <Typography variant="h3" align="center">
+            Game results
           </Typography>
-        {leaderArray
-          ? leaderArray.map((result, index) => {
-            return (
-              <Typography
-                variant="h4"
-                key={`${result}${index}`}
-                align="center"
-              >
-                {index + 1}: {`${result.score} (${result.username})`}
-              </Typography>
-            );
-          })
-          : null}
-      </Paper>
-
-    );
+          {Object.values(participants)
+            .sort((a, b) => b.totalScore - a.totalScore)
+            .map(({ displayName, totalScore }, index) => {
+              return (
+                <Typography
+                  variant="h4"
+                  key={`${displayName}${index}`}
+                  align="center"
+                >
+                  {index + 1}: {`${totalScore} (${displayName})`}
+                </Typography>
+              );
+            })}
+        </Paper>
+      );
+    } else {
+      return (
+        <Paper elevation={3} id="leaderboard-wrapper">
+          <Typography variant="h3" align="center">
+            High Scores
+          </Typography>
+          {leaderArray &&
+            leaderArray.map((result, index) => {
+              return (
+                <Typography
+                  variant="h4"
+                  key={`${result}${index}`}
+                  align="center"
+                >
+                  {index + 1}: {`${result.score} (${result.username})`}
+                </Typography>
+              );
+            })}
+        </Paper>
+      );
+    }
   }
 }
 

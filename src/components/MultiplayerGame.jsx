@@ -434,7 +434,13 @@ class MultiplayerGame extends Component {
         </>
       );
     } else if (gameIsFinished) {
-      return <ResultsPage scoreArr={scoreArr} totalScore={totalScore} />;
+      return (
+        <ResultsPage
+          scoreArr={scoreArr}
+          totalScore={totalScore}
+          participants={participants}
+        />
+      );
     } else {
       return <h1>loading</h1>;
     }
