@@ -39,7 +39,9 @@ class Timer extends Component {
     const { seconds } = this.state;
 
     const minsToDisplay = Math.floor(seconds / 60).toString();
-    const secsToDisplay = seconds.toString().padStart(2, 0);
+    const secsToDisplay = (seconds - 60 * minsToDisplay)
+      .toString()
+      .padStart(2, 0);
 
     return `${minsToDisplay}:${secsToDisplay}`;
   };
