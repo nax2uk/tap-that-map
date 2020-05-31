@@ -39,15 +39,6 @@ class MultiplayerGame extends Component {
   };
 
   userReady = () => {
-    const { gameId, currentUserId } = this.props;
-    const game = database.ref("multiplayerGame");
-
-    game
-      .child(gameId)
-      .child("participants")
-      .child(currentUserId)
-      .child("userIsReady")
-      .set(true);
     this.setState({ userIsReady: true });
   };
 
@@ -56,6 +47,7 @@ class MultiplayerGame extends Component {
     const game = database.ref("multiplayerGame");
 
     game.child(gameId).child("startRound1").set(true);
+    this.setState({ participantsAreReady: false });
   };
 
   endRound = () => {
@@ -65,6 +57,7 @@ class MultiplayerGame extends Component {
         totalScore: currState.totalScore + currState.roundScore,
         roundIsRunning: false,
         userIsReady: false,
+        participantsAreReady: false,
       };
     });
   };
@@ -132,15 +125,12 @@ class MultiplayerGame extends Component {
 
   checkAllPlayersAreReady = () => {
     const { participants } = this.props;
-    const arrayOfParticipants = Object.values(participants);
     if (
-      arrayOfParticipants.every(
-        (participant) => participant.userIsReady === true
+      Object.values(participants).every(
+        ({ userIsReady }) => userIsReady === true
       )
     ) {
       this.setState({ participantsAreReady: true });
-    } else {
-      this.setState({ participantsAreReady: false });
     }
   };
 
@@ -171,9 +161,10 @@ class MultiplayerGame extends Component {
     const newStartRound1 = dbStartRound1.val();
     if (newStartRound1 === true) {
       this.setState({
-        userIsReady: true,
+        userIsReady: false,
         gameIsRunning: true,
         roundIsRunning: true,
+        participantsAreReady: false,
       });
     }
   };
@@ -293,7 +284,6 @@ class MultiplayerGame extends Component {
     if (isHost && participants !== prevProps.participants) {
       this.checkAllPlayersAreReady();
     }
-
     if (questionArrHasLoaded && !gameIsReady) {
       this.toggleGameIsReady();
     }
