@@ -417,6 +417,7 @@ class MultiplayerGame extends Component {
             isHost={isHost}
             participantsAreReady={participantsAreReady}
             userReady={this.userReady}
+            userIsReady={userIsReady}
           />
           <Totaliser
             gameIsRunning={gameIsRunning}
