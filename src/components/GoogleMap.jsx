@@ -11,7 +11,7 @@ class GoogleMap extends Component {
   state = {
     marker: null,
     linkLine: null,
-    otherMarkers: [],
+    otherMarkers: {},
     dimensions: { width: null, height: null },
     googleMap: null,
   };
@@ -54,11 +54,13 @@ class GoogleMap extends Component {
       marker.setMap(null);
     }
 
-    otherMarkers.forEach((othermMarker) => {
-      if (othermMarker !== null) {
-        othermMarker.setMap(null);
+    Object.values(otherMarkers).forEach((otherMarker) => {
+      if (otherMarker !== null) {
+        otherMarker.setMap(null);
       }
     });
+
+    this.setState({ marker: null, otherMarkers: {} });
   };
 
   submitMarker = () => {
@@ -137,12 +139,16 @@ class GoogleMap extends Component {
 
   plotOtherMarkers = () => {
     const { participants, currentUserId } = this.props;
-    const { googleMap } = this.state;
+    const { googleMap, otherMarkers } = this.state;
 
-    const otherMarkers = [];
     Object.entries(participants).forEach(
       ([id, { marker, photoURL, roundIsRunning }]) => {
-        if (id !== currentUserId && marker !== null && !roundIsRunning) {
+        if (
+          id !== currentUserId &&
+          marker !== null &&
+          !roundIsRunning &&
+          !Object.keys(otherMarkers).includes(id)
+        ) {
           const newMarker = new window.google.maps.Marker({
             position: marker,
             map: googleMap,
@@ -153,13 +159,15 @@ class GoogleMap extends Component {
               anchor: new window.google.maps.Point(20, 20),
             },
           });
-          otherMarkers.push(newMarker);
+          this.setState(({ otherMarkers }) => {
+            const workingCopy = { ...otherMarkers };
+            const newEntry = { [id]: newMarker };
+            Object.assign(workingCopy, newEntry);
+            return { otherMarkers: workingCopy };
+          });
         }
       }
     );
-    this.setState({
-      otherMarkers,
-    });
   };
 
   createAndPanToOtherBounds = () => {
@@ -197,7 +205,7 @@ class GoogleMap extends Component {
 
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProps, prevState) {
-    const { round, roundIsRunning, participants } = this.props;
+    const { round, roundIsRunning, participants, gameIsRunning } = this.props;
     const { marker } = this.state;
     const roundHasStopped =
       !roundIsRunning &&
@@ -229,10 +237,15 @@ class GoogleMap extends Component {
     if (participants && roundHasStopped) {
       this.plotOtherMarkers();
       this.createAndPanToOtherBounds();
-      if (participants !== prevProps.participants) {
-        this.plotOtherMarkers();
-        this.createAndPanToOtherBounds();
-      }
+    }
+
+    if (
+      gameIsRunning &&
+      !roundIsRunning &&
+      participants !== prevProps.participants
+    ) {
+      this.plotOtherMarkers();
+      this.createAndPanToOtherBounds();
     }
   }
 
