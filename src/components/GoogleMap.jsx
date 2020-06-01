@@ -196,10 +196,7 @@ class GoogleMap extends Component {
   /** RESIZE WINDOW TO RERENDER GOOGLEMAP */
   updateDimensions = () => {
     this.setState(
-      { dimensions: { width: window.innerWidth, height: window.innerHeight } },
-      () => {
-        //console.log(`window is resized to ${this.state.dimensions.width} x ${this.state.dimensions.height} `);
-      }
+      { dimensions: { width: window.innerWidth, height: window.innerHeight } }
     );
   };
 
@@ -279,7 +276,6 @@ class GoogleMap extends Component {
           item
           xs={12}
           elevation={3}
-          square={true}
           id="google-map"
           ref={this.googleMapRef}
           style={{
