@@ -199,10 +199,7 @@ class GoogleMap extends Component {
   /** RESIZE WINDOW TO RERENDER GOOGLEMAP */
   updateDimensions = () => {
     this.setState(
-      { dimensions: { width: window.innerWidth, height: window.innerHeight } },
-      () => {
-        //console.log(`window is resized to ${this.state.dimensions.width} x ${this.state.dimensions.height} `);
-      }
+      { dimensions: { width: window.innerWidth, height: window.innerHeight } }
     );
   };
 
@@ -261,12 +258,10 @@ class GoogleMap extends Component {
     this.updateDimensions();
 
     window.addEventListener("resize", this.updateDimensions);
-    window.addEventListener("orientationchange", this.updateDimensions);
   }
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions);
-    window.removeEventListener("orientationchange", this.updateDimensions);
     window.google = {};
   }
 
