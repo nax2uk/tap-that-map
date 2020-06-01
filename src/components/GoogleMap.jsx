@@ -113,16 +113,19 @@ class GoogleMap extends Component {
 
   createAndPanToBounds = () => {
     const { question } = this.props;
-    const { marker } = this.state;
+    const { marker, googleMap } = this.state;
     let resultBounds = new window.google.maps.LatLngBounds();
     if (marker !== null) {
       const lat = marker.position.lat();
       const lng = marker.position.lng();
       resultBounds.extend({ lat, lng });
+      resultBounds.extend(question.position);
+      googleMap.fitBounds(resultBounds);
+      googleMap.panToBounds(resultBounds);
+    } else {
+      googleMap.panTo(question.position);
+      googleMap.setZoom(5);
     }
-    resultBounds.extend(question.position);
-    this.state.googleMap.fitBounds(resultBounds);
-    this.state.googleMap.panToBounds(resultBounds);
   };
 
   resetMapView = () => {
@@ -206,11 +209,8 @@ class GoogleMap extends Component {
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProps, prevState) {
     const { round, roundIsRunning, participants, gameIsRunning } = this.props;
-    const { marker } = this.state;
     const roundHasStopped =
-      !roundIsRunning &&
-      roundIsRunning !== prevProps.roundIsRunning &&
-      marker !== null;
+      !roundIsRunning && roundIsRunning !== prevProps.roundIsRunning;
     const roundHasStarted =
       roundIsRunning && roundIsRunning !== prevProps.roundIsRunning;
 
@@ -281,7 +281,6 @@ class GoogleMap extends Component {
           item
           xs={12}
           elevation={3}
-          square={true}
           id="google-map"
           ref={this.googleMapRef}
           style={{
