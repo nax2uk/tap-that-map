@@ -6,6 +6,21 @@ import mapStyle from "../Data/mapStyling";
 import customLine from "../resources/customLine";
 import { auth } from "../firebaseInitialise";
 import { Grid } from "@material-ui/core";
+import { Howl } from "howler";
+import coinsrc from "../resources/coin.webm";
+import wooshsrc from "../resources/woosh.mp3";
+
+const ding = new Howl({
+  src: [coinsrc],
+  preload: true,
+  volume: 0.5,
+});
+
+const woosh = new Howl({
+  src: [wooshsrc],
+  preload: true,
+  volume: 0.8,
+});
 
 class GoogleMap extends Component {
   state = {
@@ -43,6 +58,7 @@ class GoogleMap extends Component {
         anchor: new window.google.maps.Point(25, 25),
       },
     });
+    ding.play();
     recordPlayerMarker(newMarker);
     return newMarker;
   };
@@ -120,6 +136,7 @@ class GoogleMap extends Component {
       const lng = marker.position.lng();
       resultBounds.extend({ lat, lng });
     }
+    woosh.play();
     resultBounds.extend(question.position);
     this.state.googleMap.fitBounds(resultBounds);
     this.state.googleMap.panToBounds(resultBounds);
@@ -149,6 +166,7 @@ class GoogleMap extends Component {
           !roundIsRunning &&
           !Object.keys(otherMarkers).includes(id)
         ) {
+          ding.play();
           const newMarker = new window.google.maps.Marker({
             position: marker,
             map: googleMap,
