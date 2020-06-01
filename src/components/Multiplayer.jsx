@@ -3,7 +3,7 @@ import Lobby from "./Lobby";
 import { database, auth } from "../firebaseInitialise";
 import MultiplayerGame from "./MultiplayerGame";
 import { Paper, Button, Grid, Typography, TextField } from "@material-ui/core";
-import Title from "./Title"
+import Title from "./Title";
 
 class Multiplayer extends Component {
   state = {
@@ -172,7 +172,6 @@ class Multiplayer extends Component {
     } = this.state;
     return (
       <>
-
         {hostOrJoin && (
           <>
             <Title />
