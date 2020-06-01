@@ -1,62 +1,156 @@
+a {
+  text-decoration: none;
+}
+
+header {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
 #google-map {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
+  display: hidden;
+  top: 0vh;
+  left: 0vw;
+  margin:1px;
   z-index: 0;
+}
+
+#start-wrapper {
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 #timer-wrapper {
   position: absolute;
-  width: 8rem;
-  padding: 1vh 2vw 1vh 1vw;
-  top: 2vh;
-  right: -1vh;
+  padding: 1vh 2vw 1vh 2vw;
+  bottom: 4vh;
   text-align: center;
   z-index: 1;
+  left: 50%;
+
+  transform: translate(-50%);
 }
 
 #question-wrapper {
+  margin-top: 4vh;
   position: absolute;
   padding: 1vh 1vw 1vh 2vw;
-  top: 2vh;
-  left: -1vh;
   z-index: 1;
+  left: 50%;
+  text-align: center;
+
+  transform: translate(-50%);
 }
 
 #submit-wrapper {
   position: absolute;
-  right: 2vw;
-  bottom: 5vh;
+  border-radius: 2rem;
+  width: 4rem;
+  height: 4rem;
+  right: 1.5vw;
+  bottom: 1.5vh;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+#cancel-wrapper {
+  position: absolute;
+  border-radius: 2rem;
+  width: 4rem;
+  height: 4rem;
+  left: 1.5vw;
+  bottom: 1.5vh;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+}
+#next-wrapper {
+  position: absolute;
+  padding: 1vh 2vw 1vh 2vw;
+  bottom: 2vh;
+  right: -1vh;
+  text-align: left;
+  z-index: 1;
+}
+#next-wrapper > button {
+  width: 100%;
+}
+#totaliser-wrapper {
+  position: absolute;
+  padding: 1vh 2vw 1vh 5vw;
+  top: 31vh;
+  left: -1vh;
+  text-align: right;
   z-index: 1;
 }
 
 #score-wrapper {
   position: absolute;
-  padding: 1vh 1vw 1vh 2vw;
-  top: 15vh;
+  padding: 1vh 2vw 1vh 5vw;
+  top: 20vh;
   left: -1vh;
+  text-align: right;
   z-index: 1;
 }
 
 #login-form-wrapper {
-  width: 30vw;
-  margin: 20vh auto;
+  width: 40vw;
+  margin: 10vh auto;
   display: flex;
   flex-direction: column;
   padding: 5vh 5vw;
   justify-content: space-around;
+  align-items: center;
+}
+#login-form {
+  width: 80%;
+  margin: 0 auto;
+}
+#login-form > * {
+  margin: 1vh 0;
 }
 
-.two-button-wrapper {
-  width: 100%;
+#username-form-wrapper {
+  width: 50vw;
+  margin: 10vh auto;
   display: flex;
+  flex-direction: column;
+  padding: 5vh 5vw;
   justify-content: space-around;
+  align-items: center;
+}
+#upload-image-wrapper > * {
+  margin: 2vh 0;
+}
+.two-item-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2vw;
+}
+
+#button-wrapper {
+  width: 50%;
+  margin: 2vh auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
   margin-top: 1rem;
+}
+
+#button-wrapper > * {
+  margin: 1vh 0;
 }
 
 #logout-wrapper {
   width: 30vw;
-  margin: 20vh auto;
+  margin: 30vh auto;
   display: flex;
   flex-direction: column;
   padding: 5vh 5vw;
@@ -65,11 +159,74 @@
 }
 
 #home-wrapper {
-  width: 30vw;
-  margin: 20vh auto;
+  width: 60vw;
+  margin: 10vh auto;
   display: flex;
   flex-direction: column;
   padding: 5vh 5vw;
   justify-content: space-around;
   align-content: center;
+}
+
+#results-wrapper {
+  width: 85vw;
+  margin: 5vh auto;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+#results-wrapper > * {
+  margin: 5vh auto;
+}
+
+#player-results-wrapper {
+  margin-left: 10vw;
+  width: 40vw;
+  height:90vh;
+  margin-bottom:2vh;
+}
+
+#leaderboard-wrapper {
+  width: 40vw;
+  height:90vh;
+  margin-left:2vw;
+  margin-bottom:2vh;
+}
+
+#lobby-wrapper {
+  margin: 7vh auto;
+  width: 60vw;
+  display: flex;
+  flex-direction: column;
+  padding: 5vh 5vw;
+  justify-content: space-around;
+  align-content: center;
+}
+
+#initialise-game-wrapper{
+  margin: 7vh auto;
+  width: 60vw;
+  display: flex;
+  flex-direction: column;
+  padding: 5vh 5vw;
+  justify-content: space-around;
+  align-content: center;
+}
+
+#scores-tracker-wrapper{
+  position: absolute;
+  padding: 1vh 5vw 1vh 1vw;
+  top: 20vh;
+  right: -1vh;
+  align-content: left;
+  z-index: 1;
+}
+
+#loader-wrapper {
+  width: 50vw;
+  margin: 20vh auto;
+  display: flex;
+  flex-direction: column;
+  padding: 5vh 5vw;
+  
 }

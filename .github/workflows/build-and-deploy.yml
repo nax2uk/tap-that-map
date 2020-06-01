@@ -1,0 +1,26 @@
+name: Build and Deploy
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy
+    runs-on: [ubuntu-latest]
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v2
+    - name: Install dependencies
+      run:  npm install 
+    - name: Run build function
+      run: npm run build
+      env:
+        REACT_APP_MAPS_API_KEY: ${{secrets.REACT_APP_MAPS_API_KEY}}
+        REACT_APP_FIREBASE_API_KEY: ${{secrets.REACT_APP_FIREBASE_API_KEY}}
+    - name: Deploy to Firebase
+      uses: w9jds/firebase-action@master
+      with:
+        args: deploy
+      env: 
+          FIREBASE_TOKEN: ${{secrets.FIREBASE_TOKEN}}      

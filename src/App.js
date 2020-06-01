@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import "./App.css";
-import Title from "./components/Title";
-import GoogleMap from "./components/GoogleMap";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import { auth } from "./firebaseInitialise";
 import { Router } from "@reach/router";
 import Logout from "./components/Logout";
+import Game from "./components/Game";
+import Multiplayer from "./components/Multiplayer";
+import { ThemeProvider } from "@material-ui/core/styles";
+import theme from "./resources/theme";
 
 class App extends Component {
   state = {
@@ -27,13 +29,16 @@ class App extends Component {
   }
 
   render() {
-    // <GoogleMap />
+    const { currentUserId } = this.state;
     return (
-      <Router>
-        {this.state.currentUserId ? <Home path="/" /> : <Login path="/" />}
-        <Logout path="/logout" />
-        <GoogleMap path="/googlemap" currentUserId={this.state.currentUserId} />
-      </Router>
+      <ThemeProvider theme={theme}>
+        <Router>
+          {currentUserId ? <Home path="/" /> : <Login path="/" />}
+          <Logout path="/logout" />
+          <Game path="/singlePlayerGame" currentUserId={currentUserId} />
+          <Multiplayer path="/multiplayer" currentUserId={currentUserId} />
+        </Router>
+      </ThemeProvider>
     );
   }
 }

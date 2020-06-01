@@ -1,28 +1,34 @@
 import React, { Component, createRef } from "react";
 import API_KEY from "../API-KEYS/maps-api.js";
-import { Fab, Icon } from "@material-ui/core";
-import { ThemeProvider } from "@material-ui/core/styles";
-import theme from "../resources/theme.jsx";
-import Timer from "./Timer";
+import SubmitButton from "./SubmitButton";
+import CancelButton from "./CancelButton";
 import mapStyle from "../Data/mapStyling";
-import Question from "./Question";
-import Score from "./Score.jsx";
+import customLine from "../resources/customLine";
+import { auth } from "../firebaseInitialise";
+import { Grid } from "@material-ui/core";
+import { Howl } from "howler";
+import coinsrc from "../resources/coin.webm";
+import wooshsrc from "../resources/woosh.mp3";
 
-import { database } from "../firebaseInitialise";
-import calculateScore from "../utils/calculateScore";
-import generateCountryQuestions from "../utils/generateCountryQuestions";
+const ding = new Howl({
+  src: [coinsrc],
+  preload: true,
+  volume: 0.5,
+});
+
+const woosh = new Howl({
+  src: [wooshsrc],
+  preload: true,
+  volume: 0.8,
+});
 
 class GoogleMap extends Component {
   state = {
-    allMarkers: [],
     marker: null,
-    // markerAdded: false,
-    question: null,
-    countryArr: null,
-    totalScore: 0,
-    round: 0,
-    gameOver: false,
-    scoreSubmitted: false,
+    linkLine: null,
+    otherMarkers: {},
+    dimensions: { width: null, height: null },
+    googleMap: null,
   };
 
   googleMapRef = createRef();
@@ -41,176 +47,278 @@ class GoogleMap extends Component {
   };
 
   placeMarker = (latLng) => {
-    console.log("PLACE MARKER FIRING!");
-    let newMarker = new window.google.maps.Marker({
+    let user = auth.currentUser;
+    const { recordPlayerMarker } = this.props;
+    const newMarker = new window.google.maps.Marker({
       position: latLng,
-      map: this.googleMap,
-      animation: window.google.maps.Animation.DROP,
-      draggable: true,
+      map: this.state.googleMap,
+      icon: {
+        url: user.photoURL,
+        scaledSize: new window.google.maps.Size(50, 50),
+        anchor: new window.google.maps.Point(25, 25),
+      },
     });
-    const { allMarkers } = this.state;
-    this.setState({ allMarkers: [newMarker, ...allMarkers] });
+    ding.play();
+    recordPlayerMarker(newMarker);
     return newMarker;
   };
 
-  setMapOnAll = (map) => {
-    const { allMarkers } = this.state;
-    console.log("setMap Func", this.googleMap);
-    for (var i = 0; i < allMarkers.length; i++) {
-      allMarkers[i].setMap(map);
-    }
-  };
-
   removeMarker = () => {
-    this.setMapOnAll(null);
+    const { marker, otherMarkers } = this.state;
+
+    if (marker !== null) {
+      marker.setMap(null);
+    }
+
+    Object.values(otherMarkers).forEach((otherMarker) => {
+      if (otherMarker !== null) {
+        otherMarker.setMap(null);
+      }
+    });
+
+    this.setState({ marker: null, otherMarkers: {} });
   };
 
-  //called when submit button is clicked
-  submitMarker = (event) => {
-    event.preventDefault();
-    const { marker, question } = this.state;
-    if (marker !== null) {
+  submitMarker = () => {
+    const { endRound } = this.props;
+    endRound();
+  };
+
+  plotLinkLine = () => {
+    const { marker } = this.state;
+    const { question } = this.props;
+    if (marker !== null && question.position !== null) {
       const markerPosition = {
         lat: marker.position.lat(),
         lng: marker.position.lng(),
       };
-      const score = calculateScore(markerPosition, question.position);
+      const linkPath = [markerPosition, question.position];
 
-      this.setState((currState) => {
-        return {
-          totalScore: currState.totalScore + score,
-          scoreSubmitted: true,
-        };
+      const linkLine = new window.google.maps.Polyline({
+        path: linkPath,
+        ...customLine,
       });
-    } else {
-      // need to look at adding material UI styling to the alert?
-      window.alert("You need to place a marker before submitting!");
+
+      linkLine.setMap(this.state.googleMap);
+
+      this.setState({ linkLine });
     }
   };
 
-  /******** QUESTION FUNCTIONS ********/
-  // called in componentDidMount and componentDidUpdate
-  getQuestion = () => {
-    const { countryArr, round } = this.state;
-    const location = countryArr[round];
-    console.log(location);
+  removeLinkLine = () => {
+    const { linkLine } = this.state;
+    if (linkLine !== null) {
+      linkLine.setMap(null);
+    }
 
-    var country = database.ref(`countries/${location}`);
-    country.on("value", (data) => {
-      const countryData = data.val();
-      const countryObj = { location: location, position: countryData };
-      this.setState({
-        question: countryObj,
-      });
-    });
+    this.setState({ linkLine: null });
   };
 
-  /********* ROUND FUNCTIONS ********/
-  updateRound = () => {
-    if (this.state.round < 9) {
-      this.setState((currState) => {
-        this.removeMarker();
-        return {
-          round: currState.round++,
-          scoreSubmitted: false,
-          marker: null,
-        };
+  plotCountryBorder = () => {
+    const { question } = this.props;
+    if (question.borderData) {
+      this.state.googleMap.data.addGeoJson(question.borderData);
+      this.state.googleMap.data.setStyle({
+        fillColor: "white",
+        fillOpacity: 0.5,
+        strokeColor: "white",
+        strokeWeight: 0.5,
       });
-    } else this.setState({ gameOver: true });
+    }
   };
 
-  setRound = (roundsNum) => {
+  createAndPanToBounds = () => {
+    const { question } = this.props;
+    const { marker, googleMap } = this.state;
+    let resultBounds = new window.google.maps.LatLngBounds();
+    if (marker !== null) {
+      const lat = marker.position.lat();
+      const lng = marker.position.lng();
+      resultBounds.extend({ lat, lng });
+      resultBounds.extend(question.position);
+          woosh.play();
+      googleMap.fitBounds(resultBounds);
+      googleMap.panToBounds(resultBounds);
+    } else {
+          woosh.play();
+      googleMap.panTo(question.position);
+      googleMap.setZoom(5);
+    }
+  };
+
+  resetMapView = () => {
+    this.state.googleMap.setCenter({ lat: 0, lng: 0 });
+    this.state.googleMap.setZoom(2);
+  };
+
+  handleMapClick = (e) => {
+    this.removeMarker();
     this.setState({
-      round: roundsNum,
+      marker: this.placeMarker(e.latLng),
     });
   };
 
-  saveScore = () => {
-    const scores = database.ref("scores");
-    const data = {
-      UID: this.props.currentUserId,
-      score: this.state.totalScore,
-    };
-    scores.push(data);
+  plotOtherMarkers = () => {
+    const { participants, currentUserId } = this.props;
+    const { googleMap, otherMarkers } = this.state;
+
+    Object.entries(participants).forEach(
+      ([id, { marker, photoURL, roundIsRunning }]) => {
+        if (
+          id !== currentUserId &&
+          marker !== null &&
+          !roundIsRunning &&
+          !Object.keys(otherMarkers).includes(id)
+        ) {
+          ding.play();
+          const newMarker = new window.google.maps.Marker({
+            position: marker,
+            map: googleMap,
+            animation: window.google.maps.Animation.DROP,
+            icon: {
+              url: photoURL,
+              scaledSize: new window.google.maps.Size(40, 40),
+              anchor: new window.google.maps.Point(20, 20),
+            },
+          });
+          this.setState(({ otherMarkers }) => {
+            const workingCopy = { ...otherMarkers };
+            const newEntry = { [id]: newMarker };
+            Object.assign(workingCopy, newEntry);
+            return { otherMarkers: workingCopy };
+          });
+        }
+      }
+    );
+  };
+
+  createAndPanToOtherBounds = () => {
+    const { participants, currentUserId, question } = this.props;
+    const { marker } = this.state;
+
+    let resultBounds = new window.google.maps.LatLngBounds();
+    if (marker !== null) {
+      const lat = marker.position.lat();
+      const lng = marker.position.lng();
+      resultBounds.extend({ lat, lng });
+    }
+    resultBounds.extend(question.position);
+    if (participants) {
+      Object.entries(participants).forEach(
+        ([id, { marker, roundIsRunning }]) => {
+          if (id !== currentUserId && marker !== null && !roundIsRunning) {
+            resultBounds.extend(marker);
+          }
+        }
+      );
+    }
+    this.state.googleMap.fitBounds(resultBounds);
+    this.state.googleMap.panToBounds(resultBounds);
+  };
+  /** RESIZE WINDOW TO RERENDER GOOGLEMAP */
+  updateDimensions = () => {
+    this.setState(
+      { dimensions: { width: window.innerWidth, height: window.innerHeight } }
+    );
   };
 
   /******** REACT LIFE CYCLES ********/
-  componentDidUpdate(prevProp, prevState) {
-    if (prevState.round !== this.state.round) {
-      this.getQuestion();
+  componentDidUpdate(prevProps, prevState) {
+    const { round, roundIsRunning, participants, gameIsRunning } = this.props;
+    const roundHasStopped =
+      !roundIsRunning && roundIsRunning !== prevProps.roundIsRunning;
+    const roundHasStarted =
+      roundIsRunning && roundIsRunning !== prevProps.roundIsRunning;
+
+    if (roundHasStarted) {
+      window.google.maps.event.addListener(
+        this.state.googleMap,
+        "click",
+        this.handleMapClick
+      );
     }
-    if (prevState.gameOver !== this.state.gameOver) {
-      this.saveScore();
+    if (roundHasStopped) {
+      this.plotLinkLine();
+      this.plotCountryBorder();
+      this.createAndPanToBounds();
+      window.google.maps.event.clearListeners(this.state.googleMap, "click");
+    }
+    if (round !== prevProps.round) {
+      this.removeLinkLine();
+      this.removeMarker();
+      this.resetMapView();
+    }
+
+    // if participants exists on props, then this means it's multiplayer
+    if (participants && roundHasStopped) {
+      this.plotOtherMarkers();
+      this.createAndPanToOtherBounds();
+    }
+
+    if (
+      gameIsRunning &&
+      !roundIsRunning &&
+      participants !== prevProps.participants
+    ) {
+      this.plotOtherMarkers();
+      this.createAndPanToOtherBounds();
     }
   }
 
   componentDidMount() {
     const googleMapScript = document.createElement("script");
-
     googleMapScript.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places`;
     window.document.body.appendChild(googleMapScript);
 
-    //this.generateQuestion(questionData.questions);
-    this.setState(
-      {
-        countryArr: generateCountryQuestions(10),
-      },
-      () => {
-        this.getQuestion();
-      }
-    );
-
     googleMapScript.addEventListener("load", () => {
-      this.googleMap = this.createGoogleMap();
-      window.google.maps.event.addListener(this.googleMap, "click", (e) => {
-        if (this.state.marker === null)
-          this.setState({
-            marker: this.placeMarker(e.latLng),
-            // markerAdded: true,
-          });
-      });
+      this.setState({ googleMap: this.createGoogleMap() });
     });
+
+    this.updateDimensions();
+
+    window.addEventListener("resize", this.updateDimensions);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions);
+    window.google = {};
   }
 
   render() {
-    const {
-      totalScore,
-      round,
-      question,
-      gameOver,
-      scoreSubmitted,
-    } = this.state;
-    if (gameOver) return <h1>END OF GAME/Results... </h1>;
-    return (
-      <>
-        {question !== null ? (
-          <Question location={question.location} round={round} />
-        ) : null}
-        <Score totalScore={totalScore} />
+    const { marker, dimensions } = this.state;
+    const { roundIsRunning } = this.props;
 
-        <div
+    return (
+      <Grid container>
+        <Grid
+          container
+          item
+          xs={12}
+          elevation={3}
           id="google-map"
           ref={this.googleMapRef}
-          style={{ width: window.innerWidth, height: window.innerHeight }}
+          style={{
+            width: 0.95 * dimensions.width,
+            height: 0.95 * dimensions.height,
+          }}
         />
-        <div id="submit-wrapper">
-          <ThemeProvider theme={theme}>
-            <Fab
-              size="large"
-              onClick={this.submitMarker}
-              disabled={scoreSubmitted}
-              color="secondary"
-            >
-              <Icon fontSize="large">check_circle</Icon>
-            </Fab>
-          </ThemeProvider>
-        </div>
-        <Timer
-          updateRound={this.updateRound}
-          round={round}
-          setRound={this.setRound}
-        />
-      </>
+        <Grid container item xs={12}>
+          <Grid item xs={6}>
+            <SubmitButton
+              submitMarker={this.submitMarker}
+              marker={marker}
+              roundIsRunning={roundIsRunning}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <CancelButton
+              removeMarker={this.removeMarker}
+              marker={marker}
+              roundIsRunning={roundIsRunning}
+            />
+          </Grid>
+        </Grid>
+      </Grid>
     );
   }
 }
