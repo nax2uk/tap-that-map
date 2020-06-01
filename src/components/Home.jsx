@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { auth } from "../firebaseInitialise";
 import { Link, navigate } from "@reach/router";
 import { Paper, Typography, Button, Box } from "@material-ui/core";
-import { Howl } from "howler";
-import introSrc from "../resources/intro.m4a";
+// import { Howl } from "howler";
+// import introSrc from "../resources/intro.m4a";
 import UserNameForm from "./UserNameForm";
 import Title from "./Title";
 
@@ -37,23 +37,23 @@ class Home extends Component {
     }
   };
 
-  loadMusic = () => {
-    const introMusic = new Howl({
-      src: [introSrc],
-      autoplay: true,
-      preload: true,
-      volume: 0.5,
-      onplayerror: function () {
-        introMusic.once("unlock", function () {
-          introMusic.play();
-        });
-      },
-    });
+  // loadMusic = () => {
+  //   const introMusic = new Howl({
+  //     src: [introSrc],
+  //     autoplay: true,
+  //     preload: true,
+  //     volume: 0.5,
+  //     onplayerror: function () {
+  //       introMusic.once("unlock", function () {
+  //         introMusic.play();
+  //       });
+  //     },
+  //   });
 
-    introMusic.on("load", () => {
-      introMusic.play();
-    });
-  };
+  //   introMusic.on("load", () => {
+  //     introMusic.play();
+  //   });
+  // };
 
   logout = () => {
     auth.signOut();

@@ -10,9 +10,16 @@ import StartButton from "./StartButton";
 import NextButton from "./NextButton";
 import Totaliser from "./Totaliser";
 import ResultsPage from "./ResultsPage";
-// import GlobeLoader from "./GlobeLoader";
 import LoadingScreen from "./LoadingScreen";
-// import {CircularProgress, Typography, Paper }from "@material-ui/core";
+// import { Howl } from "howler";
+// import bgmsrc from "../resources/Whimsical-Popsicle.mp3";
+
+// const bgm = new Howl({
+//   src: [bgmsrc],
+//   preload: true,
+//   volume: 0.3,
+//   loop: true,
+// });
 
 class Game extends Component {
   state = {
@@ -38,6 +45,7 @@ class Game extends Component {
   };
 
   startGame = () => {
+    // bgm.play();
     this.setState({
       userIsReady: true,
       gameIsRunning: true,
