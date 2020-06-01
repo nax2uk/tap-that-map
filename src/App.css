@@ -99,7 +99,7 @@ header {
 }
 
 #login-form-wrapper {
-  width: 50vw;
+  width: 40vw;
   margin: 10vh auto;
   display: flex;
   flex-direction: column;
