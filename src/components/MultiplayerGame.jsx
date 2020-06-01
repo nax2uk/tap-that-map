@@ -12,7 +12,7 @@ import Totaliser from "./Totaliser";
 import ResultsPage from "./ResultsPage";
 import MultiplayerScoresTracker from "./MultiplayerScoresTracker";
 
-class Game extends Component {
+class MultiplayerGame extends Component {
   state = {
     userIsReady: false,
     participantsAreReady: false,
@@ -26,6 +26,8 @@ class Game extends Component {
     roundDistance: 0,
     totalScore: 0,
     scoreArr: [],
+    allPlayersMarkers: {},
+    allPlayersScores: [],
   };
 
   toggleGameIsReady = () => {
@@ -37,44 +39,47 @@ class Game extends Component {
   };
 
   userReady = () => {
-    const { gameId, currentUserId } = this.props;
-    const game = database.ref("multiplayerGame");
-    game
-      .child(gameId)
-      .child("participants")
-      .child(currentUserId)
-      .child("userIsReady")
-      .set(true);
     this.setState({ userIsReady: true });
   };
 
   startGame = () => {
     const { gameId } = this.props;
     const game = database.ref("multiplayerGame");
+
     game.child(gameId).child("startRound1").set(true);
+    this.setState({ participantsAreReady: false });
   };
 
   endRound = () => {
     this.calculateScoreAndDistance();
-
     this.setState((currState) => {
       return {
         totalScore: currState.totalScore + currState.roundScore,
         roundIsRunning: false,
         userIsReady: false,
-        playerMarker: null,
+        participantsAreReady: false,
       };
     });
   };
 
   updateRound = () => {
-    const { gameId } = this.props;
+    const { gameId, participants } = this.props;
     const { round } = this.state;
     const game = database.ref("multiplayerGame");
+
     game
       .child(gameId)
       .child("round")
       .set(round + 1);
+
+    Object.keys(participants).forEach((participant) => {
+      game
+        .child(gameId)
+        .child("participants")
+        .child(participant)
+        .child("userIsReady")
+        .set("false");
+    });
   };
 
   calculateScoreAndDistance = () => {
@@ -109,105 +114,121 @@ class Game extends Component {
 
   saveScore = () => {
     const scores = database.ref("scores");
+    const { totalScore } = this.state;
     const data = {
       UID: auth.currentUser.uid,
       username: auth.currentUser.displayName,
-      score: this.state.totalScore,
+      score: totalScore,
     };
     scores.push(data);
   };
 
-  listenForQuestionArray = () => {
-    const { gameId } = this.props;
+  checkAllPlayersAreReady = () => {
+    const { participants } = this.props;
+    if (
+      Object.values(participants).every(
+        ({ userIsReady }) => userIsReady === true
+      )
+    ) {
+      this.setState({ participantsAreReady: true });
+    }
+  };
 
+  questionArrListenerFunction = (dbQuestionArr) => {
+    const newQuestionArr = dbQuestionArr.val();
+    this.setState({ questionArr: newQuestionArr });
+  };
+
+  addQuestionArrListener = () => {
+    const { gameId } = this.props;
     const game = database.ref("multiplayerGame");
     game
       .child(gameId)
       .child("questionArr")
-      .on("value", (snapshot) => {
-        const databaseQuestionArr = snapshot.val();
-        this.setState({ questionArr: databaseQuestionArr });
-      });
+      .on("value", this.questionArrListenerFunction);
   };
 
-  listenForPlayersAreReady = () => {
+  removeQuestionArrListener = () => {
     const { gameId } = this.props;
     const game = database.ref("multiplayerGame");
-
     game
       .child(gameId)
-      .child("participants")
-      .on("value", (snapshot) => {
-        const data = snapshot.val();
-        const userIdList = Object.keys(data);
-        if (userIdList.every((user) => data[user].userIsReady === true)) {
-          this.setState({
-            participantsAreReady: true,
-          });
-        } else {
-          this.setState({ participantsAreReady: false });
-        }
-      });
+      .child("questionArr")
+      .off("value", this.questionArrListenerFunction);
   };
 
-  listenForStartRound1 = () => {
+  startRound1ListenerFunction = (dbStartRound1) => {
+    const newStartRound1 = dbStartRound1.val();
+    if (newStartRound1 === true) {
+      this.setState({
+        userIsReady: false,
+        gameIsRunning: true,
+        roundIsRunning: true,
+        participantsAreReady: false,
+      });
+    }
+  };
+
+  addStartRound1Listener = () => {
     const { gameId } = this.props;
     const game = database.ref("multiplayerGame");
-
     game
       .child(gameId)
       .child("startRound1")
-      .on("value", (snapshot) => {
-        const data = snapshot.val();
-        console.log(data);
-        if (data === true) {
-          this.setState({
-            userIsReady: true,
-            gameIsRunning: true,
-            roundIsRunning: true,
-          });
-        }
-      });
+      .on("value", this.startRound1ListenerFunction);
   };
 
-  listenForRoundChange = () => {
+  removeStartRound1Listener = () => {
+    const { gameId } = this.props;
+    const game = database.ref("multiplayerGame");
+    game
+      .child(gameId)
+      .child("startRound1")
+      .off("value", this.startRound1ListenerFunction);
+  };
+
+  roundListenerFunction = (dbRound) => {
+    const newRound = dbRound.val();
+    this.setState(() => {
+      if (newRound === 10) {
+        return {
+          gameIsReady: false,
+          gameIsRunning: false,
+          gameIsFinished: true,
+          roundIsRunning: false,
+        };
+      } else if (newRound !== 0) {
+        return {
+          round: newRound,
+          roundIsRunning: true,
+          playerMarker: null,
+          roundDistance: 0,
+          roundScore: 0,
+        };
+      }
+    });
+  };
+
+  addRoundListener = () => {
     const { gameId } = this.props;
     const game = database.ref("multiplayerGame");
 
-    game
-      .child(gameId)
-      .child("round")
-      .on("value", (snapshot) => {
-        const newRound = snapshot.val();
-        this.setState(() => {
-          if (newRound === 10) {
-            this.saveScore();
-            return {
-              gameIsReady: false,
-              gameIsRunning: false,
-              gameIsFinished: true,
-              roundIsRunning: false,
-            };
-          } else if (newRound !== 0) {
-            return {
-              round: newRound,
-              roundIsRunning: true,
-              playerMarker: null,
-              roundDistance: 0,
-              roundScore: 0,
-            };
-          }
-        });
-      });
+    game.child(gameId).child("round").on("value", this.roundListenerFunction);
   };
 
+  removeRoundListener = () => {
+    const { gameId } = this.props;
+    const game = database.ref("multiplayerGame");
+
+    game.child(gameId).child("round").off("value", this.roundListenerFunction);
+  };
   componentDidMount() {
     const { isHost, gameId } = this.props;
-    this.listenForQuestionArray();
-    this.listenForStartRound1();
-    this.listenForRoundChange();
+    this.addQuestionArrListener();
+    this.addStartRound1Listener();
+    this.addRoundListener();
+
     if (isHost) {
-      this.listenForPlayersAreReady();
       const countryArr = generateCountryQuestions(10);
       this.setState({ countryArr });
 
@@ -245,10 +266,14 @@ class Game extends Component {
     const {
       questionArr,
       gameIsReady,
+      gameIsFinished,
       roundIsRunning,
       userIsReady,
+      playerMarker,
+      roundScore,
+      totalScore,
     } = this.state;
-    const { gameId, currentUserId } = this.props;
+    const { gameId, currentUserId, participants } = this.props;
 
     const questionArrHasLoaded =
       questionArr !== null &&
@@ -256,6 +281,15 @@ class Game extends Component {
       questionArr.length === 10;
 
     const game = database.ref("multiplayerGame");
+
+    Object.entries(participants).forEach(([id, { userIsReady }]) => {
+      if (
+        Object.keys(prevProps.participants).includes(id) &&
+        userIsReady !== prevProps.participants[id].userIsReady
+      ) {
+        this.checkAllPlayersAreReady();
+      }
+    });
 
     if (questionArrHasLoaded && !gameIsReady) {
       this.toggleGameIsReady();
@@ -276,10 +310,54 @@ class Game extends Component {
         .child("userIsReady")
         .set(userIsReady);
     }
+    if (playerMarker !== prevState.playerMarker) {
+      let markerLatLng = null;
+      if (playerMarker !== null) {
+        markerLatLng = {
+          lat: playerMarker.position.lat(),
+          lng: playerMarker.position.lng(),
+        };
+      }
+
+      game
+        .child(gameId)
+        .child("participants")
+        .child(currentUserId)
+        .child("marker")
+        .set(markerLatLng);
+    }
+
+    if (totalScore !== prevState.totalScore) {
+      game
+        .child(gameId)
+        .child("participants")
+        .child(currentUserId)
+        .child("totalScore")
+        .set(totalScore);
+    }
+
+    if (roundScore !== prevState.roundScore) {
+      game
+        .child(gameId)
+        .child("participants")
+        .child(currentUserId)
+        .child("roundScore")
+        .set(roundScore);
+    }
+
+    if (gameIsFinished !== prevState.gameIsFinished) {
+      this.saveScore();
+    }
+  }
+
+  componentWillUnmount() {
+    this.removeQuestionArrListener();
+    this.removeStartRound1Listener();
+    this.removeRoundListener();
   }
 
   render() {
-    const { currentUserId, isHost } = this.props;
+    const { currentUserId, isHost, participants } = this.props;
     const {
       gameIsReady,
       gameIsFinished,
@@ -302,6 +380,7 @@ class Game extends Component {
               startGame={this.startGame}
               userReady={this.userReady}
               isHost={isHost}
+              userIsReady={userIsReady}
               participantsAreReady={participantsAreReady}
             />
           )}
@@ -325,6 +404,7 @@ class Game extends Component {
             gameIsRunning={gameIsRunning}
             roundIsRunning={roundIsRunning}
             endRound={this.endRound}
+            participants={participants}
           />
           <MultiplayerNextButton
             gameIsRunning={gameIsRunning}
@@ -334,6 +414,7 @@ class Game extends Component {
             isHost={isHost}
             participantsAreReady={participantsAreReady}
             userReady={this.userReady}
+            userIsReady={userIsReady}
           />
           <Totaliser
             gameIsRunning={gameIsRunning}
@@ -342,17 +423,25 @@ class Game extends Component {
             roundDistance={roundDistance}
           />
           <MultiplayerScoresTracker
+            currentUserId={currentUserId}
             gameIsRunning={gameIsRunning}
             roundIsRunning={roundIsRunning}
+            participants={participants}
           />
         </>
       );
     } else if (gameIsFinished) {
-      return <ResultsPage scoreArr={scoreArr} totalScore={totalScore} />;
+      return (
+        <ResultsPage
+          scoreArr={scoreArr}
+          totalScore={totalScore}
+          participants={participants}
+        />
+      );
     } else {
       return <h1>loading</h1>;
     }
   }
 }
 
-export default Game;
+export default MultiplayerGame;

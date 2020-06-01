@@ -10,7 +10,6 @@ import Multiplayer from "./components/Multiplayer";
 import { ThemeProvider } from "@material-ui/core/styles";
 import theme from "./resources/theme";
 
-
 class App extends Component {
   state = {
     currentUserId: null,
@@ -34,14 +33,12 @@ class App extends Component {
     return (
       <ThemeProvider theme={theme}>
         <Router>
-          {this.state.currentUserId ? <Home path="/" /> : <Login path="/" />}
+          {currentUserId ? <Home path="/" /> : <Login path="/" />}
           <Logout path="/logout" />
           <Game path="/singlePlayerGame" currentUserId={currentUserId} />
           <Multiplayer path="/multiplayer" currentUserId={currentUserId} />
         </Router>
       </ThemeProvider>
-
-
     );
   }
 }

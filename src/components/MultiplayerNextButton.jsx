@@ -1,5 +1,7 @@
 import React from "react";
-import { Paper, Button, Typography, Slide } from "@material-ui/core";
+import { Paper, Button, Typography, Slide, Switch } from "@material-ui/core";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CancelIcon from "@material-ui/icons/Cancel";
 
 const MultiplayerNextButton = ({
   updateRound,
@@ -9,10 +11,10 @@ const MultiplayerNextButton = ({
   isHost,
   participantsAreReady,
   userReady,
+  userIsReady,
 }) => {
   if (isHost && participantsAreReady) {
     return (
-
       <Slide
         direction="left"
         in={gameIsRunning && !roundIsRunning}
@@ -26,11 +28,9 @@ const MultiplayerNextButton = ({
           </Button>
         </Paper>
       </Slide>
-
     );
   }
   return (
-
     <Slide
       direction="left"
       in={gameIsRunning && !roundIsRunning}
@@ -40,9 +40,14 @@ const MultiplayerNextButton = ({
         <Button variant="contained" color="primary" onClick={userReady}>
           <Typography variant="h4">Ready?</Typography>
         </Button>
+        <Switch
+          color="primary"
+          checked={userIsReady}
+          checkedIcon={<CheckCircleIcon />}
+          icon={<CancelIcon />}
+        />
       </Paper>
     </Slide>
-
   );
 };
 

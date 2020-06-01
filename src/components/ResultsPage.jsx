@@ -1,12 +1,9 @@
 import React from "react";
 import { Link } from "@reach/router";
 import Leaderboard from "./Leaderboard";
-// import { auth } from "../firebaseInitialise";
 import { Paper, Typography, Button, Box } from "@material-ui/core";
 
-const ResultsPage = ({ scoreArr, totalScore }) => {
-  // let user = auth.currentUser;
-
+const ResultsPage = ({ scoreArr, totalScore, participants }) => {
   return (
     <Box id="results-wrapper">
       <Paper elevation={3} id="player-results-wrapper">
@@ -22,12 +19,12 @@ const ResultsPage = ({ scoreArr, totalScore }) => {
           );
         })}
       </Paper>
-      <Leaderboard />
+      <Leaderboard participants={participants} />
       <Box>
         <Link to="/">
           <Button variant="contained" color="primary">
             BACK HOME
-            </Button>
+          </Button>
         </Link>
       </Box>
     </Box>
