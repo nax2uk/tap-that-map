@@ -206,11 +206,8 @@ class GoogleMap extends Component {
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProps, prevState) {
     const { round, roundIsRunning, participants, gameIsRunning } = this.props;
-    const { marker } = this.state;
     const roundHasStopped =
-      !roundIsRunning &&
-      roundIsRunning !== prevProps.roundIsRunning &&
-      marker !== null;
+      !roundIsRunning && roundIsRunning !== prevProps.roundIsRunning;
     const roundHasStarted =
       roundIsRunning && roundIsRunning !== prevProps.roundIsRunning;
 
