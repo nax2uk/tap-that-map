@@ -281,7 +281,6 @@ class GoogleMap extends Component {
           item
           xs={12}
           elevation={3}
-          square={true}
           id="google-map"
           ref={this.googleMapRef}
           style={{
