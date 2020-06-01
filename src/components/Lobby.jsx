@@ -42,28 +42,33 @@ class Lobby extends Component {
     const { gameId, isHost, startGame } = this.props;
     const { participants } = this.state;
     return (
+
       <Paper elevation={3} id="lobby-wrapper">
         <Typography variant="h2" align="center">
           Game Lobby
         </Typography>
-        {gameId && <Typography variant="h4">Game ID: {gameId}</Typography>}
-        <Typography variant="body1">
+        <br />
+        {gameId && <Typography variant="h4" align="center">Game ID: {gameId}</Typography>}
+        <br />
+        <Typography variant="body1" align="center">
           Send this id to your friends to join your game session
         </Typography>
-        <Typography variant="body1">Current Players</Typography>
+        <Typography variant="body1" align="center">Current Players</Typography>
         {Object.values(participants).map((participant, index) => {
           return (
             <Fade in={true} direction="right" timeout={1000} key={index}>
-              <Typography variant="body2">{participant.displayName}</Typography>
+              <Typography variant="body2" align="center">{participant.displayName}</Typography>
             </Fade>
           );
         })}
+        <br />
         {isHost && (
           <Button variant="contained" color="primary" onClick={startGame}>
             Start Game
           </Button>
         )}
       </Paper>
+
     );
   }
 }
