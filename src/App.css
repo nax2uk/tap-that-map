@@ -117,7 +117,7 @@ header {
 
 #username-form-wrapper {
   width: 50vw;
-  margin: 20vh auto;
+  margin: 10vh auto;
   display: flex;
   flex-direction: column;
   padding: 5vh 5vw;
@@ -150,7 +150,7 @@ header {
 
 #logout-wrapper {
   width: 30vw;
-  margin: 20vh auto;
+  margin: 30vh auto;
   display: flex;
   flex-direction: column;
   padding: 5vh 5vw;
@@ -160,7 +160,7 @@ header {
 
 #home-wrapper {
   width: 60vw;
-  margin: 20vh auto;
+  margin: 10vh auto;
   display: flex;
   flex-direction: column;
   padding: 5vh 5vw;
@@ -188,6 +188,25 @@ header {
 }
 
 #lobby-wrapper {
-  margin: 5vh auto;
-  width: 90vw;
+  margin: 7vh auto;
+  width: 60vw;
+  display: flex;
+  flex-direction: column;
+  padding: 5vh 5vw;
+  justify-content: space-around;
+  align-content: center;
+}
+
+#initialise-game-wrapper{
+  margin: 7vh auto;
+  width: 60vw;
+  display: flex;
+  flex-direction: column;
+  padding: 5vh 5vw;
+  justify-content: space-around;
+  align-content: center;
+}
+
+#initialise-button-wrapper{
+  
 }
