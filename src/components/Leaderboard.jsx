@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { database } from "../firebaseInitialise";
-import { Paper, Typography, Avatar } from "@material-ui/core";
+import { Paper, Typography, Avatar, Grid } from "@material-ui/core";
 
 class Leaderboard extends Component {
   state = {
@@ -38,21 +38,20 @@ class Leaderboard extends Component {
           <Typography variant="h3" align="center">
             Game results
           </Typography>
-          {Object.values(participants)
-            .sort((a, b) => b.totalScore - a.totalScore)
-            .map(({ displayName, totalScore, photoURL }, index) => {
-              return (
-                <Typography
-                  variant="h4"
-                  key={`${displayName}${index}`}
-                  align="center"
-                >
-                  <Avatar src={photoURL} alt={displayName} />
-                  {` ${totalScore} (${displayName})`}
-                </Typography>
-              );
-            })}
-        </Paper>
+          <Grid container justify="center">
+            {Object.values(participants)
+              .sort((a, b) => b.totalScore - a.totalScore)
+              .map(({ displayName, totalScore, photoURL }, index) => {
+                return (
+                  <Grid container item xs={12} alignItems="center" key={index}>
+                    <Grid item xs={4} align="right"><Avatar src={photoURL} alt={displayName} /></Grid>
+                    <Grid item xs={1} align="center"><Typography>{` ${totalScore}  `}</Typography></Grid>
+                    <Grid item xs={7} align="left"><Typography>{`  (${displayName})`}</Typography> </Grid>
+                  </Grid>
+                );
+              })}
+          </Grid>
+        </Paper >
       );
     } else {
       return (
