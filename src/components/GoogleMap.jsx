@@ -129,17 +129,21 @@ class GoogleMap extends Component {
 
   createAndPanToBounds = () => {
     const { question } = this.props;
-    const { marker } = this.state;
+    const { marker, googleMap } = this.state;
     let resultBounds = new window.google.maps.LatLngBounds();
     if (marker !== null) {
       const lat = marker.position.lat();
       const lng = marker.position.lng();
       resultBounds.extend({ lat, lng });
+      resultBounds.extend(question.position);
+          woosh.play();
+      googleMap.fitBounds(resultBounds);
+      googleMap.panToBounds(resultBounds);
+    } else {
+          woosh.play();
+      googleMap.panTo(question.position);
+      googleMap.setZoom(5);
     }
-    woosh.play();
-    resultBounds.extend(question.position);
-    this.state.googleMap.fitBounds(resultBounds);
-    this.state.googleMap.panToBounds(resultBounds);
   };
 
   resetMapView = () => {
@@ -214,21 +218,15 @@ class GoogleMap extends Component {
   /** RESIZE WINDOW TO RERENDER GOOGLEMAP */
   updateDimensions = () => {
     this.setState(
-      { dimensions: { width: window.innerWidth, height: window.innerHeight } },
-      () => {
-        //console.log(`window is resized to ${this.state.dimensions.width} x ${this.state.dimensions.height} `);
-      }
+      { dimensions: { width: window.innerWidth, height: window.innerHeight } }
     );
   };
 
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProps, prevState) {
     const { round, roundIsRunning, participants, gameIsRunning } = this.props;
-    const { marker } = this.state;
     const roundHasStopped =
-      !roundIsRunning &&
-      roundIsRunning !== prevProps.roundIsRunning &&
-      marker !== null;
+      !roundIsRunning && roundIsRunning !== prevProps.roundIsRunning;
     const roundHasStarted =
       roundIsRunning && roundIsRunning !== prevProps.roundIsRunning;
 
@@ -279,12 +277,10 @@ class GoogleMap extends Component {
     this.updateDimensions();
 
     window.addEventListener("resize", this.updateDimensions);
-    window.addEventListener("orientationchange", this.updateDimensions);
   }
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions);
-    window.removeEventListener("orientationchange", this.updateDimensions);
     window.google = {};
   }
 
@@ -299,7 +295,6 @@ class GoogleMap extends Component {
           item
           xs={12}
           elevation={3}
-          square={true}
           id="google-map"
           ref={this.googleMapRef}
           style={{

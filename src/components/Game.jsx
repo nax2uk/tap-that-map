@@ -10,6 +10,7 @@ import StartButton from "./StartButton";
 import NextButton from "./NextButton";
 import Totaliser from "./Totaliser";
 import ResultsPage from "./ResultsPage";
+import LoadingScreen from "./LoadingScreen";
 // import { Howl } from "howler";
 // import bgmsrc from "../resources/Whimsical-Popsicle.mp3";
 
@@ -227,7 +228,7 @@ class Game extends Component {
     } else if (gameIsFinished) {
       return <ResultsPage scoreArr={scoreArr} totalScore={totalScore} />;
     } else {
-      return <h1>loading</h1>;
+      return <LoadingScreen/>
     }
   }
 }

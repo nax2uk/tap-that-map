@@ -2,6 +2,10 @@ a {
   text-decoration: none;
 }
 
+header {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
 #google-map {
   position: relative;
   display: hidden;
@@ -95,8 +99,8 @@ a {
 }
 
 #login-form-wrapper {
-  width: 50vw;
-  margin: 20vh auto;
+  width: 40vw;
+  margin: 10vh auto;
   display: flex;
   flex-direction: column;
   padding: 5vh 5vw;
@@ -113,7 +117,7 @@ a {
 
 #username-form-wrapper {
   width: 50vw;
-  margin: 20vh auto;
+  margin: 10vh auto;
   display: flex;
   flex-direction: column;
   padding: 5vh 5vw;
@@ -146,7 +150,7 @@ a {
 
 #logout-wrapper {
   width: 30vw;
-  margin: 20vh auto;
+  margin: 30vh auto;
   display: flex;
   flex-direction: column;
   padding: 5vh 5vw;
@@ -156,7 +160,7 @@ a {
 
 #home-wrapper {
   width: 60vw;
-  margin: 20vh auto;
+  margin: 10vh auto;
   display: flex;
   flex-direction: column;
   padding: 5vh 5vw;
@@ -176,14 +180,53 @@ a {
 }
 
 #player-results-wrapper {
+  margin-left: 10vw;
   width: 40vw;
+  height:90vh;
+  margin-bottom:2vh;
 }
 
 #leaderboard-wrapper {
   width: 40vw;
+  height:90vh;
+  margin-left:2vw;
+  margin-bottom:2vh;
 }
 
 #lobby-wrapper {
-  margin: 5vh auto;
-  width: 90vw;
+  margin: 7vh auto;
+  width: 60vw;
+  display: flex;
+  flex-direction: column;
+  padding: 5vh 5vw;
+  justify-content: space-around;
+  align-content: center;
+}
+
+#initialise-game-wrapper{
+  margin: 7vh auto;
+  width: 60vw;
+  display: flex;
+  flex-direction: column;
+  padding: 5vh 5vw;
+  justify-content: space-around;
+  align-content: center;
+}
+
+#scores-tracker-wrapper{
+  position: absolute;
+  padding: 1vh 5vw 1vh 1vw;
+  top: 20vh;
+  right: -1vh;
+  align-content: left;
+  z-index: 1;
+}
+
+#loader-wrapper {
+  width: 50vw;
+  margin: 20vh auto;
+  display: flex;
+  flex-direction: column;
+  padding: 5vh 5vw;
+  
 }
