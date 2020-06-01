@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { storage } from "../firebaseInitialise";
-import { Button, Typography, Box, LinearProgress } from "@material-ui/core";
+import { Button, Typography, Box, LinearProgress, Avatar, Input } from "@material-ui/core";
 
 class UploadImage extends Component {
   state = {
@@ -51,31 +51,27 @@ class UploadImage extends Component {
   render() {
     const { progress, url } = this.state;
     return (
-
-      <Box id="upload-image-wrapper">
+      <>
         <Typography variant="h4">Choose a custom marker</Typography>
-        <Box className="two-item-box">
-          <input type="file" onChange={this.handleChange} />
-          <Button
-            onClick={this.handleUpload}
-            variant="contained"
-            color="primary"
-          >
-            Upload
-            </Button>
-        </Box>
+        <Input type="file" onChange={this.handleChange} />
+        <Button
+          onClick={this.handleUpload}
+          variant="contained"
+          color="primary"
+        >
+          Upload
+        </Button>
         <LinearProgress variant="determinate" value={progress} max="100" />
         <Box className="two-item-box">
           <Typography variant="h4">Current marker:</Typography>
-          <img
+          <Avatar
             src={url || "https://img.icons8.com/emoji/2x/duck-emoji.png"}
             alt="Uploaded Images"
             height="50"
             width="50"
           />
         </Box>
-      </Box>
-
+      </>
     );
   }
 }
