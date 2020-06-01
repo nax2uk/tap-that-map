@@ -26,7 +26,7 @@ const MultiplayerScoresTracker = ({
             if (id !== currentUserId) {
               return (
                 <>
-                  <Avatar src={photoURL} />
+                  <Avatar src={photoURL} alt={displayName} />
                   <Typography variant="body2" key={index}>
                     {displayName}
                     {competitorRoundIsRunning

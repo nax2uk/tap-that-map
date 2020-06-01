@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { database } from "../firebaseInitialise";
-import { Paper, Typography } from "@material-ui/core";
+import { Paper, Typography, Avatar } from "@material-ui/core";
 
 class Leaderboard extends Component {
   state = {
@@ -40,14 +40,15 @@ class Leaderboard extends Component {
           </Typography>
           {Object.values(participants)
             .sort((a, b) => b.totalScore - a.totalScore)
-            .map(({ displayName, totalScore }, index) => {
+            .map(({ displayName, totalScore, photoURL }, index) => {
               return (
                 <Typography
                   variant="h4"
                   key={`${displayName}${index}`}
                   align="center"
                 >
-                  {index + 1}: {`${totalScore} (${displayName})`}
+                  <Avatar src={photoURL} alt={displayName} />
+                  {` ${totalScore} (${displayName})`}
                 </Typography>
               );
             })}
