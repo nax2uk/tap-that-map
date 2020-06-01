@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 import { storage } from "../firebaseInitialise";
 import { Button, Typography, Box, LinearProgress, Avatar, Input } from "@material-ui/core";
+import Alert from '@material-ui/lab/Alert';
 
 class UploadImage extends Component {
   state = {
     image: null,
     url: "",
     progress: 0,
+    error: null
   };
 
   handleChange = (event) => {
@@ -19,37 +21,43 @@ class UploadImage extends Component {
   handleUpload = (event) => {
     event.preventDefault();
     const { image } = this.state;
-    const { updateMarker } = this.props;
-    const uploadTask = storage.ref(`images/${image.name}`).put(image);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        // progress function ...
-        const progress = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
-        );
-        this.setState({ progress });
-      },
-      (error) => {
-        // Error function ...
-        console.log(error);
-      },
-      () => {
-        // complete function ...
-        storage
-          .ref("images")
-          .child(image.name)
-          .getDownloadURL()
-          .then((url) => {
-            this.setState({ url });
-            updateMarker(url);
-          });
-      }
-    );
+    if (image === null) { this.setState({ error: "Please choose an image" }) }
+    else {
+
+      const { updateMarker } = this.props;
+      const uploadTask = storage.ref(`images/${image.name}`).put(image);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          // progress function ...
+          const progress = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          this.setState({ progress });
+        },
+        (error) => {
+          // Error function ...
+          this.setState({ error: error.message });
+        },
+        () => {
+          // complete function ...
+
+          storage
+            .ref("images")
+            .child(image.name)
+            .getDownloadURL()
+            .then((url) => {
+              this.setState({ url });
+              updateMarker(url);
+            });
+
+        }
+      );
+    }
   };
 
   render() {
-    const { progress, url } = this.state;
+    const { progress, url, error } = this.state;
     return (
       <>
         <Typography variant="h4">Choose a custom marker</Typography>
@@ -61,6 +69,7 @@ class UploadImage extends Component {
         >
           Upload
         </Button>
+        {error && <Alert severity="error">{error}</Alert>}
         <LinearProgress variant="determinate" value={progress} max="100" />
         <Box className="two-item-box">
           <Typography variant="h4">Current marker:</Typography>
