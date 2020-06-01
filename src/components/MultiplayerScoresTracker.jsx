@@ -1,5 +1,5 @@
 import React from "react";
-import { Paper, Typography, Slide } from "@material-ui/core";
+import { Paper, Typography, Slide, Avatar } from "@material-ui/core";
 
 const MultiplayerScoresTracker = ({
   currentUserId,
@@ -18,19 +18,23 @@ const MultiplayerScoresTracker = ({
                 displayName,
                 roundScore,
                 roundIsRunning: competitorRoundIsRunning,
+                photoURL,
               },
             ],
             index
           ) => {
             if (id !== currentUserId) {
               return (
-                <Typography variant="body2" key={index}>
-                  {displayName}
-                  {competitorRoundIsRunning
-                    ? ": ...thinking"
-                    : `: ${roundScore}`}
-                  <br />
-                </Typography>
+                <>
+                  <Avatar src={photoURL} />
+                  <Typography variant="body2" key={index}>
+                    {displayName}
+                    {competitorRoundIsRunning
+                      ? ": ...thinking"
+                      : `: ${roundScore}`}
+                    <br />
+                  </Typography>
+                </>
               );
             }
             return null;

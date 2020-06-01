@@ -273,7 +273,7 @@ class MultiplayerGame extends Component {
       roundScore,
       totalScore,
     } = this.state;
-    const { gameId, currentUserId, participants, isHost } = this.props;
+    const { gameId, currentUserId, participants } = this.props;
 
     const questionArrHasLoaded =
       questionArr !== null &&
@@ -281,9 +281,16 @@ class MultiplayerGame extends Component {
       questionArr.length === 10;
 
     const game = database.ref("multiplayerGame");
-    if (isHost && participants !== prevProps.participants) {
-      this.checkAllPlayersAreReady();
-    }
+
+    Object.entries(participants).forEach(([id, { userIsReady }]) => {
+      if (
+        Object.keys(prevProps.participants).includes(id) &&
+        userIsReady !== prevProps.participants[id].userIsReady
+      ) {
+        this.checkAllPlayersAreReady();
+      }
+    });
+
     if (questionArrHasLoaded && !gameIsReady) {
       this.toggleGameIsReady();
     }
