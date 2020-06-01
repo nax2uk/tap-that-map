@@ -187,3 +187,12 @@ a {
   margin: 5vh auto;
   width: 90vw;
 }
+
+#loader-wrapper {
+  width: 50vw;
+  margin: 20vh auto;
+  display: flex;
+  flex-direction: column;
+  padding: 5vh 5vw;
+  
+}
