@@ -4,7 +4,6 @@ import { database, auth } from "../firebaseInitialise";
 import MultiplayerGame from "./MultiplayerGame";
 import { Paper, Button, Box, Typography, TextField } from "@material-ui/core";
 
-
 class Multiplayer extends Component {
   state = {
     hostOrJoin: true,
@@ -13,6 +12,7 @@ class Multiplayer extends Component {
     gameId: null,
     lobbyOpen: false,
     gameIsStarted: false,
+    participants: {},
   };
 
   initGame = (e) => {
@@ -23,8 +23,12 @@ class Multiplayer extends Component {
       participants: {
         [auth.currentUser.uid]: {
           displayName: auth.currentUser.displayName,
+          photoURL: auth.currentUser.photoURL,
           userIsReady: false,
           roundIsRunning: false,
+          marker: null,
+          roundScore: 0,
+          totalScore: 0,
         },
       },
       gameIsStarted: false,
@@ -46,20 +50,6 @@ class Multiplayer extends Component {
     game.child(gameId).child("gameIsStarted").set(true);
   };
 
-  listenForGameStart = () => {
-    const { gameId } = this.state;
-    const game = database.ref("multiplayerGame");
-    game
-      .child(gameId)
-      .child("gameIsStarted")
-      .on("value", (snapshot) => {
-        const gameIsStarted = snapshot.val();
-        if (gameIsStarted) {
-          this.setState({ gameIsStarted, lobbyOpen: false });
-        }
-      });
-  };
-
   updateID = (e) => {
     this.setState({
       inputtedId: e.target.value,
@@ -76,7 +66,12 @@ class Multiplayer extends Component {
         const participantsObj = snapshot.val();
         const participantData = {
           displayName: auth.currentUser.displayName,
+          photoURL: auth.currentUser.photoURL,
           userIsReady: false,
+          roundIsRunning: false,
+          marker: null,
+          roundScore: 0,
+          totalScore: 0,
         };
         participantsObj[auth.currentUser.uid] = participantData;
 
@@ -103,11 +98,64 @@ class Multiplayer extends Component {
     });
   };
 
-  componentDidMount() { }
+  gameIsStartedListenerFunction = (changeInGameIsStarted) => {
+    const newGameIsStarted = changeInGameIsStarted.val();
+    if (newGameIsStarted) {
+      this.setState({ gameIsStarted: newGameIsStarted, lobbyOpen: false });
+    }
+  };
+
+  addGameIsStartedListener = () => {
+    const { gameId } = this.state;
+    const game = database.ref("multiplayerGame");
+    game
+      .child(gameId)
+      .child("gameIsStarted")
+      .on("value", this.gameIsStartedListenerFunction);
+  };
+
+  removeGameIsStartedListener = () => {
+    const { gameId } = this.state;
+    const game = database.ref("multiplayerGame");
+    game
+      .child(gameId)
+      .child("gameIsStarted")
+      .off("value", this.gameIsStartedListenerFunction);
+  };
+
+  participantsListenerFunction = (changeInParticipants) => {
+    const newParticipants = changeInParticipants.val();
+    this.setState({ participants: newParticipants });
+  };
+
+  addParticipantsListener = () => {
+    const { gameId } = this.state;
+    const game = database.ref("multiplayerGame");
+    game
+      .child(gameId)
+      .child("participants")
+      .on("value", this.participantsListenerFunction);
+  };
+
+  removeParticipantsListener = () => {
+    const { gameId } = this.state;
+    const game = database.ref("multiplayerGame");
+    game
+      .child(gameId)
+      .child("participants")
+      .off("value", this.participantsListenerFunction);
+  };
+
+  componentWillUnmount() {
+    this.removeParticipantsListener();
+    this.removeGameIsStartedListener();
+  }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.gameId !== this.state.gameId) {
-      this.listenForGameStart();
+    const { gameId } = this.state;
+    if (prevState.gameId !== gameId) {
+      this.addGameIsStartedListener();
+      this.addParticipantsListener();
     }
   }
 
@@ -119,15 +167,15 @@ class Multiplayer extends Component {
       isHost,
       gameIsStarted,
       inputtedId,
+      participants,
     } = this.state;
     return (
-      <div>
-        {hostOrJoin ? (
-
+      <>
+        {hostOrJoin && (
           <Paper elevation={3} id="initialise-game-wrapper">
             <Typography variant="h2" align="center">
               Multiplayer
-              </Typography>
+            </Typography>
             <Box id="initialise-button-wrapper">
               <Button
                 variant="contained"
@@ -135,7 +183,7 @@ class Multiplayer extends Component {
                 onClick={this.initGame}
               >
                 Start A Game
-                </Button>
+              </Button>
               <TextField
                 variant="outlined"
                 label="game-id"
@@ -149,27 +197,22 @@ class Multiplayer extends Component {
                 disabled={inputtedId.length === 0}
               >
                 Join A Game
-                </Button>
+              </Button>
             </Box>
           </Paper>
-
-        ) : null
-        }
-        {
-          lobbyOpen ? (
-            <Lobby gameId={gameId} isHost={isHost} startGame={this.startGame} />
-          ) : null
-        }
-        {
-          gameIsStarted && (
-            <MultiplayerGame
-              currentUserId={this.props.currentUserId}
-              isHost={isHost}
-              gameId={gameId}
-            />
-          )
-        }
-      </div >
+        )}
+        {lobbyOpen && (
+          <Lobby gameId={gameId} isHost={isHost} startGame={this.startGame} />
+        )}
+        {gameIsStarted && (
+          <MultiplayerGame
+            currentUserId={this.props.currentUserId}
+            isHost={isHost}
+            gameId={gameId}
+            participants={participants}
+          />
+        )}
+      </>
     );
   }
 }

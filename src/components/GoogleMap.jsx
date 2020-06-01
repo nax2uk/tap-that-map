@@ -3,7 +3,6 @@ import API_KEY from "../API-KEYS/maps-api.js";
 import SubmitButton from "./SubmitButton";
 import CancelButton from "./CancelButton";
 import mapStyle from "../Data/mapStyling";
-// import customMarker from "../resources/customMarker";
 import customLine from "../resources/customLine";
 import { auth } from "../firebaseInitialise";
 import { Grid } from "@material-ui/core";
@@ -12,6 +11,7 @@ class GoogleMap extends Component {
   state = {
     marker: null,
     linkLine: null,
+    otherMarkers: {},
     dimensions: { width: null, height: null },
     googleMap: null,
   };
@@ -20,7 +20,6 @@ class GoogleMap extends Component {
 
   /******** MAP FUNCTIONS ********/
   createGoogleMap = () => {
-
     return new window.google.maps.Map(this.googleMapRef.current, {
       zoom: 2,
       center: {
@@ -49,11 +48,19 @@ class GoogleMap extends Component {
   };
 
   removeMarker = () => {
-    const { marker } = this.state;
+    const { marker, otherMarkers } = this.state;
+
     if (marker !== null) {
       marker.setMap(null);
     }
-    this.setState({ marker: null });
+
+    Object.values(otherMarkers).forEach((otherMarker) => {
+      if (otherMarker !== null) {
+        otherMarker.setMap(null);
+      }
+    });
+
+    this.setState({ marker: null, otherMarkers: {} });
   };
 
   submitMarker = () => {
@@ -107,15 +114,15 @@ class GoogleMap extends Component {
   createAndPanToBounds = () => {
     const { question } = this.props;
     const { marker } = this.state;
+    let resultBounds = new window.google.maps.LatLngBounds();
     if (marker !== null) {
       const lat = marker.position.lat();
       const lng = marker.position.lng();
-      let resultBounds = new window.google.maps.LatLngBounds();
       resultBounds.extend({ lat, lng });
-      resultBounds.extend(question.position);
-      this.state.googleMap.fitBounds(resultBounds);
-      this.state.googleMap.panToBounds(resultBounds);
     }
+    resultBounds.extend(question.position);
+    this.state.googleMap.fitBounds(resultBounds);
+    this.state.googleMap.panToBounds(resultBounds);
   };
 
   resetMapView = () => {
@@ -130,17 +137,75 @@ class GoogleMap extends Component {
     });
   };
 
+  plotOtherMarkers = () => {
+    const { participants, currentUserId } = this.props;
+    const { googleMap, otherMarkers } = this.state;
+
+    Object.entries(participants).forEach(
+      ([id, { marker, photoURL, roundIsRunning }]) => {
+        if (
+          id !== currentUserId &&
+          marker !== null &&
+          !roundIsRunning &&
+          !Object.keys(otherMarkers).includes(id)
+        ) {
+          const newMarker = new window.google.maps.Marker({
+            position: marker,
+            map: googleMap,
+            animation: window.google.maps.Animation.DROP,
+            icon: {
+              url: photoURL,
+              scaledSize: new window.google.maps.Size(40, 40),
+              anchor: new window.google.maps.Point(20, 20),
+            },
+          });
+          this.setState(({ otherMarkers }) => {
+            const workingCopy = { ...otherMarkers };
+            const newEntry = { [id]: newMarker };
+            Object.assign(workingCopy, newEntry);
+            return { otherMarkers: workingCopy };
+          });
+        }
+      }
+    );
+  };
+
+  createAndPanToOtherBounds = () => {
+    const { participants, currentUserId, question } = this.props;
+    const { marker } = this.state;
+
+    let resultBounds = new window.google.maps.LatLngBounds();
+    if (marker !== null) {
+      const lat = marker.position.lat();
+      const lng = marker.position.lng();
+      resultBounds.extend({ lat, lng });
+    }
+    resultBounds.extend(question.position);
+    if (participants) {
+      Object.entries(participants).forEach(
+        ([id, { marker, roundIsRunning }]) => {
+          if (id !== currentUserId && marker !== null && !roundIsRunning) {
+            resultBounds.extend(marker);
+          }
+        }
+      );
+    }
+    this.state.googleMap.fitBounds(resultBounds);
+    this.state.googleMap.panToBounds(resultBounds);
+  };
   /** RESIZE WINDOW TO RERENDER GOOGLEMAP */
   updateDimensions = () => {
-
-    this.setState({ dimensions: { width: window.innerWidth, height: window.innerHeight } }, () => {
-      //console.log(`window is resized to ${this.state.dimensions.width} x ${this.state.dimensions.height} `);
-    });
-  }
+    this.setState(
+      { dimensions: { width: window.innerWidth, height: window.innerHeight } },
+      () => {
+        //console.log(`window is resized to ${this.state.dimensions.width} x ${this.state.dimensions.height} `);
+      }
+    );
+  };
 
   /******** REACT LIFE CYCLES ********/
   componentDidUpdate(prevProps, prevState) {
-    const { round, roundIsRunning } = this.props;
+    const { round, roundIsRunning, participants, gameIsRunning } = this.props;
     const { marker } = this.state;
     const roundHasStopped =
       !roundIsRunning &&
@@ -167,6 +232,21 @@ class GoogleMap extends Component {
       this.removeMarker();
       this.resetMapView();
     }
+
+    // if participants exists on props, then this means it's multiplayer
+    if (participants && roundHasStopped) {
+      this.plotOtherMarkers();
+      this.createAndPanToOtherBounds();
+    }
+
+    if (
+      gameIsRunning &&
+      !roundIsRunning &&
+      participants !== prevProps.participants
+    ) {
+      this.plotOtherMarkers();
+      this.createAndPanToOtherBounds();
+    }
   }
 
   componentDidMount() {
@@ -175,19 +255,18 @@ class GoogleMap extends Component {
     window.document.body.appendChild(googleMapScript);
 
     googleMapScript.addEventListener("load", () => {
-      this.setState({ googleMap: this.createGoogleMap() })
-      // this.state.googleMap = this.createGoogleMap();
+      this.setState({ googleMap: this.createGoogleMap() });
     });
 
-    this.updateDimensions()
+    this.updateDimensions();
 
-    window.addEventListener('resize', this.updateDimensions);
-    window.addEventListener('orientationchange', this.updateDimensions);
+    window.addEventListener("resize", this.updateDimensions);
+    window.addEventListener("orientationchange", this.updateDimensions);
   }
 
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions);
-    window.removeEventListener('orientationchange', this.updateDimensions);
+    window.removeEventListener("orientationchange", this.updateDimensions);
     window.google = {};
   }
 
@@ -197,7 +276,10 @@ class GoogleMap extends Component {
 
     return (
       <Grid container>
-        <Grid container item xs={12}
+        <Grid
+          container
+          item
+          xs={12}
           elevation={3}
           square={true}
           id="google-map"

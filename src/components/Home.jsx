@@ -5,6 +5,7 @@ import { Paper, Typography, Button, Box } from "@material-ui/core";
 import { Howl } from "howler";
 import introSrc from "../resources/intro.m4a";
 import UserNameForm from "./UserNameForm";
+import Title from "./Title";
 
 class Home extends Component {
   state = {
@@ -71,35 +72,33 @@ class Home extends Component {
       );
     } else {
       return (
-
-        <Paper id="home-wrapper" elevation={3}>
-          <Typography variant="h2" align="center">
-            Hello {userName}
-          </Typography>
-          <Box id="button-wrapper">
-            <Link to="/singlePlayerGame">
+        <>
+          <Title />
+          <Paper id="home-wrapper" elevation={3}>
+            <Typography variant="h2" align="center">
+              Hello {userName}
+            </Typography>
+            <Box id="button-wrapper">
+              <Link to="/singlePlayerGame">
+                <Button variant="contained" color="primary">
+                  Single Player
+                </Button>
+              </Link>
+              <Link to="/multiplayer">
+                <Button variant="contained" color="primary">
+                  Multiplayer
+                </Button>
+              </Link>
               <Button
                 variant="contained"
-                color="primary"
+                color="secondary"
+                onClick={this.logout}
               >
-                Single Player
-                </Button>
-            </Link>
-            <Link to="/multiplayer">
-              <Button variant="contained" color="primary">
-                Multiplayer
-                </Button>
-            </Link>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={this.logout}
-            >
-              Logout
+                Logout
               </Button>
-          </Box>
-        </Paper>
-
+            </Box>
+          </Paper>
+        </>
       );
     }
   }
