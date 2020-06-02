@@ -11,6 +11,8 @@ import MultiplayerNextButton from "./MultiplayerNextButton";
 import Totaliser from "./Totaliser";
 import ResultsPage from "./ResultsPage";
 import MultiplayerScoresTracker from "./MultiplayerScoresTracker";
+import LoadingScreen from "./LoadingScreen";
+
 // import { Howl } from "howler";
 // import bgmsrc from "../resources/Whimsical-Popsicle.mp3";
 
@@ -449,7 +451,7 @@ class MultiplayerGame extends Component {
         />
       );
     } else {
-      return <h1>loading</h1>;
+      return <LoadingScreen/>
     }
   }
 }
