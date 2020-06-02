@@ -1,4 +1,5 @@
 require("dotenv").config();
+// this is the correct config for our team repo
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
