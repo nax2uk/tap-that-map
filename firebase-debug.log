@@ -1,13 +1,13 @@
-[debug] [2020-06-02T08:50:46.531Z] ----------------------------------------------------------------------
-[debug] [2020-06-02T08:50:46.533Z] Command:       /usr/local/Cellar/node/13.8.0/bin/node /usr/local/bin/firebase init
-[debug] [2020-06-02T08:50:46.534Z] CLI Version:   8.4.1
-[debug] [2020-06-02T08:50:46.534Z] Platform:      darwin
-[debug] [2020-06-02T08:50:46.534Z] Node Version:  v13.8.0
-[debug] [2020-06-02T08:50:46.535Z] Time:          Tue Jun 02 2020 09:50:46 GMT+0100 (British Summer Time)
-[debug] [2020-06-02T08:50:46.535Z] ----------------------------------------------------------------------
-[debug] [2020-06-02T08:50:46.536Z] 
-[debug] [2020-06-02T08:50:46.544Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2020-06-02T08:50:46.545Z] > authorizing via signed-in user
+[debug] [2020-06-02T08:53:19.535Z] ----------------------------------------------------------------------
+[debug] [2020-06-02T08:53:19.537Z] Command:       /usr/local/Cellar/node/13.8.0/bin/node /usr/local/bin/firebase init
+[debug] [2020-06-02T08:53:19.537Z] CLI Version:   8.4.1
+[debug] [2020-06-02T08:53:19.537Z] Platform:      darwin
+[debug] [2020-06-02T08:53:19.537Z] Node Version:  v13.8.0
+[debug] [2020-06-02T08:53:19.538Z] Time:          Tue Jun 02 2020 09:53:19 GMT+0100 (British Summer Time)
+[debug] [2020-06-02T08:53:19.539Z] ----------------------------------------------------------------------
+[debug] [2020-06-02T08:53:19.539Z] 
+[debug] [2020-06-02T08:53:19.546Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2020-06-02T08:53:19.546Z] > authorizing via signed-in user
 [info] 
      ######## #### ########  ######## ########     ###     ######  ########
      ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
@@ -30,17 +30,13 @@ Before we get started, keep in mind:
 [info] You can create multiple project aliases by running firebase use --add, 
 [info] but for now we'll just set up a default project.
 [info] 
-[info] i  .firebaserc already has a default project, using tap-that-map. 
-[debug] [2020-06-02T08:51:15.673Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
-[debug] [2020-06-02T08:51:15.674Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
- <request body omitted>
-[debug] [2020-06-02T08:51:15.820Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Tue, 02 Jun 2020 08:51:15 GMT","server":"scaffolding on HTTPServer2","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-27=\":443\"; ma=2592000,h3-25=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
-[debug] [2020-06-02T08:51:15.840Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/tap-that-map  
+[info] i  .firebaserc already has a default project, using tapthatmap. 
+[debug] [2020-06-02T08:53:28.298Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/tapthatmap  
  
-[debug] [2020-06-02T08:51:16.137Z] <<< HTTP RESPONSE 403 {"vary":"X-Origin, Referer, Origin,Accept-Encoding","content-type":"application/json; charset=UTF-8","date":"Tue, 02 Jun 2020 08:51:16 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-27=\":443\"; ma=2592000,h3-25=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
-[debug] [2020-06-02T08:51:16.137Z] <<< HTTP RESPONSE BODY {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
-[debug] [2020-06-02T08:51:16.140Z] HTTP Error: 403, The caller does not have permission
-[debug] [2020-06-02T08:51:16.200Z] FirebaseError: HTTP Error: 403, The caller does not have permission
+[debug] [2020-06-02T08:53:28.667Z] <<< HTTP RESPONSE 403 {"vary":"X-Origin, Referer, Origin,Accept-Encoding","content-type":"application/json; charset=UTF-8","date":"Tue, 02 Jun 2020 08:53:28 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-27=\":443\"; ma=2592000,h3-25=\":443\"; ma=2592000,h3-T050=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q049=\":443\"; ma=2592000,h3-Q048=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2020-06-02T08:53:28.668Z] <<< HTTP RESPONSE BODY {"error":{"code":403,"message":"The caller does not have permission","status":"PERMISSION_DENIED"}}
+[debug] [2020-06-02T08:53:28.669Z] HTTP Error: 403, The caller does not have permission
+[debug] [2020-06-02T08:53:28.729Z] FirebaseError: HTTP Error: 403, The caller does not have permission
     at module.exports (/usr/local/lib/node_modules/firebase-tools/lib/responseToError.js:38:12)
     at Request._callback (/usr/local/lib/node_modules/firebase-tools/lib/api.js:41:35)
     at Request.self.callback (/usr/local/lib/node_modules/firebase-tools/node_modules/request/request.js:185:22)
@@ -56,4 +52,4 @@ Before we get started, keep in mind:
     at endReadableNT (_stream_readable.js:1201:12)
     at processTicksAndRejections (internal/process/task_queues.js:84:21)
 [error] 
-[error] Error: Failed to get Firebase project tap-that-map. Please make sure the project exists and your account has permission to access it.
+[error] Error: Failed to get Firebase project tapthatmap. Please make sure the project exists and your account has permission to access it.
