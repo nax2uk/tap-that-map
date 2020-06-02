@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import Lobby from "./Lobby";
 import { database, auth } from "../firebaseInitialise";
 import MultiplayerGame from "./MultiplayerGame";
-import { Paper, Button, Box, Typography, TextField } from "@material-ui/core";
+import { Paper, Button, Grid, Typography, TextField } from "@material-ui/core";
+import Title from "./Title";
 
 class Multiplayer extends Component {
   state = {
@@ -172,11 +173,13 @@ class Multiplayer extends Component {
     return (
       <>
         {hostOrJoin && (
-          <Paper elevation={3} id="initialise-game-wrapper">
-            <Typography variant="h2" align="center">
-              Multiplayer
+          <>
+            <Title />
+            <Paper elevation={3} id="initialise-game-wrapper">
+              <Typography variant="h2" align="center">
+                Multiplayer
             </Typography>
-            <Box id="initialise-button-wrapper">
+              <br />
               <Button
                 variant="contained"
                 color="primary"
@@ -184,34 +187,50 @@ class Multiplayer extends Component {
               >
                 Start A Game
               </Button>
-              <TextField
-                variant="outlined"
-                label="game-id"
-                onChange={this.updateID}
-                value={inputtedId}
-              />
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={this.checkId}
-                disabled={inputtedId.length === 0}
-              >
-                Join A Game
-              </Button>
-            </Box>
-          </Paper>
-        )}
-        {lobbyOpen && (
-          <Lobby gameId={gameId} isHost={isHost} startGame={this.startGame} />
-        )}
-        {gameIsStarted && (
-          <MultiplayerGame
-            currentUserId={this.props.currentUserId}
-            isHost={isHost}
-            gameId={gameId}
-            participants={participants}
-          />
-        )}
+              <br />
+
+              <Grid container>
+                <Grid container item xs={12} alignItems="center">
+                  <Grid item xs={10}>
+                    <TextField
+                      variant="outlined"
+                      label="game-id"
+                      onChange={this.updateID}
+                      value={inputtedId}
+                      fullWidth={true}
+                      margin="dense"
+                    />
+                  </Grid>
+                  <Grid item xs={2} align="right">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={this.checkId}
+                      disabled={inputtedId.length === 0}
+                    >
+                      Join A Game
+                  </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Paper >
+          </>)
+        }
+        {
+          lobbyOpen && (
+            <Lobby gameId={gameId} isHost={isHost} startGame={this.startGame} />
+          )
+        }
+        {
+          gameIsStarted && (
+            <MultiplayerGame
+              currentUserId={this.props.currentUserId}
+              isHost={isHost}
+              gameId={gameId}
+              participants={participants}
+            />
+          )
+        }
       </>
     );
   }

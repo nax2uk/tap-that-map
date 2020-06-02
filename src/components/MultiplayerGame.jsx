@@ -13,6 +13,15 @@ import ResultsPage from "./ResultsPage";
 import MultiplayerScoresTracker from "./MultiplayerScoresTracker";
 import LoadingScreen from "./LoadingScreen";
 
+// import { Howl } from "howler";
+// import bgmsrc from "../resources/Whimsical-Popsicle.mp3";
+
+// const bgm = new Howl({
+//   src: [bgmsrc],
+//   preload: true,
+//   volume: 0.3,
+//   loop: true,
+// });
 
 class MultiplayerGame extends Component {
   state = {
@@ -49,6 +58,7 @@ class MultiplayerGame extends Component {
     const game = database.ref("multiplayerGame");
 
     game.child(gameId).child("startRound1").set(true);
+    // bgm.play();
     this.setState({ participantsAreReady: false });
   };
 
