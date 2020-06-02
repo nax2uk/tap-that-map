@@ -11,6 +11,8 @@ import MultiplayerNextButton from "./MultiplayerNextButton";
 import Totaliser from "./Totaliser";
 import ResultsPage from "./ResultsPage";
 import MultiplayerScoresTracker from "./MultiplayerScoresTracker";
+import LoadingScreen from "./LoadingScreen";
+
 
 class MultiplayerGame extends Component {
   state = {
@@ -439,7 +441,7 @@ class MultiplayerGame extends Component {
         />
       );
     } else {
-      return <h1>loading</h1>;
+      return <LoadingScreen/>
     }
   }
 }
