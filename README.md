@@ -52,9 +52,29 @@
      <td>Error Alert </td>
   </tr>
   <tr>
-    <td><img src="/public/images/user-stories/app-interface.png" width=250></td>
-    <td><img src="/public/images/user-stories/edit.png" width=250></td>
-    <td><img src="/public/images/user-stories/error.png" width=250></td>
+    <td><img src="/docs/user-stories/1.png" width=250></td>
+    <td><img src="/docs/user-stories/2.png" width=250></td>
+    <td><img src="/docs/user-stories/3.png" width=250></td>
+  </tr>
+      <tr>
+    <td>Sign In </td>
+     <td>Sign Up </td>
+     <td>Sign Out </td>
+  </tr>
+  <tr>
+    <td><img src="/public/images/user-stories/login.png" width=250></td>
+    <td><img src="/public/images/user-stories/signup.png" width=250></td>
+    <td><img src="/public/images/user-stories/logout.png" width=250></td>
+  </tr>
+    <tr>
+    <td>App Interface </td>
+     <td>Edit To Do </td>
+     <td>Error Alert </td>
+  </tr>
+  <tr>
+    <td><img src="/docs/user-stories/4.png" width=250></td>
+    <td><img src="/docs/user-stories/5.png" width=250></td>
+    <td><img src="/docs/user-stories/6.png" width=250></td>
   </tr>
  </table>
 
