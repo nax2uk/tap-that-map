@@ -36,20 +36,10 @@
 
 ## Screenshots
 <table>
-  <tr>
-    <td>Sign In </td>
-     <td>Sign Up </td>
-     <td>Sign Out </td>
-  </tr>
-  <tr>
-    <td><img src="/public/images/user-stories/login.png" width=250></td>
-    <td><img src="/public/images/user-stories/signup.png" width=250></td>
-    <td><img src="/public/images/user-stories/logout.png" width=250></td>
-  </tr>
     <tr>
-    <td>App Interface </td>
-     <td>Edit To Do </td>
-     <td>Error Alert </td>
+    <td>Sign In / Sign Up / Sign Out </td>
+     <td>Username / Marker Icon Option </td>
+     <td>Single / Multi-player Options </td>
   </tr>
   <tr>
     <td><img src="/docs/user-stories/1.png" width=250></td>
@@ -57,24 +47,24 @@
     <td><img src="/docs/user-stories/3.png" width=250></td>
   </tr>
       <tr>
-    <td>Sign In </td>
-     <td>Sign Up </td>
-     <td>Sign Out </td>
-  </tr>
-  <tr>
-    <td><img src="/public/images/user-stories/login.png" width=250></td>
-    <td><img src="/public/images/user-stories/signup.png" width=250></td>
-    <td><img src="/public/images/user-stories/logout.png" width=250></td>
-  </tr>
-    <tr>
-    <td>App Interface </td>
-     <td>Edit To Do </td>
-     <td>Error Alert </td>
+    <td>Join Game Lobby </td>
+     <td>Start Game </td>
+     <td>Play Game </td>
   </tr>
   <tr>
     <td><img src="/docs/user-stories/4.png" width=250></td>
     <td><img src="/docs/user-stories/5.png" width=250></td>
     <td><img src="/docs/user-stories/6.png" width=250></td>
+  </tr>
+   <tr>
+    <td>Result Page </td>
+     <td>&nbsp; </td>
+     <td>&nbsp; </td>
+  </tr>
+  <tr>
+    <td><img src="/docs/user-stories/7.png" width=250></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
   </tr>
  </table>
 
