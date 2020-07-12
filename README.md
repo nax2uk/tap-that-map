@@ -8,24 +8,30 @@
 
 ## User flows
 
-### Adding a task
+### User Sign In / Sign Up / Sign off
+* A user can sign in / sign up using their email and sign out of the game.
 
-* A user can add a task by filling in the input box and clicking the add button.
-* An error message box appears if the user enters an empty string and clicks the add button.
+### User can create a customised marker.
+* A user can use the default duck icon marker or upload a customised icon.
 
-### Editing a task
+### User can choose to play a single player or multiplayer game.
+* A user can see a menu option page to choose which game to play.
 
-* A user can edit an existing task by clicking the pencil icon and editing to input box before clicking the save button.
-* An error message box appears if the user enters an empty string and clicks the save button.
+### User can play the game in a single player or multiplayer mode.
+* A user can play the game by seeing a country name and dropping a marker on the map to guess its location.
+* Each game has 10 rounds for both single player or multiplayer game.
 
-### Checking off a task
+### User can see a leaderboard after a single player game.
+* A user in a single player game can see a leaderboard of the top 5 highest scores after the game is over.
 
-* A user can click on an existing task to mark it as completed.
-* The description of the task will be striked out.
+### User can set up an open multiplayer game.
+* A user can start a multiplayer game and get a game id to share with other players.
 
+### Users can join an open game with a shared game id.
+* A user can start a multiplayer game and get a game id to share with other players.
 
-### Deleting a task
-* A user can click the trash can button to delete a task.
+### User can see his/her score position after a multiplayer game.
+* Users in the same multiplayer game are ranked according to their scores after a game. 
 
 ## Screenshots
 <table>
