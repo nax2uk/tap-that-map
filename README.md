@@ -11,7 +11,8 @@
 ### User Sign In / Sign Up / Sign off
 * A user can sign in / sign up using their email and sign out of the game.
 
-### User can create a customised marker.
+### User can create a username and customised marker 
+* A user can create a username to display in the game.
 * A user can use the default duck icon marker or upload a customised icon.
 
 ### User can choose to play a single player or multiplayer game.
