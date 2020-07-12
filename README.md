@@ -75,4 +75,6 @@
 * [Firebase Cloud Store](https://firebase.google.com/products/storage) - Cloud Storage for Firebase.
 * [Firebase Authentication](https://firebase.google.com/products/auth) - A simple, free multi-platform sign-in.
 * [Firebase Realtime Database](https://firebase.google.com/products/realtime-database) - A cloud-hosted NoSQL database that lets you store and sync data between your users in realtime.
-* [Firebase](https://firebase.google.com/products/hosting) - Fast and Secure Web Hosting.
+* [Google Cloud Storage](https://firebase.google.com/products/hosting) - Fast and Secure Web Hosting.
+* [Google Maps Javascript API](https://cloud.google.com/maps-platform/) - Add customize maps with your own content and imagery for display on web pages and mobile devices. 
+* [HowlerJS](https://howlerjs.com/) - JavaScript audio library for the modern web.
