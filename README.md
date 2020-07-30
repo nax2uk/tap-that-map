@@ -1,7 +1,7 @@
 # Tap That Map Game
 * A world map game built as a progressive web app to challenge a player’s geographical knowledge. 
 * It is playable as a single-player (MVP) or multiplayer.
-* This was a team project and Agile methods such as daily stand-ups, kanban boards and pair-programming were used throughout our two-week sprint.
+* This was a team project and Agile methods such as daily stand-ups, kanban board (using Trello) and pair-programming were used throughout our two-week sprint.
 
 ## Link
 * You can play the game [here](https://tap-that-map.web.app/)
